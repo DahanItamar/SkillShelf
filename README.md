@@ -62,31 +62,86 @@ reader who tries it, and it poisons every other claim on the page.
 
 ## Install
 
-Two routes. Pick one — installing both loads the same rules twice.
+Two decisions: **plugin or skill**, and which surface you are on.
 
-### As a plugin — updates itself
+| Route | Invokes as | Updates with | Take it when |
+|:--|:--|:--|:--|
+| **Plugin** | `/readme-architect:readme-architect` | `/plugin marketplace update dahanitamar` | You want it to stay current on its own |
+| **Skill** | `/readme-architect` | `git pull` | You want to rewrite the house style and keep your edits |
+
+Pick one — installing both loads the same rules twice.
+
+Everything ships from one catalogue, [**ai-skills**](https://github.com/DahanItamar/ai-skills),
+which also carries [`uilint`](https://github.com/DahanItamar/uilint) and
+[`flowsystem`](https://github.com/DahanItamar/flowsystem). Add it once, install what you want.
+
+### As a plugin
+
+**Terminal CLI**
 
 ```
 /plugin marketplace add DahanItamar/ai-skills
 /plugin install readme-architect@dahanitamar
 ```
 
-Invokes as `/readme-architect:readme-architect` (plugin skills are namespaced). Update with
-`/plugin marketplace update dahanitamar`. The catalogue also carries
-[`uilint`](https://github.com/DahanItamar/uilint) and
-[`flowsystem`](https://github.com/DahanItamar/flowsystem) — one add, install what you want.
+**VS Code extension** — the two lines above do nothing here. `/plugin` is an interactive panel the
+terminal CLI has and the extension doesn't. The extension spells it **`/plugins`**, plural, and
+opens a dialog:
 
-### As a skill — editable
+1. Type `/plugins` in the prompt box
+2. **Marketplaces** tab → add `DahanItamar/ai-skills`
+3. **Plugins** tab → find **README Architect** → **Install**, and choose a scope
+4. Restart Claude Code when the banner asks
+
+Same plugins and marketplaces either way — the extension drives the same commands underneath, so
+anything you add here is there in the CLI too.
+
+**Claude desktop app** — use the built-in plugin browser and add the same catalogue.
+
+**Scripted, no prompts** — if you have the CLI but want it non-interactive:
 
 ```bash
-# macOS / Linux
-git clone https://github.com/DahanItamar/readme-architect.git ~/.claude/skills/readme-architect
-
-# Windows PowerShell
-git clone https://github.com/DahanItamar/readme-architect.git "$HOME\.claude\skills\readme-architect"
+claude plugin marketplace add DahanItamar/ai-skills
+claude plugin install readme-architect@dahanitamar
 ```
 
-Invokes as `/readme-architect`. Update with `git pull`. Prefer this if you want to change the rules.
+### As a skill
+
+**Into your skills directory** — no marketplace and no install step, so this works in web and cloud
+sessions and anywhere else without a plugin UI. The repository ships its own
+`.claude-plugin/plugin.json`, so Claude Code discovers it in place as `readme-architect@skills-dir`
+on the next session:
+
+```bash
+git clone https://github.com/DahanItamar/readme-architect.git ~/.claude/skills/readme-architect
+```
+
+```powershell
+# Windows PowerShell
+git clone https://github.com/DahanItamar/readme-architect.git "$env:USERPROFILE\.claude\skills\readme-architect"
+```
+
+Invokes as `/readme-architect:readme-architect` — the manifest travels with the clone, so it is
+namespaced exactly like the plugin route. Update with `git pull`.
+
+**Without the plugin layer** — copy only the skill files and you get a plain, un-namespaced skill:
+
+```bash
+git clone https://github.com/DahanItamar/readme-architect.git /tmp/readme-architect
+mkdir -p ~/.claude/skills/readme-architect
+cp -r /tmp/readme-architect/SKILL.md /tmp/readme-architect/references ~/.claude/skills/readme-architect/
+```
+
+```powershell
+# Windows PowerShell
+git clone https://github.com/DahanItamar/readme-architect.git "$env:TEMP\readme-architect"
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills\readme-architect" | Out-Null
+Copy-Item "$env:TEMP\readme-architect\SKILL.md","$env:TEMP\readme-architect\references" -Recurse -Destination "$env:USERPROFILE\.claude\skills\readme-architect"
+```
+
+Invokes as `/readme-architect`. Take this route if you want to change the house style.
+
+Either way, restart Claude Code or run `/reload-plugins` to pick it up.
 
 ### Any other agent
 
@@ -117,6 +172,6 @@ make this repo public", or "make this presentable on GitHub".
 
 <div align="center">
 
-Built by <a href="https://github.com/DahanItamar">Itamar Dahan</a> · © 2026
+Built by <a href="https://github.com/DahanItamar">Itamar Dahan</a> · MIT · © 2026
 
 </div>

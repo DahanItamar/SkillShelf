@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "readme-architect",
+  "displayName": "README Architect",
+  "version": "1.1.0",
+  "description": "Writes a repository README from evidence rather than adjectives — runs the project first, then fills a tight five-section skeleton with real output, observed numbers and the exact setup path.",
+  "author": {
+    "name": "Itamar Dahan",
+    "url": "https://github.com/DahanItamar"
+  },
+  "homepage": "https://github.com/DahanItamar/readme-architect",
+  "repository": "https://github.com/DahanItamar/readme-architect",
+  "license": "MIT",
+  "keywords": [
+    "readme",
+    "docs",
+    "documentation",
+    "open-source",
+    "markdown",
+    "onboarding"
+  ]
+}
