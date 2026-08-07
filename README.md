@@ -62,21 +62,37 @@ reader who tries it, and it poisons every other claim on the page.
 
 ## Install
 
-No plugin system needed — copy the folder into your skills directory:
+Two routes. Pick one — installing both loads the same rules twice.
+
+### As a plugin — updates itself
+
+```
+/plugin marketplace add DahanItamar/ai-skills
+/plugin install readme-architect@dahanitamar
+```
+
+Invokes as `/readme-architect:readme-architect` (plugin skills are namespaced). Update with
+`/plugin marketplace update dahanitamar`. The catalogue also carries
+[`uilint`](https://github.com/DahanItamar/uilint) and
+[`flowsystem`](https://github.com/DahanItamar/flowsystem) — one add, install what you want.
+
+### As a skill — editable
 
 ```bash
 # macOS / Linux
-cp -r readme-architect ~/.claude/skills/
+git clone https://github.com/DahanItamar/readme-architect.git ~/.claude/skills/readme-architect
 
 # Windows PowerShell
-Copy-Item -Recurse readme-architect "$HOME\.claude\skills\"
+git clone https://github.com/DahanItamar/readme-architect.git "$HOME\.claude\skills\readme-architect"
 ```
 
-Then in Claude Code:
+Invokes as `/readme-architect`. Update with `git pull`. Prefer this if you want to change the rules.
 
-```
-/readme-architect
-```
+### Any other agent
+
+The plugin format is Claude Code's; Codex, Cursor and the rest do not read it. But
+[`SKILL.md`](SKILL.md) is plain Markdown with no code and nothing to run — paste its body into
+`AGENTS.md`, a Cursor rule, or a system prompt and it works. What you lose is automatic invocation.
 
 Or just ask — the skill triggers on "write a README", "my README is thin", "I'm about to
 make this repo public", or "make this presentable on GitHub".
