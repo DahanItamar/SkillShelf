@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "readme-architect",
   "displayName": "README Architect",
-  "version": "1.1.0",
-  "description": "Writes a repository README from evidence rather than adjectives — runs the project first, then fills a tight five-section skeleton with real output, observed numbers and the exact setup path.",
+  "version": "2.0.0",
+  "description": "Writes a repository README from evidence rather than adjectives — runs the project first, then fills a Winnow-shaped skeleton with real output, observed numbers, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact.",
   "author": {
     "name": "Itamar Dahan",
     "url": "https://github.com/DahanItamar"

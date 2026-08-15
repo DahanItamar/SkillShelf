@@ -1,24 +1,60 @@
 ---
 name: readme-architect
-description: Write or rewrite a repository README that shows the project working instead of describing it — real output, real numbers, a stated setup path, and one clear reason the project is interesting. Use when someone asks for a README, says their README is thin or out of date, is about to make a repo public, wants their project to look presentable on GitHub, or asks how to present their work to a recruiter or a visitor. Also use to audit an existing README before publishing. Produces one Markdown file at the repository root, plus a shot list for any screenshots it cannot take itself.
+description: Write or rewrite a repository README that shows the project working instead of describing it — real output, observed numbers, a stated setup path, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact. Use when someone asks for a README, says theirs is thin or out of date, is about to make a repo public, wants their project presentable on GitHub, or asks how to present their work to a recruiter or a visitor. Also use to audit an existing README before publishing. Produces README.md, and only the images, diagrams and companion docs it can actually verify.
 ---
 
 # README Architect
 
-You are the person who writes the README **after actually running the project**. Not the person who read the folder names and guessed.
+You are the person who writes the README **after actually running the project**. Not the person who
+read the folder names and guessed.
 
-A README has one job: a stranger with thirty seconds decides whether this is worth their attention, and a stranger with five minutes gets it running. Everything that does not serve one of those two is decoration.
+A README has one job: a stranger with thirty seconds decides whether this is worth their attention,
+and a stranger with five minutes gets it running. Everything that does not serve one of those two
+is decoration.
 
 ## The one rule
 
 **Show it. Never describe what a reader could be shown.**
 
 - *"Handles concurrent requests safely"* — an assertion. A reader has no reason to believe it.
-- *"Two arrivals reach the runway exactly one tick apart (07:11:51 → 07:11:56) — one at a time, enforced by the queue"* — evidence, with the timestamps to check it.
+- *"Two arrivals reach the runway exactly one tick apart (07:11:51 → 07:11:56) — one at a time,
+  enforced by the queue"* — evidence, with the timestamps to check it.
 - *"Robust error handling"* — decoration.
-- *"`{"error":"Employee \"0\" not found"}` — serials are never saved to an unknown employee"* — the actual response.
+- *"`{"error":"Employee \"0\" not found"}` — serials are never saved to an unknown employee"* — the
+  actual response.
 
-Real output. Real numbers. Real file paths that resolve. If you cannot show something, either go and get it, or cut the claim.
+Real output. Real numbers. Real file paths that resolve. If you cannot show something, either go
+and get it, or cut the claim.
+
+---
+
+## Hard rules
+
+These bind on every invocation. They are here rather than in a reference file because a rule that
+only loads sometimes is not a rule.
+
+**Write only these paths.** Anything outside this list is out of bounds, however reasonable it
+seems at the time:
+
+| Path | Written when |
+| --- | --- |
+| `README.md` | Always |
+| `docs/SETUP.md` | Setup exceeds what fits in the Run it section |
+| `docs/ARCHITECTURE.md` | The mechanism section would otherwise swallow the README |
+| `docs/brand/<name>-{light,dark}.svg` | No brand assets exist and a wordmark is wanted |
+| `docs/assets/screens/*.png` | Capture succeeded |
+| `docs/SCREENSHOTS.md` | Capture failed, was impossible, or was declined |
+
+**Never run a git command that writes.** No commit, no push, no tag, no branch. You produce files;
+whether they enter history is the author's decision, made after they have read them.
+
+**Never publish a secret.** Output containing an API key, a token, a connection string, or a
+personal name is redacted before it is written, and the redaction is marked. An unmarked redaction
+is a fabricated line. The same applies to anything visible in a screenshot.
+
+**Never invent.** Not a log line, not a response body, not a number, not a file path, not a badge
+count. This is the fastest way to lose a reader who tries it, and it discredits every other claim
+on the page.
 
 ---
 
@@ -28,80 +64,142 @@ Real output. Real numbers. Real file paths that resolve. If you cannot show some
 
 Read, in this order:
 
-1. `package.json` / `*.csproj` / `pyproject.toml` / `go.mod` — name, scripts, dependency count, engines
-2. The entry point and the route/command surface — what can this actually *do*
+1. `package.json` / `*.csproj` / `pyproject.toml` / `go.mod` — name, scripts, dependency count
+2. The entry point and the route or command surface — what can this actually *do*
 3. The tests — they state the guarantees the author believes in, in their own words
-4. Any `docs/`, `SPEC.md`, `CONTRIBUTING.md`, existing README
+4. Any `docs/`, `SPEC.md`, `CONTRIBUTING.md`, and the existing README
 5. `.env.example` — the setup story, and what it needs from the user
 
-**Then run it.** Start it, hit an endpoint, run the test suite, trigger the interesting path. The output you collect here becomes the README's evidence. A README written without running the project reads exactly like one, and the tell is that every claim is an adjective.
+**Read all five before writing any prose.** A README written from a directory listing reads exactly
+like one, and the tell is that every claim is an adjective.
 
-If it genuinely cannot be run (missing credentials, hardware, a paid service), say so to the user and write from the tests instead — they are the next best source of real behaviour.
+### Phase 1 — Run it
 
-### Phase 1 — Find the one interesting thing
+Start it. Hit an endpoint. Run the test suite. Trigger the interesting path. The output collected
+here is the README's evidence, and there is no substitute for it.
 
-Every project worth a README has one. Not a feature list — the single decision or mechanism that makes it more than a tutorial exercise:
+**If it genuinely cannot be run** — missing credentials, hardware, a paid service, a build that
+fails — say so to the user, then write from the tests instead. They are the next best source of
+real behaviour, and they were written by someone who knew what mattered. A README built this way
+carries no timings, no runtime output, and no hero screenshot, and it says which numbers came from
+a test run rather than a live one.
+
+### Phase 2 — Find the one interesting thing
+
+Every project worth a README has one. Not a feature list — the single decision or mechanism that
+makes it more than a tutorial exercise:
 
 | Project | The one thing |
 | --- | --- |
 | A booking system | Double-booking is impossible because of a database constraint, not careful code |
-| An airport simulator | One runway, shared by landings and takeoffs, released by an event the moment it frees |
-| A warehouse scanner | The same serial is rejected on the spot, and an unknown employee is rejected before anything is written |
-| A word game | The answers are encrypted at rest; the daily word reaches the browser only after the game ends |
+| An airport simulator | One runway, shared by landings and takeoffs, released the moment it frees |
+| An idea miner | The same idea arriving twice is caught by meaning, not by matching text |
+| A word game | The answers are encrypted at rest; the daily word reaches the browser after the game |
 
-This becomes the pitch line and usually the first `##` section. If you cannot find one, the honest move is to ask the author what they are proudest of — not to pad with a feature table.
+This becomes the pitch and the first `##` section. If you cannot find one, ask the author what they
+are proudest of. Do not pad with a feature table.
 
-### Phase 2 — Gather the evidence
+### Phase 3 — Gather the evidence
 
-Before writing, collect:
+Read `references/evidence-rules.md`. Collect, before writing:
 
-- **Real output** — a log excerpt, a `curl` request and its actual response, a test summary with real counts
-- **Real numbers** — dependency count, test count, response time you measured, file size, line count
-- **The setup path** — the exact commands, in order, from clone to running. Run them yourself in a clean state if you can.
-- **What is deliberately absent** — no build step, zero dependencies, no database needed to try it, mock mode. Absence is a feature and readers do not infer it.
+- **Real output** — a log excerpt, a `curl` and its actual response, a test summary with real counts
+- **Real numbers** — dependency count, test count, a timing you measured, migrations, line counts
+- **The setup path** — the exact commands, in order, from clone to running
+- **What is deliberately absent** — no build step, zero dependencies, no account, mock mode
 
-Numbers must be ones you observed. An invented benchmark is worse than no benchmark.
+### Phase 4 — Write it
 
-### Phase 3 — Write it
+Read `references/house-style.md` for the skeleton and `references/readme-template.md` for the
+structure to fill. Read `references/identity-block.md` before the header block and
+`references/prose-style.md` for voice and formatting. Write to `README.md` at the repository root.
 
-Follow `references/house-style.md` for the skeleton and voice, and `references/evidence-rules.md` for how to present output. Write to `README.md` at the repository root.
+Then apply the admission tests below. They are the difference between a README shaped like a good
+one and a good one.
 
-Length follows the project. A weekend utility gets three `##` sections and forty lines. A substantial application gets five or six and around a hundred. **Padding a small project into a long README is its own kind of failure** — it reads as insecurity, and a reader who scrolls past three screens of prose to find the install command leaves.
+### Phase 5 — Visuals
 
-### Phase 4 — Images
+Read `references/visuals.md`.
 
-Diagrams you can author, author. A flow, an architecture, a state machine — hand-written SVG in `docs/` renders on GitHub, costs nothing, and is honest.
+Author the mermaid diagram where the mechanism has branching or sequence — it renders on GitHub, it
+is text in the diff, and it needs no file. Ask the user which capture mechanism to use before
+taking any screenshot. Where capture is impossible or declined, write the shot list and say plainly
+that this is the one thing you could not do.
 
-**Screenshots you cannot take, do not fake.** If you have no browser tooling:
-
-- Do **not** reference PNGs that do not exist — GitHub renders a broken-image icon, and a broken image on a repo front page is worse than no image.
-- Write `docs/SCREENSHOTS.md`: for each shot, the filename, what must be visible in it, how to stage the app to produce it, and where in the README it goes.
-- Tell the user plainly that this is the one thing you could not do.
-
-### Phase 5 — Pressure-test before handing over
+### Phase 6 — Pressure-test, then hand over
 
 Reread as a stranger and fix anything that fails:
 
-1. Does the first sentence say what this **is**, in words someone outside the domain understands?
+1. Does the first sentence say what this **is**, to someone outside the domain?
 2. Is there a single claim I would have to take on trust? Replace it with evidence or cut it.
 3. Can I get it running from this file alone, with nothing else open?
-4. Does every relative link resolve? Every image exist?
+4. **Does every relative link resolve, and does every referenced image exist?** Open them.
 5. Is there a number here I did not personally observe?
-6. Does it say what the project deliberately does *not* do or need? Readers cannot infer absence.
+6. Does it say what the project deliberately does *not* do or need?
 7. Would this survive a recruiter reading only the first screen?
 
-Then run a link and image check over the finished file. Do not hand over a README with a broken reference in it.
+**Then hand over, always reporting four things:**
+
+- every path written
+- every number used, and where it came from
+- every claim you could not verify
+- whether screenshots were captured or listed, and why
+
+---
+
+## The admission tests
+
+An element is admitted because it **carries** something, never because it would look right there.
+
+| Element | Admitted only if |
+| --- | --- |
+| **A badge** | It states a status, a version, a count, or a licence — a bare technology name is omitted |
+| **A count in a badge** | You observed it in this repository |
+| **The nav row** | Its targets exist. Confirm by opening them; otherwise omit the row entirely |
+| **The hero image** | The file exists, because you produced it |
+| **A wordmark** | It is type, not a symbol — or the project already had one, which always wins |
+| **A diagram** | The mechanism branches or sequences, and every edge carries a label |
+| **A capability section** | It carries a diagram, a table, real output, a measured number, or an image |
+| **A callout** | A reader will hit a trap that costs real time and the symptom will not say why |
+| **A cost table** | The figures were measured, and it carries the date, the conditions, and a disclaimer |
+
+**A capability section that carries none of the five becomes a bullet** in `Under the hood —
+briefly`. It is not padded until it looks like a section, and it is not deleted — the information
+is usually worth one line, and one line is what it gets.
+
+This matters because *"include it if it is earned"* is exactly the judgement that resolves toward
+**yes** on everything, and a README where every element was admitted is the padded README this
+skill exists to prevent.
+
+## Companion documents
+
+Write one only when the README would otherwise swell past readability:
+
+- **`docs/SETUP.md`** — when setup needs more than the commands that fit in Run it: platform
+  differences, provider configuration, hardware sizing, troubleshooting.
+- **`docs/ARCHITECTURE.md`** — when the mechanism genuinely needs more room than one section.
+
+Then link it from the nav row, having confirmed it exists.
+
+**Never create a maintainer-process document** — no `HANDOFF.md`, `CHANGELOG.md`, `CONTRIBUTING.md`,
+`CODE_OF_CONDUCT.md`, `ROADMAP.md` — unless the user asks for it by name. A visitor did not open
+the repository for its process, and a `CONTRIBUTING.md` on a solo project reads as a template
+somebody forgot to finish.
 
 ---
 
 ## Never
 
-- **Badge walls.** A row of shields for build/coverage/version/licence/downloads communicates less than one sentence of real output. A licence or CI badge earns its place; nine do not.
-- **Emoji section headers.** They date fast and add nothing a word does not.
-- **"Contributing", "Roadmap", "Acknowledgements" on a solo project.** Sections with nothing in them read as a template someone forgot to finish.
-- **A feature list of things every project has.** "Responsive design", "clean code", "error handling" — the reader assumes these or does not care.
-- **Placeholder text of any kind.** `TODO`, `Coming soon`, `Lorem`, `your-project-name`. If it is not written, cut the section.
-- **Invented output.** Never write a log line, a response body, or a number you did not observe. This is the fastest way to lose a reader who tries it.
+- **Badges that carry nothing.** Not a ban on badges — a ban on badges with no fact in them. Test
+  the badge, not the row.
+- **Emoji section headers.** They date, they are read aloud, and they replace the work.
+- **"Contributing", "Roadmap", "Acknowledgements" on a solo project.** Empty sections read as an
+  abandoned template.
+- **A feature list of things every project has.** "Responsive design", "clean code", "error
+  handling" — the reader assumes these or does not care.
+- **Placeholder text of any kind.** `TODO`, `Coming soon`, `Lorem`, `your-project-name`. If it is
+  not written, cut the section.
+- **A referenced image that does not exist.** A broken image on the front page is worse than none.
 
 ## Calibration
 
@@ -109,12 +207,19 @@ Then run a link and image check over the finished file. Do not hand over a READM
 | --- | --- | --- |
 | Utility, one clear function | 3 | 40–60 lines |
 | Application with a domain worth explaining | 5 | 80–110 lines |
-| Platform with several distinct capabilities | 5–6, some with sub-headings | 110–160 lines |
+| Platform with several distinct capabilities | 5–7 | 110–170 lines |
 
-The section *count* barely moves. What grows is the depth of the middle sections, and only when there is real substance to put in them.
+The section *count* barely moves. What grows is the depth of the middle sections, and only when
+there is real substance to put in them. **Padding a small project into a long README is its own
+kind of failure** — it reads as insecurity, and a reader who scrolls past three screens of prose to
+find the install command leaves.
 
 ## Reference files
 
-- `references/house-style.md` — the exact skeleton, the voice, and the formatting conventions
-- `references/readme-template.md` — the structure with per-section guidance
-- `references/evidence-rules.md` — how to present real output, and what makes a claim checkable
+- `references/house-style.md` — the skeleton, the section rules, and the callout rules
+- `references/prose-style.md` — voice, claiming absence, and formatting conventions
+- `references/identity-block.md` — wordmark, badges, nav row, hero image
+- `references/visuals.md` — mermaid, screenshot capture, the shot list, the wordmark SVG
+- `references/evidence-rules.md` — the five evidence classes, redaction, and the test every number
+  must pass
+- `references/readme-template.md` — the structure to fill, with per-section guidance
