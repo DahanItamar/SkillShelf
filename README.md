@@ -7,8 +7,21 @@ Six legal regimes, eight modules, and only the ones your project fires. A local 
 never pays the context cost of the CCPA module; a US-only storefront never reads the Israeli
 spam law.
 
-> **Status: M1.** The router works. The eight reference modules land in M2 and the document
-> templates in M3. See `docs/SPEC.md` for the whole plan.
+> ⚠️ **ACSM produces no legal advice.** It generates engineering directives, audit findings and
+> document drafts that require review by qualified legal counsel in each market before you rely
+> on them. Nothing it outputs is a compliance certification, and it never describes a project
+> as compliant.
+
+**What it does — three things:**
+
+1. **Directs.** While you write code, it applies the obligations that actually bind you —
+   erasure endpoints, consent gating, payment isolation, signed binaries, audit logging.
+2. **Audits.** Points at an existing repo and returns pass / fail / n-a / unverifiable per
+   check, with a file and line for every failure.
+3. **Drafts.** Produces privacy policies, cookie copy, cancellation terms and nine other
+   documents — each carrying a mandatory disclaimer and visible placeholders.
+
+**8 modules · 34 obligations · 83 audit checks · 31 cited instruments · 11 templates.**
 
 ## Install
 

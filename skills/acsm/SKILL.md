@@ -81,8 +81,11 @@ Which markets does this ship to — US, EU, Israel, UK/APAC, or Global?
 
 ### Ask, never default
 
-If a field cannot be inferred, **ask for that field**. Do not substitute a default and do not
-guess from a neighbouring field.
+If a field cannot be inferred, **ask for that field** — using the option blocks in
+**`references/config-questions.md`**, which spell out every permitted value. Present options,
+never free text: a user who does not already know the enum cannot answer well.
+
+Do not substitute a default and do not guess from a neighbouring field.
 
 Silence is not `Public`. No locale files is not `US`. An unanswered field is the one most
 likely to be wrong, and a default hides exactly the case where the user needed to think.
@@ -273,3 +276,14 @@ When the user asks whether a repository complies, route first as above, then fol
 
 It lives outside this file on purpose. Auditing is procedure, and this file is loaded on every
 invocation including the ones that never audit anything.
+
+---
+
+## 6. Drafting a legal document
+
+When the user asks for a privacy policy, cookie copy, cancellation terms or similar, route
+first, then follow **`references/drafting-flow.md`**.
+
+Three rules from it are absolute, so they are stated here too: the disclaimer in
+`templates/_disclaimer.txt` goes first and unchanged; placeholder values are never inferred;
+and nothing ACSM produces is described as compliant.

@@ -40,7 +40,7 @@ fi
 printf 'ACSM verify\n'
 
 TMPF=./.verify.tmp
-trap 'rm -f "$TMPF" "$TMPF.fm" "$TMPF.lk" "$TMPF.aw" "$TMPF.in"' EXIT INT TERM
+trap 'rm -f "$TMPF" "$TMPF.fm" "$TMPF.lk" "$TMPF.aw" "$TMPF.in" "$TMPF.ph"' EXIT INT TERM
 
 # Module files are `references/<n>-<slug>.md` with n in 1..8 (SPEC.md AC-051).
 # Other files may live in references/ — audit-flow.md is procedure, not a module,
@@ -161,6 +161,68 @@ for f in $MODULE_GLOB; do
 		[ -n "$ln" ] || continue
 		fail audit "$f" "$ln" "audit check does not carry all six fields"
 	done < "$TMPF.aw"
+done
+
+# --- templates: the disclaimer is byte-identical and comes first -----------
+# Frontmatter is metadata, not content, so the comparison starts at the first
+# non-blank line after it. The block is one line by design: byte comparison of
+# a multi-line block fails on trailing whitespace nobody can see.
+
+DISC=skills/acsm/templates/_disclaimer.txt
+
+if [ -d skills/acsm/templates ]; then
+	if [ ! -f "$DISC" ]; then
+		fail disclaimer "$DISC" 1 "canonical disclaimer is missing"
+	else
+		for f in skills/acsm/templates/*.md; do
+			[ -e "$f" ] || continue
+			if [ "$(sed -n '1p' "$f")" = "---" ]; then
+				start=$(sed -n '2,$p' "$f" | grep -n '^---$' | head -n 1 | cut -d: -f1)
+				start=$((start + 2))
+			else
+				start=1
+			fi
+			first=$(sed -n "${start},\$p" "$f" | grep -n . | head -n 1)
+			off=${first%%:*}
+			line=${first#*:}
+			ln=$((start + off - 1))
+			if [ "$line" != "$(cat "$DISC")" ]; then
+				fail disclaimer "$f" "$ln" "first content is not the canonical disclaimer block"
+			fi
+		done
+	fi
+fi
+
+# --- templates: bracketed tokens are placeholders and nothing else ---------
+# Scoped to the body: `jurisdictions: ["US", "EU"]` in frontmatter is YAML
+# syntax, not a token in the document. AC-054 bans everything else, which
+# means template bodies carry no Markdown links.
+
+for f in skills/acsm/templates/*.md; do
+	[ -e "$f" ] || continue
+	if [ "$(sed -n '1p' "$f")" = "---" ]; then
+		start=$(sed -n '2,$p' "$f" | grep -n '^---$' | head -n 1 | cut -d: -f1)
+		start=$((start + 2))
+	else
+		start=1
+	fi
+	sed -n "${start},\$p" "$f" | grep -no '\[[^]]*\]' > "$TMPF.ph" 2>/dev/null || true
+	while IFS= read -r hit; do
+		[ -n "$hit" ] || continue
+		off=${hit%%:*}
+		tok=${hit#*:}
+		case "$tok" in
+			'[INSERT_'*']')
+				body=${tok#\[INSERT_}
+				body=${body%\]}
+				case "$body" in
+					*[!A-Z0-9_]*) fail placeholder "$f" $((start + off - 1)) "malformed placeholder: $tok" ;;
+					'') fail placeholder "$f" $((start + off - 1)) "empty placeholder: $tok" ;;
+				esac
+				;;
+			*) fail placeholder "$f" $((start + off - 1)) "bracketed token is not a placeholder: $tok" ;;
+		esac
+	done < "$TMPF.ph"
 done
 
 # --- citation index: every instrument a module names appears in it ---------

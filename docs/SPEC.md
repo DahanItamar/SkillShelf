@@ -1,7 +1,7 @@
 # ACSM — Adaptive Compliance & Security Matrix · Technical Spec
 
-> Status: Draft · 2026-08-15 · Spec version 1.2
-> Merged changes: 0002-verify-criteria-split, 0004-citation-index-criteria
+> Status: Draft · 2026-08-16 · Spec version 1.3
+> Merged changes: 0002-verify-criteria-split, 0004-citation-index-criteria, 0005-config-question-gate
 
 ## 1. Problem & Users
 
@@ -95,6 +95,7 @@ ACSM is a Claude Code skill that puts the obligations *in the session*. It reads
 | AC-054 | If a file under `skills/acsm/templates/` contains a bracketed token that does not match `\[INSERT_[A-Z0-9_]+\]`, then `scripts/verify.sh` shall fail. |
 | AC-055 | `docs/CITATIONS.md` shall list every instrument named in any module's `instruments` frontmatter, with the instrument's official URL and the date its text was last accessed. |
 | AC-056 | If a module's frontmatter names an instrument absent from `docs/CITATIONS.md`, then `scripts/verify.sh` shall fail. |
+| AC-057 | When the router asks the user to confirm or supply a configuration field, it shall present that field's permitted values from §5 as explicit options rather than as free text. |
 
 Verification criteria are stated as *If `<violation>`, then `verify.sh` shall fail* and are
 deliberately separate from the properties they enforce. `AC-040` says files are UTF-8 with LF;
@@ -427,6 +428,13 @@ R11 is written as an **exclusion**, not an enumeration, so that a new `appType` 
 
 **Module 1 is loaded by R02, R04, R06 and R12** and is therefore loaded for nearly every real configuration. It is not unconditional: a `LocalDesktop`, `Public`-data, `None`-AI, `LocalOnPrem` tool genuinely has no network security surface, and loading a TLS module for it would be noise.
 
+### 6.1a Configuration question gate
+
+The router asks through `references/config-questions.md`, which holds one block per field with
+its permitted values from §5. `SKILL.md` points at it rather than carrying it, for the same
+reason the audit flow moved out: the question is procedure, and the router is loaded on every
+invocation including the ones that never ask anything.
+
 ### 6.2 Skill ↔ target repository
 
 Read-only except one file, and that one requires consent.
@@ -617,11 +625,12 @@ All three land on the same `SKILL.md` with the same relative `references/` and `
 - [ ] Drafting flow in `SKILL.md`: disclaimer prepend, no placeholder invention, unfilled list, refusal to characterize as legal advice — closes AC-026, AC-029, AC-034
 - [ ] Hebrew-required flagging for Israeli configurations — closes AC-033
 - [ ] Extend `verify.sh`: byte-compare the disclaimer, check placeholder form, check template location — closes AC-053, AC-054
+- [ ] `references/config-questions.md` with one option block per field, and a pointer from the router — closes AC-057
 
 **M4 — Publish**
 *Demo: a second machine runs `/plugin marketplace add <owner>/acsm` and gets a working skill.*
 
-- [ ] `README.md` — what it is, both install paths, one worked example, the not-legal-advice statement — closes AC-045
+- [x] `README.md` — what it is, both install paths, one worked example, the not-legal-advice statement — closes AC-045
 - [ ] Create the GitHub repository and push
 - [ ] Install from the public URL on a clean machine — closes AC-035, AC-036
 - [ ] Run `/spec-constitution` to move §4 into a document that outlives this spec
