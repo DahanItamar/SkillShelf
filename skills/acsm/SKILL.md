@@ -89,8 +89,16 @@ likely to be wrong, and a default hides exactly the case where the user needed t
 
 ### Reuse a saved answer — check this before inferring
 
-Where `acsm.config.yml` exists at the target repository root, load it and **skip inference and
-confirmation entirely**. The question was already answered by someone who knew.
+Where `acsm.config.yml` exists at the target repository root, use it and **skip inference and
+confirmation entirely** — but only when both of these hold:
+
+- `lastConfirmed` is a date. Not `null`, not absent.
+- `configVersion` is `1`.
+
+A file failing either test is an inference nobody blessed, not an answer. Fall through to
+infer-and-confirm, then offer to save the result over it. `lastConfirmed: null` exists to mark
+exactly that state, and trusting it would bypass the confirmation gate in the one case it was
+built for.
 
 If the file is malformed or carries a value outside the enums above, ask — never repair it
 silently. A quietly corrected config is a wrong answer nobody was shown.

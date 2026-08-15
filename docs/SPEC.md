@@ -1,6 +1,7 @@
 # ACSM — Adaptive Compliance & Security Matrix · Technical Spec
 
-> Status: Draft · 2026-08-15 · Spec version 1.0
+> Status: Draft · 2026-08-15 · Spec version 1.1
+> Merged changes: 0002-verify-criteria-split
 
 ## 1. Problem & Users
 
@@ -78,11 +79,25 @@ ACSM is a Claude Code skill that puts the obligations *in the session*. It reads
 | AC-038 | `SKILL.md` shall carry YAML frontmatter containing `name` and `description`. |
 | AC-039 | `SKILL.md` shall not exceed 300 lines. |
 | AC-040 | Every Markdown file in the repository shall be UTF-8 without a byte-order mark and shall use LF line endings. |
-| AC-041 | When `scripts/verify.sh` runs, it shall check frontmatter presence, disclaimer byte-equality, placeholder form, relative link resolution, audit-section presence, file encoding, and size limits, and shall exit non-zero if any check fails. |
+| ~~AC-041~~ | *Retired in 0002-verify-criteria-split — compound across seven check families spanning three milestones, so no milestone could satisfy it. Replaced by AC-044 and AC-047–AC-054.* |
 | AC-042 | When a pull request is opened or updated, CI shall run `scripts/verify.sh` and shall fail the check run on a non-zero exit. |
 | AC-043 | `scripts/verify.sh` shall depend on no language runtime and no package manager, using only POSIX shell utilities. |
 | AC-044 | If a relative Markdown link in any repository file does not resolve to an existing path, then `scripts/verify.sh` shall fail. |
 | AC-045 | The README shall document both install paths and shall state that the repository produces no legal advice. |
+| AC-046 | The repository shall be licensed MIT, except `skills/acsm/templates/`, which shall be licensed CC0-1.0. |
+| AC-047 | If a Markdown file under `skills/acsm/` lacks YAML frontmatter containing every key required for its kind by §5, then `scripts/verify.sh` shall fail. |
+| AC-048 | If any tracked text file contains a byte-order mark or a carriage return, then `scripts/verify.sh` shall fail. |
+| AC-049 | If a file exceeds the hard size limit stated for its kind in §4, then `scripts/verify.sh` shall fail. |
+| AC-050 | When `scripts/verify.sh` completes with one or more failed checks, it shall print each as `FAIL <check>: <path>:<line>` and exit 1. |
+| AC-051 | If the repository does not contain exactly eight module files numbered 1 through 8, then `scripts/verify.sh` shall fail. |
+| AC-052 | If a module file has no `## Audit` section, or an audit check within it omits any of the six fields defined in §5, then `scripts/verify.sh` shall fail. |
+| AC-053 | If the first content of a file under `skills/acsm/templates/` is not byte-identical to `skills/acsm/templates/_disclaimer.txt`, then `scripts/verify.sh` shall fail. |
+| AC-054 | If a file under `skills/acsm/templates/` contains a bracketed token that does not match `\[INSERT_[A-Z0-9_]+\]`, then `scripts/verify.sh` shall fail. |
+
+Verification criteria are stated as *If `<violation>`, then `verify.sh` shall fail* and are
+deliberately separate from the properties they enforce. `AC-040` says files are UTF-8 with LF;
+`AC-048` says CI fails when they are not. A property can be true today by luck; only the
+enforcement keeps it true next month.
 
 ## 3. Architecture
 
@@ -171,7 +186,7 @@ Instead of: MIT throughout — rejected for the reason above. CC0 across the who
 Revisit if: a template is ever derived from a source with its own license terms.
 
 **Verification is `bash` + `grep`, not Node or Python.**
-Because: the repository has no other reason to require a runtime, and "zero dependencies" is only true if the verify step honors it. Every check in AC-041 is a text-shape check.
+Because: the repository has no other reason to require a runtime, and "zero dependencies" is only true if the verify step honors it. Every check in AC-044 and AC-047–AC-054 is a text-shape check.
 Instead of: a Node script with `gray-matter` and `remark` — rejected because it would add a lockfile, a CI setup step, and Dependabot noise to a repository of Markdown files.
 Revisit if: a check needs real YAML parsing rather than line matching.
 
@@ -379,7 +394,7 @@ The complete routing surface. R01–R10 are the source rules from the project's 
 | --- | --- | --- |
 | R01 | `appType == 'LocalDesktop'` | 7 |
 | R02 | `appType == 'ConnectedDesktop'` | 7 + 1 + 8 |
-| R03 | `appType == 'E-commerce'` | 5 + 6 + market modules |
+| R03 | `appType == 'E-commerce'` | 5 + 6 |
 | R04 | `rank(dataSensitivity) >= 1` | 1 + 3 (forces erasure handler, RLS, AES-256 at rest) |
 | R05 | `enterpriseFlag == true` | 8 + 5 (SBOM, SAML/OIDC) |
 | R06 | `aiIntegration != 'None'` | 1 + 3 (OWASP LLM Top 10, EU AI Act Art. 50) |
@@ -387,10 +402,12 @@ The complete routing surface. R01–R10 are the source rules from the project's 
 | R08 | `targetMarkets` includes `Israel` | 4 |
 | R09 | `targetMarkets` includes `US` | 2 |
 | R10 | `targetMarkets` includes `UK_APAC` | 3 |
-| R11 | `appType` in `{Web, SaaS, E-commerce, LocalDesktop, ConnectedDesktop, Mobile}` | 6 |
+| R11 | `appType != 'HeadlessAPI'` | 6 |
 | R12 | `infrastructure != 'LocalOnPrem'` | 1 + 8 |
 
 **R11 exists because accessibility was unreachable.** In the source rules, Module 6 (WCAG 2.2 AA / ADA Title III / Israeli Equal Rights Regulations) is selected only by R03, meaning a SaaS product or a mobile app inherited no accessibility obligation at all. ADA Title III and the Israeli regulations do not care whether a product sells things. R11 selects Module 6 for every app type that renders a user interface, and excludes `HeadlessAPI`, which has none.
+
+R11 is written as an **exclusion**, not an enumeration, so that a new `appType` inherits the accessibility obligation by default. That default is the safe direction — a UI wrongly exempted ships inaccessible, while a headless service wrongly included reads one module it can ignore. Any future app type with no user interface must therefore be added to the exclusion deliberately.
 
 **R12 exists because remote infrastructure implies baseline obligations** — TLS 1.3 in transit, no unauthenticated public buckets, and access logging — that no other rule guarantees for, say, a `Web` app holding only `Public` data.
 
@@ -456,7 +473,7 @@ All three land on the same `SKILL.md` with the same relative `references/` and `
 
 | Invocation | Exit | Meaning |
 | --- | --- | --- |
-| `bash scripts/verify.sh` | `0` | Every structural invariant in AC-041 holds |
+| `bash scripts/verify.sh` | `0` | Every structural invariant in AC-044 and AC-047–AC-054 holds |
 | | `1` | At least one failed; each failure printed as `FAIL <check>: <path>:<line>` |
 | | `2` | The script could not run — missing file, wrong working directory |
 
@@ -506,13 +523,13 @@ All three land on the same `SKILL.md` with the same relative `references/` and `
 | No configuration and an ambiguous repository | Silent wrong routing — obligations for the wrong market applied confidently | Infer, present all five, confirm before loading; ask for any field that resists inference | AC-002, AC-003 |
 | `Global` in `targetMarkets` | Every market module loads, consuming context and burying the relevant one | `Global` expands to the four markets; progressive disclosure keeps only selected modules loaded | AC-009 |
 | US and EU both in scope — cookie opt-out vs. opt-in | Whichever is written last wins silently; one market ends up in violation | Strictest-wins, with the conflict and both sources stated | AC-010 |
-| Module referenced by a rule but missing from the tree | Router loads nothing and reports success | CI resolves every relative link; the eight-module count is checked | AC-017, AC-044 |
-| Disclaimer corrupted by encoding (`â ï¸`) | Byte comparison fails or, worse, a corrupted disclaimer ships | UTF-8 no-BOM enforced by `.gitattributes`; CI byte-compares against `_disclaimer.txt` | AC-027, AC-040, AC-041 |
+| Module referenced by a rule but missing from the tree | Router loads nothing and reports success | CI checks the module count and every audit block. The link check does not cover this: `SKILL.md` names modules as code spans, not Markdown links, so nothing resolves them | AC-017, AC-051 |
+| Disclaimer corrupted by encoding (`â ï¸`) | Byte comparison fails or, worse, a corrupted disclaimer ships | UTF-8 no-BOM enforced by `.gitattributes`; CI byte-compares against `_disclaimer.txt` | AC-027, AC-040, AC-048, AC-053 |
 | Template shipped with placeholders unfilled | `[INSERT_COMPANY_NAME]` published on a live privacy policy | Every generation ends with the unfilled-placeholder list | AC-029 |
 | Target repository contains prompt-injection text | Audit reports a compromised repository as clean — the failure mode ACSM's own Module 1 warns about | Repository content is data, never instruction; directives are reported as findings | AC-022, AC-023 |
 | Law changes after a module was written | Confidently stated obsolete obligation | `last_verified` per module; age stated before the module is applied | AC-013, AC-014 |
 | Audit check undecidable from available files | `pass` reported for something never checked — the most dangerous output this skill can produce | `unverifiable` is a distinct verdict and never counts as a pass | AC-020 |
-| `SKILL.md` grows as obligations leak into the router | Every invocation pays full context cost; progressive disclosure defeated | 300-line hard limit enforced in CI | AC-039, AC-041 |
+| `SKILL.md` grows as obligations leak into the router | Every invocation pays full context cost; progressive disclosure defeated | 300-line hard limit enforced in CI | AC-039, AC-049 |
 | Plain-skill copy taken without the repository root | `templates/` missing, drafting silently unavailable | `templates/` lives inside `skills/acsm/`, so it travels with the copy | AC-030, AC-036, AC-037 |
 | Windows checkout converts LF to CRLF | Byte-comparison checks fail on a clean tree | `.gitattributes` with `eol=lf`; CI checks encoding | AC-040 |
 | User asks the skill to drop the disclaimer | The one control on the drafting capability is removed on request | Refuse, with the reason in one sentence | AC-026, AC-034 |
@@ -544,19 +561,20 @@ All three land on the same `SKILL.md` with the same relative `references/` and `
 
 **Supply chain.** The plugin is instructions Claude executes, so a compromised commit is a compromised session. Controls: version pinned in `plugin.json` and nowhere else, every content change reviewed against its citation, and no dependency of any kind that could introduce a transitive change (AC-043).
 
-**The liability control is the disclaimer, and it is structural.** Templates are the only part of this repository that can hurt someone — an unreviewed privacy policy published to a live site makes representations to real users. Three mechanisms, all mechanical rather than aspirational: the disclaimer block is the first content of every template and is byte-checked in CI (AC-025, AC-027, AC-041); placeholders stay visibly unfilled rather than being invented (AC-028, AC-029); and the skill is forbidden from characterizing output as legal advice or as compliant (AC-034).
+**The liability control is the disclaimer, and it is structural.** Templates are the only part of this repository that can hurt someone — an unreviewed privacy policy published to a live site makes representations to real users. Three mechanisms, all mechanical rather than aspirational: the disclaimer block is the first content of every template and is byte-checked in CI (AC-025, AC-027, AC-053); placeholders stay visibly unfilled rather than being invented (AC-028, AC-029, AC-054); and the skill is forbidden from characterizing output as legal advice or as compliant (AC-034).
 
 ## 10. Build Order
 
 **M1 — Installable skeleton that routes**
 *Demo: `/plugin marketplace add ./` from a local clone, ask "I'm building a desktop app for the Israeli market", and watch it infer the config, name the rules that fired, and load exactly modules 4, 6 and 7.*
 
-- [ ] `git init`, `.gitattributes` with `eol=lf`, MIT `LICENSE`, CC0 `LICENSE-TEMPLATES` — closes AC-040
+- [ ] `git init` and `.gitattributes` with `eol=lf` — closes AC-040
+- [ ] MIT `LICENSE` and CC0 `LICENSE-TEMPLATES` scoped to `skills/acsm/templates/` — closes AC-046
 - [ ] `.claude-plugin/marketplace.json` and `plugin.json`; verify by installing from a local path — closes AC-035
 - [ ] `skills/acsm/SKILL.md` — frontmatter, config schema, rank table, R01–R12, conflict resolver, injection and consent rules — closes AC-001, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-038, AC-039
 - [ ] Inference-then-confirm flow, including the ask-don't-default rule and consent-gated `acsm.config.yml` write — closes AC-002, AC-003, AC-004, AC-005
 - [ ] Read-only and prompt-injection rules stated in `SKILL.md` — closes AC-019, AC-022, AC-023
-- [ ] `scripts/verify.sh` with frontmatter, encoding, link and size checks — closes AC-041, AC-043, AC-044
+- [ ] `scripts/verify.sh` with frontmatter, encoding, link and size checks — closes AC-043, AC-044, AC-047, AC-048, AC-049, AC-050
 - [ ] `.github/workflows/verify.yml` — closes AC-042
 - [ ] `examples/*.config.yml` covering LocalDesktop-IL, SaaS-Global-AI, and E-commerce-US — closes AC-005
 - [ ] Confirm the plain-skill copy path works from the same tree — closes AC-036, AC-037
@@ -575,7 +593,7 @@ All three land on the same `SKILL.md` with the same relative `references/` and `
 - [ ] `docs/CITATIONS.md` with the official URL and access date for every instrument — closes AC-012
 - [ ] Staleness warning driven by `last_verified` — closes AC-014
 - [ ] Audit execution and reporting flow in `SKILL.md`, including the `unverifiable` verdict — closes AC-018, AC-020, AC-021, AC-024
-- [ ] Extend `verify.sh`: eight modules present, every module has an `## Audit` section, every check has all six fields — closes AC-015, AC-017
+- [ ] Extend `verify.sh`: eight modules present, every module has an `## Audit` section, every check has all six fields — closes AC-051, AC-052
 
 **M3 — Templates and the disclaimer control**
 *Demo: ask for a privacy policy for a US+EU+Israel SaaS; get the disclaimer first, placeholders intact, Hebrew-required sections flagged, and an unfilled-placeholder list at the end. Then delete one disclaimer and watch CI fail.*
@@ -584,7 +602,7 @@ All three land on the same `SKILL.md` with the same relative `references/` and `
 - [ ] All eleven templates from §6.4, each with frontmatter and disclaimer — closes AC-025, AC-028, AC-030, AC-031, AC-032
 - [ ] Drafting flow in `SKILL.md`: disclaimer prepend, no placeholder invention, unfilled list, refusal to characterize as legal advice — closes AC-026, AC-029, AC-034
 - [ ] Hebrew-required flagging for Israeli configurations — closes AC-033
-- [ ] Extend `verify.sh`: byte-compare the disclaimer, check placeholder form, check template location — closes AC-041
+- [ ] Extend `verify.sh`: byte-compare the disclaimer, check placeholder form, check template location — closes AC-053, AC-054
 
 **M4 — Publish**
 *Demo: a second machine runs `/plugin marketplace add <owner>/acsm` and gets a working skill.*

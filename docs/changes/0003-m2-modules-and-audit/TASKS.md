@@ -68,11 +68,17 @@ Suggested wording, to be authored in the spec and not here:
 
 ### Watch the router's line budget
 
-`SKILL.md` is at 179 lines of a 300 hard limit. T-10 and T-11 both add to it, and T-11 is the
-larger of the two — the audit flow needs four verdicts, the `path:line` rule and the
-report-on-request rule. If the two together push past 300, `AC-049` fails the build and the
-fix is not to raise the limit: it is that the audit flow has become procedure rather than
-routing, and belongs in its own reference file. Decide that at T-11, not by editing §4.
+`SKILL.md` is at **250 lines of a 300 hard limit, already past the 220 soft limit.** T-10 and
+T-11 both add to it, and T-11 is the larger — the audit flow needs four verdicts, the
+`path:line` rule and the report-on-request rule, which is 40+ lines on its own.
+
+Fifty lines of headroom for two tasks means this will almost certainly breach. Plan for it
+now: **T-11 writes the audit flow to `skills/acsm/references/audit-flow.md`** and leaves a
+two-line pointer in `SKILL.md`. That keeps the router at routing, which is what the size limit
+exists to protect — a `SKILL.md` carrying procedure is loaded in full on every invocation,
+including the ones that never audit anything.
+
+Do not respond by raising the limit in §4. Crossing it is the signal, not the problem.
 
 ### Deferred by schedule
 
