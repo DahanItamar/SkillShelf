@@ -1,116 +1,142 @@
 # README Template
 
-The structure to fill in. Guidance under each heading is instruction to you, not content
-to copy. Drop sections that genuinely do not apply — never reorder them, and never leave a
-heading with nothing under it.
+The structure to fill in.
+
+**Everything in angle brackets is an instruction to you, not content to copy.** Not one `<…>`
+survives into the file you write — no `<Project Name>`, no `TODO`, no `Coming soon`, no `Lorem`, no
+`your-project-name`. A placeholder that ships is the single loudest signal a README can send that
+nobody finished it, and a reader who finds one stops trusting every number on the page.
+
+Drop a section that genuinely does not apply. Never reorder them, and never keep a heading you
+could not fill.
 
 ---
 
 ````markdown
 <div align="center">
 
-# <Project Name>
+<Wordmark as a picture element with light and dark sources, or a plain `# Project Name` if there
+is no wordmark. Never both.>
 
-**<One sentence: what this is, and the thing about it that is actually interesting.>**
+**<The pitch. One or two bold sentences: what this is, and the thing about it that is not
+ordinary. Not a category — "a booking app" — but a claim: "a live airport, arrivals and departures
+competing for one runway in real time". Write this line last, once you know what the interesting
+thing is. It is the hardest sentence in the document and the one most readers will read.>**
 
-<Stack line, plain prose, with the notable constraint in bold — "**zero dependencies, no
-build step**", "one dependency", "pure Node.js".>
+<The stack line. Plain prose, one or two lines, naming what it is built on. The notable
+constraint in bold — "**one runtime dependency, no server, no account**", "**zero dependencies,
+no build step**".>
 
-<img src="docs/<hero>.png" alt="<What is visible: the screen, the state it is in, what a
-reader should notice>" width="830">
+<Badge row one: proof. Build status, test count, version, licence.>
+<Badge row two: stack, each badge carrying a version or a count.>
+
+<Nav row: middot-separated links to docs that exist. Omit the row entirely if none do.>
+
+<Hero image. Alt text describes what is visible and what the reader should notice in it.>
 
 </div>
 
 ---
 
-## <The Domain Noun>
+## <The mechanism>
 
-<Named for the thing, never "Overview" or "About": The Simulation · The Flow · How you
-play · The idea.
+<Named for the thing, never "Overview", "Introduction" or "About". The Simulation · The evidence
+trail · How you play · Why deduplication is the whole product.
 
-Explain the one interesting mechanism in the reader's terms. A table when the content is
-an enumeration (stations, states, roles, colour meanings); prose when it is a mechanism.>
+This section carries the README. Explain the one interesting mechanism in the reader's terms, well
+enough that they could describe it to someone else. Prose when it is a mechanism; a table when it
+is an enumeration — stations, states, roles, tiers, what each colour means.
+
+Where the mechanism has branching or sequence, put the diagram here.>
 
 | <Thing> | <Role> | <Constraint> |
 |:-:|---|:-:|
 | | | |
 
-### Real Example
+### <Real example>
 
-<Actual output from a real run — a log excerpt, a transcript, a worked case. Say if you
-trimmed it: "IDs shortened for readability".>
+<Actual output from an actual run — a log excerpt, a transcript, a request and the body that came
+back. Say so if you trimmed it or shortened identifiers.>
 
+```text
+<real output, copied, never composed>
 ```
-<real output>
-```
 
-<Then one sentence interpreting it. This is the part that turns data into an argument —
-name the thing to notice and why it matters. Not optional.>
+<Then one sentence naming what the reader should notice and why it matters. This sentence is what
+turns a code block into an argument. Without it the reader scrolls past.>
 
 ## <Capability>
 
-<One section per genuinely distinct capability, two or three at most. Each must carry
-something concrete: an example, a table, output, or an image. A section that is three
-sentences of adjectives belongs in Under the Hood as a bullet.>
+<One section per genuinely distinct capability, three at most. Each must carry a diagram, a table,
+real output, a measured number, or an image — a section carrying none of those is demoted to a
+bullet in "Under the hood" instead of being padded until it looks like a section.
 
-<img src="docs/<a>.png" alt="…" width="420"> <img src="docs/<b>.png" alt="…" width="420">
+Place it before "Run it" if it stands on its own; after, if the reader needs to have seen the thing
+running for it to mean anything.>
 
-## Run It
+<Paired images, both 415 wide, or a single one at 830.>
 
-<Requirements as one sentence. Then the shortest honest path from clone to running, with
-URLs and ports as inline comments.>
+## Run it
+
+<Requirements in one sentence. Then the shortest honest path from clone to running, with ports and
+URLs as inline comments.>
 
 ```bash
 <install>
 <run>          # http://localhost:<port>
 ```
 
-<The zero-setup story, if there is one — "starts in mock mode, no database needed",
-"works out of the box on an in-memory database". A reader deciding whether to try this is
-asking what it will cost them.>
+<The zero-setup story, if there is one: "needs no API key", "runs on an in-memory database",
+"starts in mock mode". A reader deciding whether to try this is asking what it will cost them.>
 
 | Command | |
 |---|---|
-| `<cmd>` | <what it does> |
+| `<cmd>` | <what it does, with a real number in it where there is one> |
 
-## Under the Hood — Briefly
+<A warning callout here if — and only if — there is a trap that will cost the reader real time and
+the symptom will not tell them what it was. Name the symptom first, then the fix.>
 
-<Six bullets at most. Each opens with a bold lead-in naming the concern, then one or two
-sentences. Architecture, data, security, frontend — compressed. "Briefly" is a promise.>
+## Under the hood — briefly
+
+<At most six bullets. Each opens with a bold lead-in naming the concern, then one or two sentences
+carrying the detail a reader would not have guessed. Architecture, data, security, platform,
+testing. "Briefly" in the heading is a promise to the reader; six bullets keeps it.
+
+Security bullets name mechanisms and nothing else: "parameterized queries", "scrypt with a
+per-user salt", "`HttpOnly` session cookie". Never "secure by design".>
 
 - **<Concern>** — <what it is, and the one detail worth knowing>
-- **<Data>** — <store, and the interesting property>
-- **<Security>** — <concrete mechanisms only: scrypt with salt, parameterized queries,
-  HttpOnly cookie. Never "secure by design".>
+- **<Absence>** — <what the project deliberately does not do or need, stated because a reader
+  cannot infer it>
 
-> <One blockquote, optional: what is deliberately not in the repo and why, a history note,
-> or a limitation worth stating before someone discovers it.>
+> <One blockquote, optional: where the depth lives that this file deliberately does not carry, or
+> a limitation worth stating before someone discovers it themselves.>
 
 ---
 
 <div align="center">
 
-Built by <a href="https://github.com/<username>"><Author Name></a> · © <year>
+Built by <a href="https://github.com/<username>"><Author Name></a> · <a href="LICENSE">MIT</a> · © <year>
 
 </div>
 ````
 
 ---
 
-## Notes on filling it in
+## Filling it in
 
-**The pitch is the hardest line and worth the time.** It has to say what the thing is *and*
-why it is not ordinary, in one sentence, to someone who does not know the domain. Write it
-last, after you know what the interesting thing is.
+**Write the pitch last.** It has to say what the thing is *and* why it is not ordinary, in one
+sentence, to someone who does not know the domain. You cannot write it until the rest of the
+document has told you what the interesting thing was.
 
-**The domain section carries the README.** If a reader only reads one section, it is this
-one. It should leave them understanding the mechanism well enough to explain it to someone
-else.
+**The mechanism section is the one that carries the file.** If a reader reads one section, it is
+that one. Everything else can be skimmed; that one has to land.
 
-**Sections are earned, not filled.** Three strong sections beat five with two padded ones.
-If a capability has nothing concrete behind it, demote it to a bullet.
+**Sections are earned, not filled.** Three strong sections beat five with two padded ones. A
+capability with nothing concrete behind it becomes a bullet, and the README gets shorter — which
+is the correct outcome, not a failure to reach a length.
 
-**Every image needs alt text describing what is visible** — it is read aloud, and it is
-what shows when the image fails to load.
-
-**The footer is identical every time.** It is the one piece of pure convention here.
+**Length follows the project.** A utility with one clear function is forty lines and three
+sections. An application with a domain worth explaining is a hundred. Padding a small project into
+a long README reads as insecurity, and a reader who scrolls three screens to find the install
+command leaves before they get there.
