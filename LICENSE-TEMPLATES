@@ -1,0 +1,42 @@
+CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+SPDX-License-Identifier: CC0-1.0
+
+Scope: this dedication applies to every file under `skills/acsm/templates/`
+and to documents generated from those files. It does not apply to any other
+part of this repository, which is licensed MIT (see LICENSE).
+
+
+THE DEDICATION
+
+To the extent possible under law, Itamar Dahan has waived all copyright and
+related or neighboring rights to the contents of `skills/acsm/templates/`.
+This work is published from Israel.
+
+You may copy, modify, distribute and use the templates, including for
+commercial purposes, all without asking permission and without any obligation
+to provide attribution.
+
+The full legal text of CC0 1.0 Universal is incorporated by reference and is
+published at:
+
+    https://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+
+WHY THE TEMPLATES ARE CARVED OUT
+
+The MIT License requires its copyright notice to travel with every copy. A
+privacy policy or cookie notice generated from these templates is published on
+someone else's website, and MIT would oblige them to carry an attribution
+notice inside their own legal notice. That is an obligation nobody would
+comply with and none of them should have to. CC0 removes it.
+
+See docs/SPEC.md section 3, decision "Repository is MIT; templates/ is CC0".
+
+
+NO WARRANTY
+
+The templates are provided without warranty of any kind. They are AI-generated
+starting points for review by qualified legal counsel, not legal advice, and
+not a representation that any document generated from them satisfies any legal
+obligation in any jurisdiction. See the disclaimer block carried by every
+template file.

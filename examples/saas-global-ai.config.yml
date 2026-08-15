@@ -1,0 +1,25 @@
+# Fixture: a multi-tenant SaaS with an AI feature, sold everywhere.
+# Not loaded by the skill. Used to check Global expansion and rule stacking.
+#
+# Expected: modules 1, 2, 3, 4, 6, 8
+#   Global expands to US, EU, Israel, UK_APAC first
+#   R07  markets include EU                 -> 3
+#   R08  markets include Israel             -> 4
+#   R09  markets include US                 -> 2
+#   R10  markets include UK_APAC            -> 3
+#   R04  rank >= 1 (StandardPII)            -> 1, 3
+#   R06  aiIntegration != None              -> 1, 3
+#   R11  appType != HeadlessAPI             -> 6
+#   R12  infrastructure != LocalOnPrem      -> 1, 8
+# Not fired: R01, R02, R03, R05 (no enterprise flag)
+#
+# Module 5 stays out: no payments and no enterprise flag. Add SSO or set
+# EnterpriseB2B and R05 pulls it in.
+
+appType: SaaS
+targetMarkets: [Global]
+dataSensitivity: StandardPII
+aiIntegration: ThirdPartyAPI
+infrastructure: CloudMultiTenant
+configVersion: 1
+lastConfirmed: 2026-08-15

@@ -1,0 +1,21 @@
+{
+  "name": "acsm",
+  "description": "Adaptive Compliance & Security Matrix. Routes a project to the compliance obligations that actually apply to it, audits a repository against them, and drafts the user-facing legal documents they require.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Itamar Dahan",
+    "url": "https://github.com/DahanItamar"
+  },
+  "homepage": "https://github.com/DahanItamar/acsm",
+  "repository": "https://github.com/DahanItamar/acsm",
+  "license": "MIT",
+  "keywords": [
+    "compliance",
+    "security",
+    "gdpr",
+    "ccpa",
+    "pci-dss",
+    "accessibility",
+    "privacy"
+  ]
+}

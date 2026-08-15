@@ -1,0 +1,16 @@
+# Fixture: a local-only desktop tool sold in Israel.
+# Not loaded by the skill. Used to check that routing selects what it should.
+#
+# Expected: modules 4, 6, 7
+#   R01  appType == LocalDesktop            -> 7
+#   R08  markets include Israel             -> 4
+#   R11  appType != HeadlessAPI             -> 6
+# Not fired: R04 (rank 0), R06 (no AI), R12 (LocalOnPrem)
+
+appType: LocalDesktop
+targetMarkets: [Israel]
+dataSensitivity: Public
+aiIntegration: None
+infrastructure: LocalOnPrem
+configVersion: 1
+lastConfirmed: 2026-08-15

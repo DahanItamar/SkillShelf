@@ -1,0 +1,22 @@
+# Fixture: a US-only storefront taking card payments.
+# Not loaded by the skill. Checks that R04 reaches Module 3 without an EU market.
+#
+# Expected: modules 1, 2, 3, 5, 6, 8
+#   R03  appType == E-commerce              -> 5, 6
+#   R04  rank >= 1 (PaymentFinancial = 2)   -> 1, 3
+#   R09  markets include US                 -> 2
+#   R11  appType != HeadlessAPI             -> 6
+#   R12  infrastructure != LocalOnPrem      -> 1, 8
+# Not fired: R01, R02, R05, R06, R07, R08, R10
+#
+# Module 3 loads for a US-only product on purpose. R04 pulls it in for the
+# Art. 17 erasure handler, which is the same deletion machinery CCPA 1798.105
+# needs. If that ever looks wrong, the fix is in R04, not here.
+
+appType: E-commerce
+targetMarkets: [US]
+dataSensitivity: PaymentFinancial
+aiIntegration: None
+infrastructure: CloudMultiTenant
+configVersion: 1
+lastConfirmed: 2026-08-15
