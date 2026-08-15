@@ -1,7 +1,7 @@
 # ACSM — Adaptive Compliance & Security Matrix · Technical Spec
 
-> Status: Draft · 2026-08-15 · Spec version 1.1
-> Merged changes: 0002-verify-criteria-split
+> Status: Draft · 2026-08-15 · Spec version 1.2
+> Merged changes: 0002-verify-criteria-split, 0004-citation-index-criteria
 
 ## 1. Problem & Users
 
@@ -93,6 +93,8 @@ ACSM is a Claude Code skill that puts the obligations *in the session*. It reads
 | AC-052 | If a module file has no `## Audit` section, or an audit check within it omits any of the six fields defined in §5, then `scripts/verify.sh` shall fail. |
 | AC-053 | If the first content of a file under `skills/acsm/templates/` is not byte-identical to `skills/acsm/templates/_disclaimer.txt`, then `scripts/verify.sh` shall fail. |
 | AC-054 | If a file under `skills/acsm/templates/` contains a bracketed token that does not match `\[INSERT_[A-Z0-9_]+\]`, then `scripts/verify.sh` shall fail. |
+| AC-055 | `docs/CITATIONS.md` shall list every instrument named in any module's `instruments` frontmatter, with the instrument's official URL and the date its text was last accessed. |
+| AC-056 | If a module's frontmatter names an instrument absent from `docs/CITATIONS.md`, then `scripts/verify.sh` shall fail. |
 
 Verification criteria are stated as *If `<violation>`, then `verify.sh` shall fail* and are
 deliberately separate from the properties they enforce. `AC-040` says files are UTF-8 with LF;
@@ -344,6 +346,18 @@ instruments:
 ---
 ```
 
+### Citation index row
+
+One row per instrument in `docs/CITATIONS.md`. The `Instrument` cell must match the `name`
+field of the corresponding entry in a module's `instruments` frontmatter, byte for byte —
+that equality is what `AC-056` checks. A module cites an instrument inline because that is
+what a reader needs while applying an obligation; the index is what makes the citation
+checkable against the official text, and what gives a `last_verified` date something to refer to.
+
+| Instrument | Jurisdiction | Official text | Accessed |
+| --- | --- | --- | --- |
+| Regulation (EU) 2016/679 | EU | https://eur-lex.europa.eu/eli/reg/2016/679/oj | 2026-08-15 |
+
 ### Audit check
 
 Expressed as a table row inside a module's `## Audit` section. Every field is required; a check with no pass condition is a suggestion, not a check.
@@ -590,10 +604,10 @@ All three land on the same `SKILL.md` with the same relative `references/` and `
 - [ ] `references/6-accessibility.md` — WCAG 2.2 AA, ADA Title III, IL Equal Rights Regs — closes AC-012
 - [ ] `references/7-desktop-binary.md` — EV code signing, SQLCipher AES-256 via OS keychain, NIST SP 800-147B — closes AC-012
 - [ ] `references/8-auditability.md` — immutable audit logs, access logging, retention, observability — closes AC-012, AC-017
-- [ ] `docs/CITATIONS.md` with the official URL and access date for every instrument — closes AC-012
+- [ ] `docs/CITATIONS.md` with the official URL and access date for every instrument — closes AC-055
 - [ ] Staleness warning driven by `last_verified` — closes AC-014
 - [ ] Audit execution and reporting flow in `SKILL.md`, including the `unverifiable` verdict — closes AC-018, AC-020, AC-021, AC-024
-- [ ] Extend `verify.sh`: eight modules present, every module has an `## Audit` section, every check has all six fields — closes AC-051, AC-052
+- [ ] Extend `verify.sh`: eight modules present, every module has an `## Audit` section, every check has all six fields, and every instrument appears in the citation index — closes AC-051, AC-052, AC-056
 
 **M3 — Templates and the disclaimer control**
 *Demo: ask for a privacy policy for a US+EU+Israel SaaS; get the disclaimer first, placeholders intact, Hebrew-required sections flagged, and an unfilled-placeholder list at the end. Then delete one disclaimer and watch CI fail.*
