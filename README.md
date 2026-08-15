@@ -12,7 +12,7 @@ Six reference files and one workflow, in plain Markdown.
 <img alt="version 2.0.0" src="https://img.shields.io/badge/version-2.0.0-B55400?style=flat-square">
 <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2b2e3a?style=flat-square"></a>
 <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-1f6f3f?style=flat-square">
-<img alt="1,321 lines of doctrine across 7 files" src="https://img.shields.io/badge/doctrine-1%2C321%20lines-2b2e3a?style=flat-square">
+<img alt="1,341 lines of doctrine across 7 files" src="https://img.shields.io/badge/doctrine-1%2C341%20lines-2b2e3a?style=flat-square">
 <img alt="44 acceptance criteria" src="https://img.shields.io/badge/criteria-44-2b2e3a?style=flat-square">
 
 <a href="docs/SPEC.md">Spec</a> ·
@@ -136,7 +136,7 @@ itself.
 
 ## Under the hood — briefly
 
-- **Progressive disclosure.** `SKILL.md` is 225 lines and loads every invocation; the six
+- **Progressive disclosure.** `SKILL.md` is 245 lines and loads every invocation; the six
   reference files are 1,096 lines and load only at the phase that needs them. A reference file is
   read cold and alone, so each is complete by itself and none links to another.
 - **Built by its own pipeline.** `docs/SPEC.md` carries 44 acceptance criteria in EARS notation,
