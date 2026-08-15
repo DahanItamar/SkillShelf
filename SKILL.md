@@ -60,6 +60,26 @@ on the page.
 
 ## Workflow
 
+Seven phases. **State them before starting, and name each one as you enter it.**
+
+The user invoked a skill and is about to watch a long run of reading, running and writing before
+anything they recognise appears. Without markers that is an undifferentiated wall: no way to tell
+gathering from writing, and therefore no way to judge whether now is the moment to interrupt. Two
+lines of output turn it into a progress bar.
+
+Open with this, filled in for the run you are about to do:
+
+```markdown
+> **README Architect · 7 phases** — `0 Learn` → `1 Run` → `2 Find the one thing` → `3 Evidence` →
+> `4 Write` → `5 Visuals` → `6 Pressure-test`
+> Currently: **Phase 0 — Learn the project.**
+```
+
+Then name each phase as you reach it — one short line, not a paragraph. **Any question you ask
+mid-run says which phase it belongs to**, because the capture question in Phase 5 arrives long
+after the user stopped tracking where you were, and an unanchored question reads as coming from
+nowhere.
+
 ### Phase 0 — Learn the project before writing a word
 
 Read, in this order:
