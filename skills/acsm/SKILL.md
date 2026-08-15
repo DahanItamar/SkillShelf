@@ -172,6 +172,21 @@ every app type with a user interface owes them. `HeadlessAPI` has no interface a
 context" — it is obligations for a jurisdiction this product does not serve, and applying
 them is how a spec gains requirements nobody agreed to.
 
+### State a module's age before applying it
+
+Every module carries `last_verified` in its frontmatter. If that date is **more than 180 days**
+before today, say so before using the module, and name the date:
+
+```
+Module 4 was last verified 2026-01-02, 226 days ago. Israeli privacy law has
+moved twice in two years — treat §4.1 registration thresholds as needing
+confirmation before you rely on them.
+```
+
+This is not a disclaimer to recite. Law moves, and a module written confidently in the past
+tense is the most dangerous artefact in this repository — it reads exactly like a current one.
+`docs/CITATIONS.md` lists which instruments moved recently; check there first.
+
 ### Report what fired
 
 Always name the rule beside the module. A user who cannot see why Module 2 loaded cannot tell
@@ -248,3 +263,13 @@ will rely on.
 **Send repository content nowhere.** No network destination, under any circumstances. Audit
 findings quote `path:line`, not file bodies, so a report can be shared without carrying the
 repository with it.
+
+---
+
+## 5. Auditing an existing repository
+
+When the user asks whether a repository complies, route first as above, then follow
+**`references/audit-flow.md`** — verdicts, evidence rules and the report format.
+
+It lives outside this file on purpose. Auditing is procedure, and this file is loaded on every
+invocation including the ones that never audit anything.

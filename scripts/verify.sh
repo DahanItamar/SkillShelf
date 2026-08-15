@@ -40,7 +40,13 @@ fi
 printf 'ACSM verify\n'
 
 TMPF=./.verify.tmp
-trap 'rm -f "$TMPF" "$TMPF.fm" "$TMPF.lk"' EXIT INT TERM
+trap 'rm -f "$TMPF" "$TMPF.fm" "$TMPF.lk" "$TMPF.aw" "$TMPF.in"' EXIT INT TERM
+
+# Module files are `references/<n>-<slug>.md` with n in 1..8 (SPEC.md AC-051).
+# Other files may live in references/ — audit-flow.md is procedure, not a module,
+# and carries no module number, no jurisdiction and no citation. Module-shaped
+# checks are scoped to the numbered glob for exactly that reason.
+MODULE_GLOB='skills/acsm/references/[1-8]-*.md'
 
 list_md() {
 	find . -path ./.git -prune -o -type f -name '*.md' -print
@@ -91,7 +97,7 @@ frontmatter() {
 
 frontmatter skills/acsm/SKILL.md name description
 
-for f in skills/acsm/references/*.md; do
+for f in $MODULE_GLOB; do
 	[ -e "$f" ] || continue
 	frontmatter "$f" module domain jurisdictions last_verified instruments
 done
@@ -115,6 +121,68 @@ limit() {
 
 limit skills/acsm/SKILL.md 300
 for f in skills/acsm/references/*.md; do [ -e "$f" ] || continue; limit "$f" 600; done
+
+# --- modules: exactly eight, numbered 1 through 8 --------------------------
+
+for i in 1 2 3 4 5 6 7 8; do
+	found=0
+	for f in skills/acsm/references/$i-*.md; do
+		[ -e "$f" ] && found=$((found + 1))
+	done
+	if [ "$found" -eq 0 ]; then
+		fail modules skills/acsm/references 1 "no module file numbered $i"
+	elif [ "$found" -gt 1 ]; then
+		fail modules skills/acsm/references 1 "$found module files numbered $i; expected one"
+	fi
+done
+
+for f in skills/acsm/references/*.md; do
+	[ -e "$f" ] || continue
+	b=$(basename "$f")
+	case "$b" in
+		[1-8]-*) ;;
+		[0-9]*) fail modules "$f" 1 "numbered module file outside the range 1-8" ;;
+	esac
+done
+
+# --- audit blocks: present, and every check carries all six fields ---------
+
+for f in $MODULE_GLOB; do
+	[ -e "$f" ] || continue
+	if ! grep -q '^## Audit' "$f"; then
+		fail audit "$f" 1 "no ## Audit section"
+		continue
+	fi
+	if ! grep -q '^| AUDIT-' "$f"; then
+		fail audit "$f" 1 "## Audit section contains no checks"
+	fi
+	awk -F'|' '/^\| AUDIT-/ && NF - 2 != 6 { print NR }' "$f" > "$TMPF.aw"
+	while IFS= read -r ln; do
+		[ -n "$ln" ] || continue
+		fail audit "$f" "$ln" "audit check does not carry all six fields"
+	done < "$TMPF.aw"
+done
+
+# --- citation index: every instrument a module names appears in it ---------
+
+if [ ! -f docs/CITATIONS.md ]; then
+	fail citations docs/CITATIONS.md 1 "citation index is missing"
+else
+	for f in $MODULE_GLOB; do
+		[ -e "$f" ] || continue
+		grep -n '^  - name:' "$f" > "$TMPF.in" 2>/dev/null || true
+		while IFS= read -r hit; do
+			[ -n "$hit" ] || continue
+			ln=${hit%%:*}
+			nm=${hit#*name: }
+			nm=${nm#\"}
+			nm=${nm%\"}
+			if ! grep -Fq "$nm" docs/CITATIONS.md; then
+				fail citations "$f" "$ln" "instrument absent from docs/CITATIONS.md: $nm"
+			fi
+		done < "$TMPF.in"
+	done
+fi
 for f in skills/acsm/templates/*.md; do [ -e "$f" ] || continue; limit "$f" 400; done
 
 desc=$(sed -n 's/^description:[[:space:]]*//p' skills/acsm/SKILL.md | head -n 1)
