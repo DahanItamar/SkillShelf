@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "readme-architect",
+  "description": "Writes a repository README from evidence rather than adjectives.",
+  "owner": {
+    "name": "Itamar Dahan",
+    "url": "https://github.com/DahanItamar"
+  },
+  "plugins": [
+    {
+      "name": "readme-architect",
+      "displayName": "README Architect",
+      "source": "./",
+      "description": "Writes a repository README from evidence rather than adjectives — runs the project first, then fills a Winnow-shaped skeleton with real output, observed numbers, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact.",
+      "category": "documentation",
+      "license": "MIT",
+      "author": {
+        "name": "Itamar Dahan",
+        "url": "https://github.com/DahanItamar"
+      },
+      "keywords": [
+        "readme",
+        "docs",
+        "documentation",
+        "open-source",
+        "markdown",
+        "onboarding"
+      ]
+    }
+  ]
+}

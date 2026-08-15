@@ -2,176 +2,163 @@
 
 # README Architect
 
-**A Claude Code skill that writes a repository README by running the project first — real output, real numbers, and one clear reason the project is interesting.**
+**A Claude Code skill that writes your README after running your project — not after reading your
+folder names. Every number in what it produces is one it observed, and anything it could not
+observe it tells you it could not observe.**
 
-Standalone skill. Four Markdown files, no dependencies, no build step.
+Six reference files and one workflow, in plain Markdown.
+**No dependencies, no build step, no runtime — nothing here executes.**
+
+<img alt="version 2.0.0" src="https://img.shields.io/badge/version-2.0.0-B55400?style=flat-square">
+<a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2b2e3a?style=flat-square"></a>
+<img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-1f6f3f?style=flat-square">
+<img alt="1,321 lines of doctrine across 7 files" src="https://img.shields.io/badge/doctrine-1%2C321%20lines-2b2e3a?style=flat-square">
+<img alt="44 acceptance criteria" src="https://img.shields.io/badge/criteria-44-2b2e3a?style=flat-square">
+
+<a href="docs/SPEC.md">Spec</a> ·
+<a href="docs/CONSTITUTION.md">Constitution</a> ·
+<a href="SKILL.md">Skill</a>
 
 </div>
 
 ---
 
-## The idea
+## Why most generated READMEs are adjectives
 
-Most generated READMEs are adjectives. *Fast. Scalable. Robust error handling. Clean
-architecture.* A reader has no reason to believe any of it, so they skim to the install
-command and decide from the code instead.
+Ask a model for a README and it reads the directory, infers what the project probably does, and
+writes *"robust error handling"*, *"clean architecture"*, *"blazing fast"*. Every one of those is
+unfalsifiable, which is another way of saying it carries no information. The reader learns nothing
+and — worse — learns that this README is the kind that carries nothing.
 
-This skill enforces one rule:
+This skill's entire design follows from one rule:
 
 > **Show it. Never describe what a reader could be shown.**
 
-Which in practice means the skill does not start writing until it has run the project and
-collected something to show:
+*"Handles concurrent requests safely"* is an assertion. *"Two arrivals reach the runway exactly one
+tick apart (07:11:51 → 07:11:56) — one at a time, enforced by the queue"* is evidence, and it comes
+with the timestamps to check it. The first is free to write. The second requires running the thing.
 
-| Instead of | It writes |
+So the workflow runs the thing. It reads the manifest, the entry point, the tests and
+`.env.example`; it starts the project, hits an endpoint, runs the suite; and only then does it
+write. Where it genuinely cannot run something — no credentials, no hardware, a paid service — it
+says so to you and writes from the tests instead, carrying no timings and no screenshots, because
+those would have to be invented.
+
+## Nothing gets in because it would look right there
+
+The failure mode of every README template is that it has slots, and slots get filled. A badge row
+gets badges. A screenshot section gets a screenshot. The document ends up shaped like a good README
+without being one.
+
+So every element faces an admission test with a stated condition, and failing it means removal —
+not padding until it looks sufficient.
+
+```mermaid
+flowchart TD
+    E["Proposed element<br/>badge · section · diagram · image"] --> Q1
+
+    Q1{"Does it carry a fact,<br/>or only a name?"}
+    Q1 -- "only a name" --> R1["Cut<br/><i>a bare 'TypeScript' badge<br/>states nothing checkable</i>"]
+    Q1 -- carries a fact --> Q2
+
+    Q2{"Did I observe the fact<br/>in this repository?"}
+    Q2 -- "no, inferred" --> R2["Cut<br/><i>an invented count discredits<br/>every other number</i>"]
+    Q2 -- observed --> Q3
+
+    Q3{"Does the file it<br/>references exist?"}
+    Q3 -- "no" --> R3["Cut, and record it<br/><i>a broken image on the front<br/>page is worse than none</i>"]
+    Q3 -- exists --> Q4
+
+    Q4{"Is it a section carrying<br/>none of the five?"}
+    Q4 -- "carries none" --> D["Demote to one bullet<br/><i>the information is worth a line,<br/>and a line is what it gets</i>"]
+    Q4 -- carries one --> A["Admitted"]
+```
+
+The five a capability section may carry: **a diagram, a table, real program output, a measured
+number, or an image.** Not a well-written paragraph, not a list of sub-features, not a claim that
+the approach is unusual — those are the raw material of a section, not a section.
+
+**This README is the worked example.** It has no CI badge and no test-count badge because this
+repository has neither a pipeline nor a suite; it has no hero image because none was produced.
+Five badges, all checkable. That is what the test produces when it is applied honestly, and it is
+why there is no sixth reference file holding a fabricated sample.
+
+## What it writes, and what it refuses to
+
+| Writes | When |
 |---|---|
-| "Handles concurrent requests safely" | Two log lines one tick apart, and a sentence naming what that proves |
-| "Comprehensive test coverage" | "59 tests, including end-to-end against the real server" |
-| "Secure by design" | "Passwords hashed with scrypt and a per-user salt; session cookie is `HttpOnly`" |
-| "Robust error handling" | The actual failure response: `{"error":"Employee \"0\" not found"}` |
+| `README.md` | Always |
+| `docs/SETUP.md` | Setup needs more than the commands that fit in Run it |
+| `docs/ARCHITECTURE.md` | The mechanism needs more room than one section |
+| `docs/brand/*.svg` | A typographic wordmark, light and dark — never a pictorial mark |
+| `docs/assets/screens/*.png` | Capture succeeded |
+| `docs/SCREENSHOTS.md` | Capture failed, was impossible, or you declined |
 
-Every one of those is checkable in seconds. That is the whole point — a claim a reader can
-verify is worth more than five they have to trust.
+That list is the whole write surface. It creates no `CONTRIBUTING.md`, no `CHANGELOG.md`, no
+`ROADMAP.md` unless you ask by name — a visitor did not open your repository for its process, and
+an empty process file reads as a template somebody forgot to finish.
 
-## What it does
+> [!IMPORTANT]
+> **It never runs a git command that writes.** No commit, no push, no tag. It produces files;
+> whether they enter your history is a decision you make after reading them. It also redacts any
+> secret, token or personal name found in real output before writing it, and marks the
+> redaction — because an unmarked redaction is a fabricated line.
 
-**Phase 0 — learns the project.** Manifest, entry point, route surface, tests, `.env.example`.
-Then it *runs* it: starts the server, hits an endpoint, runs the suite. A README written
-without running the project reads exactly like one, and the tell is that every claim is an
-adjective.
+## Screenshots are asked about, never guessed
 
-**Phase 1 — finds the one interesting thing.** Not a feature list; the single decision that
-makes the project more than a tutorial exercise. That becomes the pitch and the first
-section.
+Whether your project is a page at a URL, a desktop window, or a terminal session — and whether it
+needs credentials or staging into a particular state — are facts you have and the skill does not.
+So it asks, offering the mechanisms that fit what it found, plus a custom option where you write
+the instruction yourself.
 
-**Phase 2 — gathers evidence.** Real output, numbers it observed, the exact setup path, and
-what the project deliberately does *not* need — readers cannot infer absence, so "no build
-step" and "no database needed to try it" have to be claimed.
+When capture fails or you decline, it writes `docs/SCREENSHOTS.md`: for each shot, the filename,
+what must be visible, how to stage it, and where it goes in the README. Then it tells you plainly
+that this was the one thing it could not do. **It never references an image it did not produce.**
 
-**Phase 3–5 — writes, illustrates, pressure-tests.** Five sections, 80–110 lines. It authors
-SVG diagrams itself, and for screenshots it cannot take, it writes a shot list rather than
-referencing PNGs that do not exist — a broken image on a repo front page is worse than no
-image.
+## Run it
 
-### What it refuses to do
-
-Badge walls. Emoji headers. Empty "Contributing" and "Roadmap" sections on a solo project.
-Feature lists of things every project has. Placeholder text. And above all, **invented
-output** — a log line or benchmark that was never observed is the fastest way to lose a
-reader who tries it, and it poisons every other claim on the page.
-
-## Install
-
-Two decisions: **plugin or skill**, and which surface you are on.
-
-| Route | Invokes as | Updates with | Take it when |
-|:--|:--|:--|:--|
-| **Plugin** | `/readme-architect:readme-architect` | `/plugin marketplace update dahanitamar` | You want it to stay current on its own |
-| **Skill** | `/readme-architect` | `git pull` | You want to rewrite the house style and keep your edits |
-
-Pick one — installing both loads the same rules twice.
-
-Everything ships from one catalogue, [**ai-skills**](https://github.com/DahanItamar/ai-skills),
-which also carries [`uilint`](https://github.com/DahanItamar/uilint) and
-[`flowsystem`](https://github.com/DahanItamar/flowsystem). Add it once, install what you want.
-
-### As a plugin
-
-**Terminal CLI**
-
-```
-/plugin marketplace add DahanItamar/ai-skills
-/plugin install readme-architect@dahanitamar
-```
-
-**VS Code extension** — the two lines above do nothing here. `/plugin` is an interactive panel the
-terminal CLI has and the extension doesn't. The extension spells it **`/plugins`**, plural, and
-opens a dialog:
-
-1. Type `/plugins` in the prompt box
-2. **Marketplaces** tab → add `DahanItamar/ai-skills`
-3. **Plugins** tab → find **README Architect** → **Install**, and choose a scope
-4. Restart Claude Code when the banner asks
-
-Same plugins and marketplaces either way — the extension drives the same commands underneath, so
-anything you add here is there in the CLI too.
-
-**Claude desktop app** — use the built-in plugin browser and add the same catalogue.
-
-**Scripted, no prompts** — if you have the CLI but want it non-interactive:
+There is nothing to run. It is Markdown that Claude Code reads.
 
 ```bash
-claude plugin marketplace add DahanItamar/ai-skills
-claude plugin install readme-architect@dahanitamar
+# as a plugin
+/plugin marketplace add DahanItamar/readme-architect
+/plugin install readme-architect
+
+# or drop it in directly
+git clone https://github.com/DahanItamar/readme-architect \
+          ~/.claude/skills/readme-architect
 ```
 
-### As a skill
+Then ask for a README in whatever words you would have used anyway — *"write a README for this"*,
+*"my README is out of date"*, *"make this presentable before I make it public"*. Both install
+routes work because `SKILL.md` sits at the repository root and every path it names is relative to
+itself.
 
-**Into your skills directory** — no marketplace and no install step, so this works in web and cloud
-sessions and anywhere else without a plugin UI. The repository ships its own
-`.claude-plugin/plugin.json`, so Claude Code discovers it in place as `readme-architect@skills-dir`
-on the next session:
+## Under the hood — briefly
 
-```bash
-git clone https://github.com/DahanItamar/readme-architect.git ~/.claude/skills/readme-architect
-```
+- **Progressive disclosure.** `SKILL.md` is 225 lines and loads every invocation; the six
+  reference files are 1,096 lines and load only at the phase that needs them. A reference file is
+  read cold and alone, so each is complete by itself and none links to another.
+- **Built by its own pipeline.** `docs/SPEC.md` carries 44 acceptance criteria in EARS notation,
+  and every one is closed by a task in `docs/changes/`. The constitution, spec, task lists and
+  change proposals are all committed — the reasoning is the asset, not just the result.
+- **Badges are tested, not banned.** v1 forbade badge rows outright. That ban was a proxy for
+  *badges usually carry nothing*, and the proxy failed on `runtime deps 1`, which carries the most
+  interesting fact about a project. So the rule now tests the badge, not the row.
+- **Mermaid ahead of any image format.** It renders on GitHub, it is plain text in the diff, it
+  needs no file to rot, and where it does not render it degrades to readable source rather than to
+  a broken image.
+- **Nothing executes.** No dependencies, no build, no scripts. Installation is a file copy, and a
+  repository that only contains Markdown is one you can actually audit before running it.
 
-```powershell
-# Windows PowerShell
-git clone https://github.com/DahanItamar/readme-architect.git "$env:USERPROFILE\.claude\skills\readme-architect"
-```
-
-Invokes as `/readme-architect:readme-architect` — the manifest travels with the clone, so it is
-namespaced exactly like the plugin route. Update with `git pull`.
-
-**Without the plugin layer** — copy only the skill files and you get a plain, un-namespaced skill:
-
-```bash
-git clone https://github.com/DahanItamar/readme-architect.git /tmp/readme-architect
-mkdir -p ~/.claude/skills/readme-architect
-cp -r /tmp/readme-architect/SKILL.md /tmp/readme-architect/references ~/.claude/skills/readme-architect/
-```
-
-```powershell
-# Windows PowerShell
-git clone https://github.com/DahanItamar/readme-architect.git "$env:TEMP\readme-architect"
-New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills\readme-architect" | Out-Null
-Copy-Item "$env:TEMP\readme-architect\SKILL.md","$env:TEMP\readme-architect\references" -Recurse -Destination "$env:USERPROFILE\.claude\skills\readme-architect"
-```
-
-Invokes as `/readme-architect`. Take this route if you want to change the house style.
-
-Either way, restart Claude Code or run `/reload-plugins` to pick it up.
-
-### Any other agent
-
-The plugin format is Claude Code's; Codex, Cursor and the rest do not read it. But
-[`SKILL.md`](SKILL.md) is plain Markdown with no code and nothing to run — paste its body into
-`AGENTS.md`, a Cursor rule, or a system prompt and it works. What you lose is automatic invocation.
-
-Or just ask — the skill triggers on "write a README", "my README is thin", "I'm about to
-make this repo public", or "make this presentable on GitHub".
-
-## Under the Hood — Briefly
-
-- **`SKILL.md`** — the persona, the one rule, and a five-phase workflow ending in a
-  pressure-test the README has to survive before handover.
-- **`references/house-style.md`** — the skeleton and the voice: centred header block, a
-  domain section named for the thing rather than "Overview", `Under the Hood — Briefly`
-  bullets, and a formatting table down to image widths and alt-text rules.
-- **`references/evidence-rules.md`** — the four kinds of evidence, the test any sentence
-  must pass, how to claim absence, and what to do when the project genuinely cannot be run.
-- **`references/readme-template.md`** — the structure to fill in, with per-section guidance.
-
-> The house style is derived from READMEs that hold a reader's attention rather than from a
-> generator's defaults. The skeleton is deliberately tight — five sections, around a hundred
-> lines — because padding a small project into a long README reads as insecurity, and a
-> reader who scrolls three screens to find the install command leaves.
+> Also here: [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md), the rules this repository holds itself
+> to, and [`docs/SPEC.md`](docs/SPEC.md), which records why each decision beat its alternative.
+> Read those before changing anything — they separate what was decided from what was merely typed.
 
 ---
 
 <div align="center">
 
-Built by <a href="https://github.com/DahanItamar">Itamar Dahan</a> · MIT · © 2026
+Built by <a href="https://github.com/DahanItamar">Itamar Dahan</a> · <a href="LICENSE">MIT</a> · © 2026
 
 </div>

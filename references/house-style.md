@@ -1,8 +1,12 @@
 # House Style
 
-The skeleton, the voice, and the formatting. Derived from READMEs that work: the common
-shape across them is remarkably tight — five `##` sections, 80–110 lines, and evidence
-instead of adjectives.
+The skeleton, the voice, and the formatting. Derived from READMEs that hold up under a stranger's
+first thirty seconds — the shape across them is remarkably tight, and the parts that vary are the
+parts carrying evidence.
+
+**Scope.** This file covers structure — which sections exist, what admits one, and what goes in
+each. The centred header block, the diagrams and images, the evidence, and the sentence-level voice
+are each specified in their own file and are not restated here.
 
 ---
 
@@ -10,174 +14,217 @@ instead of adjectives.
 
 ```markdown
 <div align="center">
-
-# Project Name
-
-**One bold sentence: what this is, and the thing about it that is actually interesting.**
-
-Stack line — plain prose, with the notable constraint in bold.
-
-<img src="docs/hero.png" alt="Descriptive alt text naming what is visible" width="830">
-
+  <!-- the identity block: wordmark · pitch · stack line · badges · nav row · hero -->
+  <!-- six elements, in that order, specified separately -->
 </div>
 
 ---
 
-## The <Domain Noun>          ← how the core thing works
+## <The mechanism>            ← mandatory. Named for the thing, never "Overview"
 
-## <Capability>               ← the notable parts, one section each
+## <Capability>               ← 0–3, each admitted by the test below
 
-## Run It                     ← shortest path from clone to running
+## Run it                     ← mandatory
 
-## Under the Hood — Briefly   ← bullets, bold lead-in each
+## <Capability>               ← the ones a reader only wants after seeing it run
 
-> A blockquote for a caveat, a history note, or what is deliberately absent.
+## Under the hood — briefly   ← mandatory, always last
+
+> A blockquote pointing at the docs that carry the depth this file deliberately does not.
 
 ---
 
 <div align="center">
 
-Built by <a href="https://github.com/USERNAME">Author Name</a> · © YEAR
+Built by <a href="https://github.com/USERNAME">Author Name</a> · <a href="LICENSE">MIT</a> · © YEAR
 
 </div>
 ```
 
-The header block and the footer are **centred**; everything between them is left-aligned.
-That contrast is what makes the page feel composed rather than dumped.
+**Four fixed points, and free slots between them.** The identity block opens, the mechanism section
+comes first, `Under the hood — briefly` comes last, and the footer closes. Everything else is a
+capability section that earned its place, and where it sits is decided by one question: *does the
+reader need to have seen this thing run before this section means anything?* If yes, it goes after
+`Run it`. If no, before.
+
+The header block and the footer are **centred**; everything between them is left-aligned. That
+contrast is what makes the page read as composed rather than dumped.
 
 ---
 
-## Section by section
+## The mechanism section
 
-### The header block
+The one that carries the README. If a reader reads a single section, it is this one, and they
+should finish it able to explain the mechanism to someone else.
 
-Three lines, in this order, and nothing else:
+**Named for the thing it explains.** *The evidence trail* · *The simulation* · *How you play* ·
+*Why deduplication is the whole product*. Never `Overview`, `Introduction`, or `About` — those name
+the document rather than the subject, and a reader who wanted a document would not be here.
 
-1. `# Project Name`
-2. **The pitch** — one bold sentence. Names what it is and why it is not ordinary. Not a
-   category ("a booking app") but a claim ("a live airport — arrivals and departures
-   competing for one runway and two gates in real time").
-3. **The stack line** — plain prose, one line, with the notable constraint bolded:
-   *"Backend: ASP.NET Core 8, EF Core, an event-driven state machine. Frontend: vanilla
-   JS, **zero dependencies, no build step**."*
+Exactly one section does this job. Two mechanism sections means neither is *the* interesting thing,
+and the second one is a capability section wearing the wrong name.
 
-Then the hero image at `width="830"`, then `</div>`, then `---`.
+What goes in it:
 
-If there is no hero image, the block still works — do not substitute a badge row.
+- **The mechanism itself**, in the reader's terms. Prose when it is a mechanism; a table when it is
+  an enumeration — stations, states, roles, tiers, what each colour means.
+- **A diagram**, where the mechanism has branching or sequence.
+- **Real output**, followed by one sentence naming what to notice.
 
-### The domain section
+---
 
-Named for the thing, not for the document: **The Simulation**, **The Flow**, **How you
-play**, **The idea**. Never "Overview", "Introduction", or "About".
+## The admission test
 
-This is where the one interesting thing gets explained, in the reader's terms. Use a table
-when the content is an enumeration (stations, states, roles, colour meanings) and prose
-when it is a mechanism.
+A capability section is not admitted because it describes something the project does. It is
+admitted because it **carries** something. One question, asked of every proposed `##` section
+between the mechanism and `Under the hood`:
 
-Follow it with a **Real Example** — actual output, then a sentence interpreting it. The
-interpretation is what turns a code block into an argument:
+> Does this section contain at least one of the five?
 
-> Watch the runway do its job: the two arrivals reach station 4 **exactly one tick apart**
-> (07:11:51 → 07:11:56) — one at a time, enforced by the queue.
+| Admissible | What it proves |
+| --- | --- |
+| A **diagram** | The mechanism has a shape, and here it is |
+| A **table** | The thing is an enumeration, and here are all of its members |
+| **Real program output** | It runs, and this is what it said |
+| **A measured number** | Someone counted, and here is the count |
+| **An image** | It exists on a screen and this is what the screen looks like |
 
-### The capability sections
+Nothing else counts. Not a well-written paragraph, not a list of sub-features, not a claim that the
+approach is unusual. Those are the raw material of a section, not a section.
 
-One `##` per genuinely distinct capability, two or three at most. Each earns its place by
-having something concrete in it — an example, a table, a piece of output, an image. A
-section that is three sentences of adjectives should be a bullet in "Under the Hood".
-
-Images belong here, paired at `width="420"` or single at `width="830"`.
-
-### Run It
-
-The shortest honest path. Requirements as one sentence, then a fenced block:
+**A section that carries none of the five is demoted to a bullet** in `Under the hood — briefly`.
+It is not padded until it looks like a section, and it is not deleted — the information is usually
+worth one line. It is worth one line.
 
 ````markdown
-The only requirement: [.NET SDK 8](https://dotnet.microsoft.com/download/dotnet/8.0).
+<!-- Fails the test: three sentences, no artifact. -->
+## Caching
 
-```bash
-cd AirportAPI
-dotnet run          # tower: http://localhost:5055 · swagger: /swagger
-```
+The application caches responses to avoid redundant work. The cache is invalidated when the
+underlying data changes, keeping memory use predictable even under sustained load.
 
-Works out of the box on an in-memory database — zero setup.
+<!-- Admitted, because the number is real and was observed. -->
+## Caching
+
+Responses are cached until the row they read changes. On the 48-document corpus this cut model
+calls from 97 to 8 — the other 89 were re-reads of documents already in the ledger.
+
+<!-- Or, if there is no such number: demoted, and honest. -->
+- **Caching** — responses are held until the row they read changes, so a re-read costs nothing.
 ````
 
-Inline comments in the code block carry the URLs and ports. **Always state the
-zero-setup story** if there is one — a reader deciding whether to try something is asking
-"what will this cost me", and "nothing, it runs on a mock" is the best possible answer.
+The test exists because "include it if it earns its place" is exactly the judgement that resolves
+toward *yes* on every section, and a README where every section was admitted is the padded README
+this style exists to prevent.
 
-A command table is worth adding when there are more than three scripts:
+---
+
+## Run it
+
+The shortest honest path from clone to running. Requirements as **one sentence**, then the commands.
+
+````markdown
+Requires **Node 22+**. No C++ toolchain — `better-sqlite3` ships prebuilt binaries.
+
+```bash
+./setup.sh      # once — dependencies and models
+./dev.sh        # run with hot reload    → http://localhost:5173
+```
+````
+
+Inline comments carry the ports and URLs; a reader scanning for "where does it appear" finds it
+without reading prose. **Always state the zero-setup story if there is one** — *"needs no API key"*,
+*"runs on an in-memory database"*, *"starts in mock mode"*. A reader deciding whether to try
+something is asking what it will cost them, and *nothing* is the best answer available.
+
+A command table earns its place past three commands:
 
 ```markdown
 | Command | |
 |---|---|
-| `npm start` | Run the server |
-| `npm test` | 59 tests, including end-to-end against the real server |
+| `npm test` | 321 tests across 22 suites, about a second |
 ```
 
-The second column header is deliberately empty — the commands are self-labelling.
+The second column header is deliberately empty — the commands label themselves.
 
-### Under the Hood — Briefly
+---
 
-Bullets, each opening with a **bold lead-in** naming the concern, then one or two
-sentences. This is where architecture, data, security and frontend choices go, compressed:
+## Under the hood — briefly
+
+**At most six bullets**, each opening with a **bold lead-in** naming the concern, then one or two
+sentences. Architecture, data, security, platform, testing — compressed to the one detail per
+concern that a reader would not have guessed.
 
 ```markdown
-- **Server** — Express, ~70 lines: static hosting plus the three endpoints, with input
-  cleaning and employee validation before anything touches the database.
-- **DB layer** — one abstraction over `mssql` / `mysql2` / `pg` with lazy driver loading,
-  connection pooling, and a mock implementation for zero-setup testing.
+- **The renderer holds no capability.** It renders text scraped from the open internet, so it has
+  no Node, no filesystem, no network, and a CSP of `connect-src 'self'`.
+- **One runtime dependency**, and that is the list. The S3 client is 122 lines of `node:crypto`
+  signing SigV4, checked against AWS's own published test vector.
 ```
 
-Six bullets is plenty. The word "Briefly" in the heading is a promise — keep it.
+The word *briefly* in the heading is a promise to the reader. Six bullets keeps it; nine breaks it,
+and a broken promise in the last section is the one they leave on.
 
-### The blockquote
-
-One `>` block, near the end, for exactly one of:
-
-- what is deliberately not in the repo, and why
-- a history note ("built as a learning exercise in 2023; updated in 2026 to …")
-- a limitation worth stating before someone discovers it
-
-Optional. Do not manufacture one.
+This section is also where a capability that failed the admission test lands — demoted to a bullet
+rather than padded into a heading.
 
 ---
 
-## Voice
+## Callouts
 
-**Concrete over abstract.** Name the actual thing: not "efficient queueing" but "the plane
-waits in a queue and is released by a `QueueChanged` event the moment the spot frees up".
+GitHub renders five alert types. This style uses **two**:
 
-**Bold one phrase per paragraph, at most.** It should be the phrase a skimmer needs. Bold
-everywhere is bold nowhere.
+```markdown
+> [!WARNING]
+> For the trap — something that will cost the reader real time.
 
-**Em dashes for the aside that carries the point.** They are the rhythm of this voice —
-used to attach the consequence to the claim.
+> [!IMPORTANT]
+> For the constraint they must carry away — a liability disclaimer, a guarantee with a hard edge.
+```
 
-**Second person for instructions, third for description.** "Copy `.env.example` to `.env`"
-— not "the user should copy".
+`[!NOTE]`, `[!TIP]` and `[!CAUTION]` are not used. Three of five is already more distinction than
+a reader tracks, and a tip is a sentence that belongs in the prose that needed it.
 
-**State constraints as features.** "One dependency." "No build step." "Zero setup."
-"Answers encrypted at rest." A reader cannot infer absence, so absence must be claimed.
+**A callout is admitted by one condition: a reader is likely to hit something that costs them real
+time, and the symptom will not tell them what it was.** That is the whole test. The cost is the
+misdiagnosis, not the problem — a failure that announces itself needs no callout.
 
-**No hedging.** Not "should work on most systems" — say which systems.
+Every callout names **the symptom and the fix**, in that order. The symptom first, because that is
+what the reader arrives holding:
+
+```markdown
+> [!WARNING]
+> **If the app starts and nothing happens, check `ELECTRON_RUN_AS_NODE`.** VS Code sets it in the
+> terminals it spawns, and any Electron binary that inherits it runs as plain Node: it exits
+> instantly, prints nothing, and opens no window — indistinguishable from a crash. Every launcher
+> in this repo clears it first. If you invoke the binary yourself, clear it too.
+```
+
+A reader who has just watched nothing happen finds that in one scan, and the hour they were about
+to spend bisecting their install is returned to them. That is the only thing a callout is for.
+
+**Never a callout for emphasis.** Not to make a good sentence louder, not to flag the feature the
+author is proudest of, not to open a section with a summary of itself. A README that shouts three
+times has taught the reader to skip the boxes, and the fourth one — the real warning — goes with
+them. If a sentence matters, bold a phrase in it and leave it in the prose.
+
+Two callouts is normal. Four means at least two are emphasis wearing a warning's clothes.
 
 ---
 
-## Formatting conventions
+## The footer
 
-| Element | Convention |
-| --- | --- |
-| Hero image | `<img src="docs/x.png" alt="…" width="830">` inside the centred block |
-| Paired images | Two `<img>` on one line, `width="420"` each |
-| Inline image | `width="300"` when it sits beside prose |
-| Alt text | Describes what is *visible*, not the filename. It is read aloud. |
-| Table, enumerated | `|:-:|` centre the id/symbol column, left-align the rest |
-| Table, two-column | Empty second header when the first column is self-labelling |
-| Code fence | Always language-tagged: ```bash, ```sql, ```json |
-| Links to files | Relative and clickable: `[`config/database.js`](config/database.js)` |
-| Footer | Identical every time, with the current year |
+Identical every time. It is the one piece of pure convention in the document.
 
-Line-wrap prose at roughly 100 characters. GitHub reflows it, but a wrapped source file is
-reviewable in a diff and an unwrapped one is not.
+```markdown
+<div align="center">
+
+Built by <a href="https://github.com/USERNAME">Author Name</a> · <a href="LICENSE">MIT</a> · © YEAR
+
+</div>
+```
+
+Three facts, centred, separated by middots: **who built it**, **the licence** — linked to the file,
+so the claim is checkable in one click — and **the year**. Nothing else. A footer that thanks
+contributors on a solo project, or links a roadmap that does not exist, undoes the credibility the
+rest of the page just earned.
