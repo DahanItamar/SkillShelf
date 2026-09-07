@@ -2,7 +2,8 @@
 
 # ACSM
 
-**A Claude Code skill that works out which laws actually bind your project, then holds the code to them — a local desktop tool in Israel loads 3 of 8 compliance modules and never sees the CCPA.**
+**A Claude Code skill that resolves which laws actually apply to your project, and audits your code against exactly those — nothing more, nothing borrowed from a jurisdiction you don't operate in.
+**
 
 Markdown and POSIX shell. **Zero dependencies, no build step, no runtime** — the audit is Claude reading your repository, not a scanner you have to maintain.
 
