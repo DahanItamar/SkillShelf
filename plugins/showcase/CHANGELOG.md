@@ -24,28 +24,6 @@ All notable changes to this plugin. Format follows [Keep a Changelog](https://ke
 ### Removed
 - `docs/` maintainer files (spec, constitution, task lists) no longer ship inside the plugin folder, so a copy of the folder carries less.
 
-## [2.3.0] - 2026-11-22
-
-### Added
-- `examples/`: a small fixture, the README written for it and its evidence ledger. It is a hand-authored reference example following the skill's rules, not generated output.
-- `scripts/replay.sh`, an optional maintainer or CI check that replays a ledger (it runs the ledger's commands, so only use a ledger you trust).
-- `references/modes.md`, loaded only for non-Write modes or special shapes, with a fixed six-item Audit only checklist and one output table.
-- README section "Use it in other tools".
-- Redaction now covers personal data, internal hostnames, IPs and account ids, prefers seeded data, and adds a pre-write scan. This lowers the leak risk; it is not a compliance claim.
-- `check.sh` validates the SKILL.md frontmatter and that every reference named in SKILL.md exists.
-
-### Changed
-- Handover is one fixed six-row table, always present; rows that did not run say `not run`.
-- Run-safety gate tightened: own means you wrote it, your organisation owns it, or you said yes in this session; other clones default to Static. A throwaway copy or container is offered first. The detailed checklist moved to `references/run-recipes.md`.
-- The port check runs only when a server was started.
-- Stranger test leads with a reread in a scratch copy; a fresh-context helper is optional. Wording is tool-neutral.
-- Hard rules: delete only run artifacts you created; the process-document ban applies to the repository being documented.
-- `SKILL.md` is smaller (16,212 bytes, from 18,897).
-- README shortened.
-
-### Removed
-- `docs/` maintainer files (spec, constitution, task lists) no longer ship inside the plugin folder, so a copy of the folder carries less.
-
 ## [2.2.0] - 2026-11-22
 
 ### Changed
