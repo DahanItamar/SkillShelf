@@ -1,6 +1,6 @@
 ---
 name: readme-architect
-description: Write or rewrite a repository README that shows the project working instead of describing it — real output, observed numbers, a stated setup path, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact. Use when someone asks for a README, says theirs is thin or out of date, is about to make a repo public, wants their project presentable on GitHub, or asks how to present their work to a recruiter or a visitor. Also use to audit an existing README before publishing. Produces README.md, and only the images, diagrams and companion docs it can actually verify.
+description: Write or rewrite a repository README that shows the project working instead of describing it — real output, observed numbers, a stated setup path, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact. Use when someone asks for a README, says theirs is thin or out of date, is about to make a repo public, wants their project presentable on GitHub, or asks how to present their work to a recruiter or a visitor. Also use to audit an existing README before publishing ("audit a README without changing it"). Produces README.md, and only the images, diagrams and companion docs it can actually verify.
 ---
 
 # README Architect
@@ -99,10 +99,13 @@ org, else ask). Neither is invented; the footer needs both.
 
 **Mode.** If a README already exists, audit first: show a keep / change / cut table, keep the
 author's accurate hand-written prose, and write the replacement only after the table is shown.
-Offer **audit only**: a findings list ranked high / med / low that writes nothing. Write each
-finding as three lines: `Where: file:line`, `Problem:`, `Fix:`. If `docs/EVIDENCE.md` exists, enter
-**refresh mode**: replay its commands, compare the output to the README, and edit only the facts
-that are stale, leaving the prose alone. Update the ledger's dates. Never overwrite
+Offer **audit only** (trigger: "audit my README"): a findings list that writes nothing. Write each
+finding as four lines: `Where: file:line`, `Problem:`, `Fix:`, `Rank: high|med|low`. If
+`docs/EVIDENCE.md` exists, enter **refresh mode**: replay its commands, compare the output to the
+README, and edit only the facts that are stale, leaving the prose alone. Record a short hash of
+each command's output in the ledger and edit only rows whose hash changed. Update the ledger's
+dates. If `.readme-architect.md` exists, read it and let it override the footer, section list and
+tone; it never overrides the run-safety gate or the evidence rules. Never overwrite
 an existing README that has uncommitted edits without saying so.
 
 Special shapes, one line each: **internal or team service** - use the Internal service skeleton
@@ -125,7 +128,11 @@ in the handover.
 
 Before starting a dev server, check that its host or port flag or config binds to
 127.0.0.1/localhost (for example `--host`, `HOST`, a listen address). If it binds 0.0.0.0 or cannot
-be confirmed, set it to localhost or ask. Read `references/run-recipes.md` for the likely test
+be confirmed, set it to localhost or ask; if you cannot ask, skip the run and mark it
+`unverified`, and do not retry. A failed or timed-out run is recorded as `unverified: <exit or
+reason>` and retried at most once. Before the run and again after cleanup, list listening ports
+(`ss -ltn` or `netstat -an`) and diff them; report any new port in the handover. Read
+`references/run-recipes.md` for the likely test
 and dev-server commands per ecosystem.
 
 **If it genuinely cannot be run** — missing credentials, hardware, a paid service, a build that
@@ -191,11 +198,11 @@ stranger and fix anything that fails:
 4. Did the mechanical checks above come back clean?
 5. Is there a number here I did not personally observe?
 6. Does it say what the project deliberately does *not* do or need?
-7. Owner-facing or portfolio repo: would it survive a recruiter reading only the first screen?
-   Team or internal service: can a new on-call engineer find the owner, the run command and the
-   runbook link on the first screen?
+7. Only one applies. 7a, owner-facing or portfolio repo: would it survive a recruiter reading only
+   the first screen? 7b, team or internal service: can a new on-call engineer find the owner, the
+   run command and the runbook link on the first screen?
 
-**Then hand over, always reporting five things:**
+**Then hand over, always reporting five things, plus the stranger-test step when it ran:**
 
 - every path written
 - every number used, as a table: claim, command, observed output, date (offer it as PR text, and
@@ -205,6 +212,7 @@ stranger and fix anything that fails:
 - whether screenshots were captured or listed, and why
 - the `Verified on <OS, runtime version, date>` line for Run it, filled from the Phase 1 run notes
   and omitted when nothing was run
+- when it ran, the first step the stranger-test subagent had to guess
 
 Offer the handover as ready-to-paste PR description text.
 

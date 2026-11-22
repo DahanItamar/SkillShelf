@@ -33,17 +33,18 @@ Ask in your own words, for example:
 
 - *"write a README for this"*
 - *"my README is out of date, audit it"*
+- *"audit my README without changing it"* (audit only, writes nothing)
 - *"make this presentable before I make it public"*
 
 Not for: a `CHANGELOG`, a `CONTRIBUTING` guide, or API reference docs.
 
 ## Cost and safety
 
-- **Cost.** `SKILL.md` is 16,057 bytes (about 4.0k tokens at 4 bytes per token) and loads on every
-  run. The seven reference files total 49,791 bytes and load only at the phase that needs them. A
+- **Cost.** `SKILL.md` is 16,832 bytes at 2.1.0 (about 4.2k tokens at 4 bytes per token) and loads on every
+  run. The seven reference files total 50,269 bytes and load only at the phase that needs them. A
   utility run that skips `identity-block.md` and `visuals.md` loads `SKILL.md` plus five
-  references, 46,697 bytes (about 11.7k tokens). A run that loads everything is 65,848 bytes (about
-  16.5k tokens). Sizes measured with `wc -c`.
+  references, 47,950 bytes (about 12.0k tokens). A run that loads everything is 67,101 bytes (about
+  16.8k tokens). Sizes measured with `wc -c` at 2.1.0.
 - **Safety.** Phase 1 runs the project, which executes its code. The gate default-allows only the
   test suite and a localhost dev server, asks before network, paid, remote-database, migration,
   deploy or credential-bearing steps, reads `.env.example` and never `.env`, and stops what it

@@ -24,3 +24,9 @@ Notes:
 - If a flag is not listed or the project binds a port in its own config, read that config. If the
   bind address cannot be confirmed, set it to localhost or ask.
 - If no row fits, run what the README, CI file or `Makefile` already names, under the same gate.
+  No row (Deno, Bun, Elixir, Swift, C/C++)? Use the CI file or Makefile; if neither names a
+  command, ask the user and mark the claim `unverified`.
+- Monorepo: use the manifest's own workspace command (`pnpm -r test`, `npm test -w <pkg>`), scoped
+  to the package being documented.
+- If the dev server cannot be confirmed as localhost-only, or Compose publishes 0.0.0.0, skip and
+  mark `unverified`; do not retry. A failed run is `unverified: <exit or reason>`, retried once.

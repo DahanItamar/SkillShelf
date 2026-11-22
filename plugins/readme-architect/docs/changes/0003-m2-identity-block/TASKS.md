@@ -1,3 +1,5 @@
+> Build history, not user instructions. Kept as provenance for how this plugin was made.
+
 # M2 The identity block — Tasks
 
 > Source: docs/SPEC.md §10 M2 · Constitution: docs/CONSTITUTION.md

@@ -140,3 +140,8 @@ Made without asking. Reject any one and I will rewrite the sections it touches.
 6. **Prose wraps at 100 characters everywhere, including `SKILL.md`.** Your answer, recorded here
    because it makes v1 non-conforming and creates work. If wrong: the wrap rule and the size table
    both drop the line limit.
+
+## Release checklist
+
+Bump `plugin.json`, the README badge and the root `.claude-plugin/marketplace.json` entry
+together, so the three never disagree.
