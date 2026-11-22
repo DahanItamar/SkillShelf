@@ -89,6 +89,7 @@ No state files, no locks.
 
 - **One commit per task**, message `T-04 closes AC-003`. Git then holds the AC-to-commit trail.
 - **Parallel work:** one `TASKS.md` per milestone directory, one owner per directory. Split large milestones with the spec-tasks rule so two developers never edit the same checkbox file.
+- **Parallel branches** that each add a change proposal use provisional ids and get real ones at merge. See the Teams section of `spec-architect/references/change-proposals.md`.
 - **A merge conflict in `TASKS.md`** is resolved by re-verifying every task ticked on either side, not by taking a side.
 
 ## Refactoring lists

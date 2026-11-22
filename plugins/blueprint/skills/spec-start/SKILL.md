@@ -36,7 +36,7 @@ that made the first version correct.
 
 Detect tasks by globbing `docs/changes/*/TASKS.md` (not `archive/`); the one with unchecked boxes is the resume point; if several, ask which.
 
-Check the repository — do not ask the user what it contains, because the whole point is that they
+The repository means the root the user names, or the current working directory if they name none; in a monorepo that is a package root with its own `docs/`. Check it — do not ask the user what it contains, because the whole point is that they
 may not know. **Go down this list in order and stop at the first row that matches.** That row names the one command.
 
 | # | Found | Say | Hand them |

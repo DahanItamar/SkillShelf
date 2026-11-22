@@ -26,6 +26,8 @@ It checks integrity of references, not truth of behavior. Whether the code still
 | 5 | Each active criterion has a test or code location | Candidate only: a grep for the id and for key words of the criterion in test files and source. Label every hit `candidate, not proof` |
 | 6 | Commit convention | For each closed criterion, no `git log` message matches `T-NN closes AC-###`. List it as `no conforming commit`. Informational: not a failure, not counted in `Orphans: N`. Scope: search the current branch only (`git log`). If the repo squash-merges, match the PR title or body instead; if that is not possible, treat check 6 as not applicable and print one line saying so, rather than listing every criterion |
 
+A provisional `AC-NEW-n` cited by a task is resolved against the unmerged `PROPOSAL.md` in the same directory; if there is none, it is an orphan like any other id that does not exist. Duplicate ids after parallel branches merge are caught by check 3.
+
 Do not infer a closing task from similar wording. A criterion is closed only where a task cites its id.
 
 ## Output

@@ -20,7 +20,7 @@ If you cannot name the `AC-###` a task closes, you have one of two problems, and
 - The work isn't needed. Delete the task.
 - The spec is missing a requirement. Go add it, then come back.
 
-Never invent a criterion inside the task list to resolve this. Criteria live in the spec; tasks cite them (that is what keeps one source of truth).
+A criterion in an unmerged proposal written on a branch may carry a provisional id such as `AC-NEW-1`; cite it as written and it is renumbered at merge. Never invent a criterion inside the task list to resolve this. Criteria live in the spec; tasks cite them (that is what keeps one source of truth).
 
 ---
 

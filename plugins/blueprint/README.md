@@ -171,7 +171,7 @@ calculation diverged where no criterion looks — stage 6 catches that.
 | One id across every stage | not claimed here | not claimed here | not claimed here | `AC-###` |
 | Machine-checkable traceability line | `analyze` checks artifact consistency; code-level via extensions (per third-party write-ups) | not claimed here | not claimed here | `/spec-check`: read-only AC-to-task-to-commit-to-test thread, final `Orphans: N` line a CI step can match |
 
-Honest limits: Claude Code only, no CLI, no IDE integration, no multi-agent portability. The other tools win on all four. "Not claimed here" means this README has not verified the competitor either way.
+Honest limits: Claude Code only, no CLI, no IDE integration, no multi-agent portability, and one spec set per repository root. For a monorepo, run the chain from each package root with its own `docs/` and its own constitution; there is no shared layout across packages. The other tools win on all four. "Not claimed here" means this README has not verified the competitor either way.
 
 ## Optional CI recipe
 
