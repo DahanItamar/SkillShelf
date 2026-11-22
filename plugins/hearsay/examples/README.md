@@ -1,9 +1,9 @@
 # Examples
 
 A tiny fictional project, `pagegrab`, a one-page fetcher. Everything here is made up for this plugin:
-no real project, no real data. **Nothing in this folder has been run through the skill yet.** The files
+no real project, no real data. **No recorded run exists yet.** The files
 in `expected/` are expectations written by the skill's author, not recorded output. Read them as the
-target, and see `results/` for whether a real run exists.
+target, and see `results/` for whether a real run has been committed.
 
 ## What is here
 
@@ -14,11 +14,14 @@ target, and see `results/` for whether a real run exists.
 | `changes/commit-*.diff` | The four commits that lead from v1.3.0 to HEAD, applied by `make-fixture.sh` |
 | `inputs/` | The prose under test, one file per case |
 | `expected/` | Golden verdicts for each case |
-| `results/` | Empty until a real run is committed |
+| `results/` | A template only, until a real run is committed |
 
 ## The cases
 
-Run every case inside a fixture repo (next section). Use absolute paths for the inputs.
+Run every case inside a fixture repo (next section). Use absolute paths for the inputs. The Command
+column and the goldens use `/hearsay ...` as shorthand; in a tool without that syntax, say the same
+thing in words ("fact-check <input> against the diff file <path>", "check the release notes since tag
+v1.3.0").
 
 | # | Input | Command | Golden | Checks |
 |---|---|---|---|---|
@@ -44,6 +47,11 @@ git config is touched. The result is a repository with tag `v1.3.0` and four com
 goldens refer to the files as they are at HEAD of that repository.
 
 ## Self-test
+
+For a fair run, keep it blind: do not read this table's Checks column, the goldens or the expected
+output in the plugin README before the run. Copy only `SKILL.md` and `references/` into a scratch skill
+folder named `hearsay`, run each case from a fresh session in the fixture repo, save each raw ledger,
+and open the goldens only when scoring.
 
 1. Build the fixture and open a session in it with the plugin installed.
 2. Run cases 1 to 8. Run each case twice in fresh sessions.

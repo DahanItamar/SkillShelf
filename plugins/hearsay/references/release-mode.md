@@ -1,12 +1,12 @@
 # Release mode
 
-Read with `--release [<prev-tag>] [notes-path]`, together with `public-surface.md`. Everything here is
+Read in release mode (a previous tag and an optional notes file), together with `public-surface.md`. Everything here is
 read-only and uses only the git allowlist in `SKILL.md`.
 
 ## 1. Preflight
 
-- No tag given: infer it with `git describe --tags --abbrev=0`. Print "base inferred from latest tag
-  <t>" in the header so the user can correct it. No tags at all: ask for `--base <ref>`.
+- No tag given: infer it with `git describe --tags --abbrev=0` (with a package directory, add `--match` for the package tag form, `pkg@*` or `pkg-v*`; in a multi-manifest repo without one, say "tag inferred from the newest tag of any package, may be wrong, pass the previous tag"). Print "base inferred from latest tag
+  <t>" in the header so the user can correct it. No tags at all: ask for a base ref.
 - Resolve the tag: `git rev-parse --verify <tag>^{commit}`.
 - If it does not resolve, print `git tag --list` (newest 5 by version) and stop. Make no other claim.
 - If `git rev-parse --is-shallow-repository` prints `true`, warn that history may be incomplete.
@@ -18,7 +18,10 @@ read-only and uses only the git allowlist in `SKILL.md`.
   checking for a `BREAKING CHANGE` footer.
 - Files: `git diff --no-ext-diff --no-textconv --name-status -M <tag> HEAD`.
 - Diff range: if `git --no-optional-locks status --porcelain` is dirty, use `git diff --no-ext-diff --no-textconv <tag>` (working
-  tree against the tag) so citations match the files; else `<tag> HEAD`. Print which one in the header.
+  tree against the tag) so citations match the files; else `<tag> HEAD`. Print which one in the header. With a dirty tree also run
+  `git ls-files --others --exclude-standard` (untracked files never appear in `git diff`), treat each
+  listed file as added (read it) and add it to the closed set; if the list is long, say so under Not
+  checked.
 - Per-file diffs, and `git show --no-ext-diff --no-textconv <tag>:<path>` for the base side of any file you cite.
 - Large ranges: if there are more than 200 files or about 5,000 changed lines, review in priority
   order: public-surface files, manifests, then the rest. State "reviewed N of M files" in the header.
@@ -72,8 +75,8 @@ claims a change the diff does not contain.
 
 ## 6. Notes
 
-- If `notes-path` is given, use it. Otherwise use CHANGELOG.md: the section whose version equals the
-  manifest version at HEAD, else `Unreleased`, else the newest. State the section in the header. If
+- If a notes file is given, use it. Otherwise use CHANGELOG.md with the section rule in `SKILL.md`
+  step 1. State the section in the header. If
   neither exists, print "no notes found to check" and skip this step.
 - Run the normal ledger on the notes with the diff source `<tag>..HEAD`.
 - Then the reverse check. These go under **Not mentioned**, each with its `path:line` and a suggested
@@ -97,9 +100,11 @@ claims a change the diff does not contain.
 6. Not mentioned.
 7. Rewrites.
 8. "What this cannot tell you": behavior changes, dynamic registration, anything marked
-   `needs-maintainer`.
+   `needs-maintainer`. With `--no-merges`, changes made only while resolving a merge are in the file
+   diff but belong to no listed commit, so the commit-message check cannot cover them; squash-merge
+   histories are unaffected.
 
-## Monorepo: `--path <dir>`
+## Monorepo: package directory
 
 Restrict `git log` and `git diff` to `-- <dir>`, read the manifest in that dir, and match tags of the
 form `<pkg>@<ver>` or `<pkg>-v<ver>` with `git tag --list '<pkg>*'`. Without `--path` in a repo with
@@ -110,5 +115,5 @@ handles only the common layouts; say under Not checked what it did not handle.
 
 - Not a git repository: say that change claims are unverified and state claims were checked against
   the files only. Release mode cannot run.
-- No tags at all: say so and ask for a `--base <ref>`.
+- No tags at all: say so and ask for a base ref.
 - Tag is HEAD: "no commits since the tag"; classify nothing.
