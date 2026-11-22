@@ -36,7 +36,7 @@ AUDIT-1-02  Encryption at rest: no infrastructure code in the repository.
 
 Fix first: AUDIT-5-01 and 5-03 together, by moving to provider-hosted card fields.
 
-QUESTIONS FOR COUNSEL
+FOR COUNSEL (question column only, abridged)
 1. AUDIT-1-02 / ISO/IEC 27001:2022 A.8.24 - Is provider-side encryption documented in a form an
    auditor accepts?
 2. AUDIT-2-10 / State statutes, section 2.6 - Which of the state universal opt-out rules apply at

@@ -20,9 +20,9 @@ paraphrase of it.
 
 Print the report header first: `Jurisdictions covered: <expanded markets>. NOT covered: Canada,
 Brazil, India, Japan, China, SensitiveHealth.` Add `Law as of: module N <last_verified>, ...` for
-every loaded module, oldest first, and, when module 2 is loaded, `State table: 10 of 19 rows
-verified` (use the count in module 2 section 2.6). End the header with: "To resume in a new session: paste this ledger and say: Regwise: resume this audit, skip the finished modules." If Module 3 was selected only by R04 or R06,
-run only the rows in its `neutral_rows` frontmatter and mark the others `n/a` "market not served".
+every loaded module, oldest first, and, when module 2 is loaded, `State table: N of 19 rows
+verified` (take N from module 2 section 2.6, where it is stated; do not copy a number from here). If Module 3 was selected only by R04 or R06,
+run only the rows in its `neutral_rows` frontmatter and mark the others `n/a` "market not served". In neutral mode report each row at most `medium`, label it `advisory, market not served`, and write it as engineering hygiene, never as a violation of a law for a market the user did not choose; do not cite the EU article as the reason it fails, and say what to do if the user later serves the EU.
 
 If `references/citations.md` is missing, say so in the report header and cite the module
 frontmatter `url` instead; never invent a citation id.
@@ -36,6 +36,10 @@ The default is the full set. The user may narrow it, and the header must say how
   routing did not select stays out, even if named.
 - `diff`: follow section 4b.
 
+When 4 or fewer modules load, the full set is the default. When 5 or more load, offer "blockers first,
+rest on request" in the one confirmation message. If chosen, print `high, medium rows not run` in the
+header and offer the remainder at the end of the report.
+
 Audit cost is dominated by the repository files read, not by module size, so a narrower scope
 saves most when the `Locate` files are few.
 
@@ -45,7 +49,7 @@ saves most when the `Locate` files are few.
 (`module N: rows done, fail, unverifiable`), then start the next. Do not hold all modules in
 mind at once. Print each ledger line in your reply as you finish a module, so it survives
 compaction and can be pasted into a new session; with consent, also append it to
-`Regwise-REPORT.md`. To resume in a new session, paste the ledger and say: "Regwise: resume this audit, skip the finished modules." Where a row's `Locate` is prose, grep for the file names a stack uses (for example
+`Regwise-REPORT.md`. To resume in a new session, paste the ledger and say: "Regwise: resume this audit, skip the finished modules." This is the only place the resume phrase is stated. Where a row's `Locate` is prose, grep for the file names a stack uses (for example
 `middleware`, `layout`, `.env.example`, IaC folders) before reading widely.
 
 Read the files `Locate` names. **Read them** — do not infer from a filename, a dependency in
@@ -101,8 +105,7 @@ repository inside it.
 
 Every finding carries `path:line` evidence and one confidence label: `confirmed in code` (you
 read it), `inferred` (strong signal, not read end to end), or `cannot determine` (then the verdict
-is `unverifiable`). Print "Not legal advice; counsel to confirm." once, at the end of the
-report, never per finding.
+is `unverifiable`). The "Not legal advice; counsel to confirm." line is printed once, at the end of the report (section 4).
 
 ## 4. Report
 
@@ -142,53 +145,42 @@ AUDIT-1-02  blocker   Data at rest encrypted
 Then, in one or two sentences: what to fix first, and why that one. A ranked list with no
 recommendation is the same as no report.
 
-### Questions for counsel
+### FOR COUNSEL
 
-End every report with this block, built only from material already in the report. One question
-per item, each tied to a citation ID from `references/citations.md` or an `AUDIT-` row:
-
-- every `unverifiable` row (what counsel or an operator must confirm);
-- every assumption you made (market list, thresholds, neutral-mode Module 3);
-- every instrument marked volatile that a failing or passing row relies on;
-- every conflict block from `SKILL.md` section 3.
+End every report with one table, built only from material already in the report. One row each for
+every `unverifiable` row, every assumption (market list, thresholds, neutral-mode Module 3), every
+instrument marked volatile that a failing or passing row relies on, and every conflict block from
+`SKILL.md` section 3. Each row ties to a citation id from `references/citations.md`. Text only; no
+new file, no extra reading. If nothing qualifies, print "None raised."
 
 ```
-QUESTIONS FOR COUNSEL
-1. AUDIT-1-02 / ISO/IEC 27001:2022 A.8.24 — Is encryption at rest on the managed database
-   documented in a form an auditor accepts? (unverifiable from the repository)
-2. AUDIT-2-07 / Cal. Civ. Code 1798.135 — The do-not-sell link wording was judged against
-   the statute text only; does a state regulator guidance change it?
+FOR COUNSEL
+| Finding | Question | Citation id | Rule fired | Evidence | Unverified? |
+| --- | --- | --- | --- | --- | --- |
+| AUDIT-1-02 | Is encryption at rest on the managed database documented in a form an auditor accepts? | ISO/IEC 27001:2022 A.8.24 | R04 | none in repo | yes, console setting |
+| AUDIT-2-10 | Which state opt-out rules bind at our consumer counts? | State statutes, section 2.6 | R09 | src/middleware/headers.js:2 | yes, section 2.6 |
 ```
 
-Close with a table so counsel can quote one row:
+### Findings list (repeat or diff runs, or when asked)
 
-```
-| Finding | Decision needed | Rule fired | Evidence | Unverified? |
-| --- | --- | --- | --- | --- |
-| AUDIT-2-10 | Which state opt-out rules bind at our consumer counts | <rule id from SKILL.md> | src/middleware/headers.js:2 | yes, section 2.6 |
-```
-
-Text only. No new file, no extra reading. If nothing qualifies, print "None raised."
-
-### Findings list
-
-End every report with a plain list for week-over-week comparison: one line per non-pass row, in
-this fixed order, sorted by id. Text only; no file is written unless the user asks.
+Print a plain list for week-over-week comparison only on a repeat run, a diff run, or when the user
+asks: one line per non-pass row, in this fixed order, sorted by id. Text only; no file is written
+unless the user asks.
 
 ```
 AUDIT-id | verdict | severity | path:line | citation id
 ```
 
-### Counsel packet
+### Counsel packet (only on request)
 
-Append after the questions, as one saveable block, still text only and built from the report:
-resolved config (five fields and `lastConfirmed`), fired rule IDs, every non-pass row with
-`path:line`, each loaded module's `last_verified` date, the unverifiable items, then the
-questions above grouped by module with their citations. If a module's `last_verified` is over
-180 days old, say so at the top of the packet. When `AUDIT-2-10`, `AUDIT-2-11` or `AUDIT-2-12`
-produced a verdict, print one line `State table unverified: <state names>` listing the states
-whose row in `references/citations.md` (US state statutes) has no access date, and only while at
-least one such row remains.
+Optional and printed only when asked. It is the FOR COUNSEL table plus: the resolved config (five
+fields and `lastConfirmed`), fired rule ids, and each loaded module's `last_verified` date, with a
+note at the top if any is over 180 days old. When `AUDIT-2-10`, `AUDIT-2-11` or `AUDIT-2-12`
+produced a verdict, add one line `State table unverified: <state names>` listing the states whose
+row in `references/citations.md` (US state statutes) has no access date, and only while at least
+one such row remains.
+
+Close the report with "Not legal advice; counsel to confirm." once, never per finding.
 
 ## 4b. Diff re-route (only when the user asks for a PR or diff audit)
 
@@ -208,6 +200,19 @@ Not audited: files outside this diff.
 
 Use the saved config for routing and name which file you used. Print the findings list from
 section 4 at the end.
+
+### Machine-readable output (optional)
+
+Only when the user asks for "machine-readable" or "lines" output. It is the findings list from
+section 4, printed after the report with no spaces around the separators, nothing else on a line:
+
+```
+row|verdict|severity|path:line|citation-id
+AUDIT-5-01|fail|blocker|web/app/checkout.html:2|PCI-DSS v4.0.1
+```
+
+Use `-` for a field with no value (for example `n/a` rows have no `path:line`). Two saved
+outputs of the same scope can then be compared with plain `diff`.
 
 ## 5. What the audit never does
 

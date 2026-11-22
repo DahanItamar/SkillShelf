@@ -175,6 +175,8 @@ Other Legislation Amendment Act 2024.
 | AUDIT-3-10 | Direct marketing carries a working opt-out | Email/SMS send paths; unsubscribe handling | Every marketing message carries an opt-out honoured promptly | Privacy Act 1988 APP 7 | high |
 | AUDIT-3-11 | Cross-border recipients under contractual guarantee | Sub-processor register; DPAs | Every overseas recipient of personal information is covered by binding terms | Privacy Act 1988 APP 8 | medium |
 
+**Neutral mode:** In neutral mode report each row at most `medium`, label it `advisory, market not served`, and write it as engineering hygiene, never as a violation of a law for a market the user did not choose; do not cite the EU article as the reason it fails, and say what to do if the user later serves the EU. The severity column above applies only when `EU` or `UK_APAC` is a served market.
+
 **Reporting these:** AUDIT-3-04 is the one most often reported `pass` on insufficient evidence.
 A deletion endpoint that returns 200 proves nothing about the search index. If the destination
 inventory does not exist in the repository, the correct verdict is `unverifiable`, naming what

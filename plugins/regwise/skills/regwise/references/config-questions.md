@@ -108,6 +108,20 @@ small the component.
 
 ---
 
+## Facts for drafting
+
+Three yes/no questions that gate three templates. They are not config fields and never go into
+`regwise.config.yml`, which stays five enums at `configVersion` 1. Ask each only when the repo does
+not answer it, once, in one message, at drafting time and not at routing time.
+
+| Question | The repo may already answer it | Gates |
+| --- | --- | --- |
+| Do you send marketing email or SMS? | a mail or SMS SDK in the dependencies | `marketing-consent-copy.md` |
+| Could users be under 13? | no age gate, and a kids audience | `parental-consent-notice.md` |
+| Do you bill on a recurring basis? | Stripe subscription objects | `subscription-disclosure.md` |
+
+---
+
 ## After the answer
 
 1. Restate the full five-field configuration so the user sees what routing will use.
