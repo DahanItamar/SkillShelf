@@ -4,9 +4,9 @@ Release checklist: version in `plugin.json` == the casebook entry (version and d
 
 ## 0.1.0 - 2026-11-22
 - First version. Two skills: `/casebook` opens a case file in `docs/bugs/NNN.md`, ranks hypotheses with the cheapest experiment each, and allows no edit to any other file until one experiment result is recorded; `/casebook-close` checks nine conditions (C1 to C9) before it sets a case to closed.
-- Done means the repro failed before the fix and passes after, with a regression test pointer. `/casebook-close` re-checks this with a fresh run of the constitution's verify command.
+- Done means the repro failed before the fix and passes after, with a regression test pointer. `/casebook-close` re-checks this with a fresh run of the approved verify command (from the constitution or approved by you).
 - Optional maintainer check `scripts/check-case.sh` (POSIX sh and awk, 9 rules) and a before/after proof run with `node --test` (no packages). Neither runs at install.
-- Worked examples under `examples/`: one hand-written walkthrough, 12 case files that the lint checks, and the proof.
+- Worked examples under `examples/`: one hand-written walkthrough, 19 case files that the lint checks, and the proof.
 - No constitution needed: with no verify line, Casebook proposes one read-only candidate (package.json test script, Makefile, pytest, go, cargo) and runs it only after your explicit yes. The approved command is recorded in the case header with `(constitution)` or `(user-approved)`, and `/casebook-close` runs only that command.
 - Optional header lines: `Verify one:` (scoped single-test run with `{test}`, the full command still runs once as the final proof), `Runs: N`, `Proof command:` and `Single hypothesis reason:`.
 - Flaky bugs: Before is valid when at least one of up to 5 runs fails (`runs: <failed>/<total>`); After needs every run to pass. Fix `Attempts:` and the stop rule are defined (a round is one experiment with a recorded result).
