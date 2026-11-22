@@ -127,3 +127,9 @@ before the first deadline passes, not after.
   against a claim that you did not.
 - Do not use these templates for a request that arrives alongside a legal claim or a regulator
   enquiry. Those go to counsel.
+
+## Counsel must check — delete before publishing
+
+- Response deadlines and extension rules in each market served.
+- Identity-verification steps proportionate to the data held.
+- The exemptions listed against the law that applies to the requester.

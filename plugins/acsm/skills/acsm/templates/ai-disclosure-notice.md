@@ -100,3 +100,9 @@ machine-readable mark that it was artificially generated or manipulated.
   actual terms rather than the marketing page.
 - Article 50 is the transparency layer only. Systems in the high-risk categories carry
   obligations this template does not touch.
+
+## Counsel must check — delete before publishing
+
+- Whether any use of the system falls in a high-risk category under the AI Act.
+- The statements on training, retention and sub-processors against the provider contract.
+- That the disclosure appears at the point of interaction, not only in this document.

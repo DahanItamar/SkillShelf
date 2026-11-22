@@ -143,3 +143,9 @@ Data protection contact: [INSERT_DPO_EMAIL]
   this template is not sufficient. That needs counsel.
 - The rights list must match what you can actually do. A stated deletion right with no working
   deletion endpoint is a representation you cannot meet.
+
+## Counsel must check — delete before publishing
+
+- That every statement matches what the product actually collects, shares and retains.
+- The lawful bases, transfer mechanisms and retention periods named.
+- The controller identity, representative and regulator contact details.

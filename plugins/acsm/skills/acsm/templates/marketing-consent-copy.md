@@ -117,3 +117,9 @@ you do not have the exception.
   banner is a marketing message.
 - If you buy or import a list, you do not have consent. There is no version of this template
   that fixes that.
+
+## Counsel must check — delete before publishing
+
+- That the consent wording is valid for each channel (email, SMS) in each market.
+- That the consent records can prove who agreed, when, and to what.
+- Whether the sender identification and opt-out text meet local statutory wording.

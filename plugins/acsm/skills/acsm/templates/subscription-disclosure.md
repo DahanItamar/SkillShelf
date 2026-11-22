@@ -101,3 +101,9 @@ Building to California plus Israel satisfies the rest.
   term is simpler than tracking which ones require it.
 - If your billing cycle is longer than the Israeli cancellation window, cancellation cannot
   wait for the end of the cycle. Stop charges within the window and prorate.
+
+## Counsel must check — delete before publishing
+
+- The cancellation route and window against each state and national rule that applies.
+- The renewal reminder timing for the longest billing cycle offered.
+- That the price and renewal terms shown at checkout match this text exactly.

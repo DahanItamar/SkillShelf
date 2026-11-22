@@ -115,3 +115,9 @@ provider, you need one of the stronger methods.
   moment creates actual knowledge, and the obligation starts then.
 - The UK Age Appropriate Design Code adds duties beyond consent — default settings, profiling
   off, data minimisation — that this notice does not address.
+
+## Counsel must check — delete before publishing
+
+- The age threshold in each market served, and the consent method accepted.
+- That the method of verification is one the regulator accepts.
+- Duties beyond consent, such as default settings and profiling limits.

@@ -112,3 +112,9 @@ protections of that country still apply.
   both, keep them — the consumer version has to survive.
 - Section 11 cannot override the consumer's home forum in the EU or Israel. Do not let a
   boilerplate exclusive jurisdiction clause replace it.
+
+## Counsel must check — delete before publishing
+
+- Governing law, forum and liability limits against consumer protection law in each market.
+- That consumer carve-outs survive where the law makes them mandatory.
+- Any term the payment provider or app store requires to appear.

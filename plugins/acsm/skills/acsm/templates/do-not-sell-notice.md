@@ -87,3 +87,9 @@ Questions about this notice: [INSERT_CONTACT_EMAIL]
   the person back in.
 - Several other states now have comparable opt-out rights with different mechanics. If you
   operate nationally, honour the strictest and apply it everywhere rather than segmenting.
+
+## Counsel must check — delete before publishing
+
+- Whether the product sells or shares personal information as the statutes define those terms.
+- Which state laws apply at your consumer counts, and the opt-out signals each requires.
+- The exact link wording and placement required in each state.

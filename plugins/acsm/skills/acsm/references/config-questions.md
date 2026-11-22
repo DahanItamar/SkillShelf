@@ -57,7 +57,7 @@ Multiple choice. At least one.
 | `EU` | 3 | no analytics script may load before opt-in consent |
 | `Israel` | 4 | marketing without prior consent carries statutory damages per message |
 | `UK_APAC` | 3 | UK transfers need their own instrument, not EU clauses |
-| `Global` | 2, 3, 4 | shorthand for all four; may not be combined with another value |
+| `Global` | 2, 3, 4 | means exactly US, EU, Israel, UK/APAC. It does not cover Canada, Brazil, India, Japan, China or health law. May not be combined with another value |
 
 Ask this one explicitly almost every time. It is the field a repository rarely reveals, and the
 field that changes the module set most.

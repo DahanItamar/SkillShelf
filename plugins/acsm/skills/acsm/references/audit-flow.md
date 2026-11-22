@@ -18,7 +18,17 @@ Each row carries six fields: `ID`, `Obligation`, `Locate`, `Pass when`, `Citatio
 `Locate` tells you where to look. `Pass when` is the condition, and it is the contract — not a
 paraphrase of it.
 
+Print the report header first: `Jurisdictions covered: <expanded markets>. NOT covered: Canada,
+Brazil, India, Japan, China, SensitiveHealth.` If Module 3 was selected only by R04 or R06, run
+only the rows in its `neutral_rows` frontmatter and mark the others `n/a` "market not served".
+
 ## 2. Evaluate each one
+
+**Work one module at a time.** Finish a module's rows, append one line to a running ledger
+(`module N: rows done, fail, unverifiable`), then start the next. Do not hold all modules in
+mind at once. If the audit is interrupted, resume from the last ledger line rather than
+restarting. Where a row's `Locate` is prose, grep for the file names a stack uses (for example
+`middleware`, `layout`, `.env.example`, IaC folders) before reading widely.
 
 Read the files `Locate` names. **Read them** — do not infer from a filename, a dependency in
 `package.json`, or the presence of a library that could have been used correctly.
@@ -106,6 +116,26 @@ AUDIT-1-02  blocker   Data at rest encrypted
 
 Then, in one or two sentences: what to fix first, and why that one. A ranked list with no
 recommendation is the same as no report.
+
+### Questions for counsel
+
+End every report with this block, built only from material already in the report. One question
+per item, each tied to a citation ID from `docs/CITATIONS.md` or an `AUDIT-` row:
+
+- every `unverifiable` row (what counsel or an operator must confirm);
+- every assumption you made (market list, thresholds, neutral-mode Module 3);
+- every instrument marked volatile that a failing or passing row relies on;
+- every conflict block from `SKILL.md` section 3.
+
+```
+QUESTIONS FOR COUNSEL
+1. AUDIT-1-02 / ISO/IEC 27001:2022 A.8.24 — Is encryption at rest on the managed database
+   documented in a form an auditor accepts? (unverifiable from the repository)
+2. AUDIT-2-07 / Cal. Civ. Code 1798.135 — The do-not-sell link wording was judged against
+   the statute text only; does a state regulator guidance change it?
+```
+
+Text only. No new file, no extra reading. If nothing qualifies, print "None raised."
 
 ## 5. What the audit never does
 
