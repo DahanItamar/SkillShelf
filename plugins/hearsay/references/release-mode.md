@@ -107,7 +107,7 @@ claims a change the diff does not contain.
 ## Monorepo: package directory
 
 Restrict `git log` and `git diff` to `-- <dir>`, read the manifest in that dir, and match tags of the
-form `<pkg>@<ver>` or `<pkg>-v<ver>` with `git tag --list '<pkg>*'`. Without `--path` in a repo with
+form `<pkg>@<ver>` or `<pkg>-v<ver>` with `git tag --list '<pkg>*'`. Without a package directory in a repo with
 several manifests, say "multiple manifests found" and scope to the one the notes name, or ask. This
 handles only the common layouts; say under Not checked what it did not handle.
 
