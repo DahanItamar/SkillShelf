@@ -1,6 +1,6 @@
 # House Style
 
-The skeleton, the voice, and the formatting. Derived from READMEs that hold up under a stranger's
+The section rules and the formatting. Derived from READMEs that hold up under a stranger's
 first thirty seconds — the shape across them is remarkably tight, and the parts that vary are the
 parts carrying evidence.
 

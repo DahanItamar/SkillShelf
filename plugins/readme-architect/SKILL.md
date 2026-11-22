@@ -269,7 +269,7 @@ find the install command leaves.
 
 ## Reference files
 
-- `references/house-style.md` — the skeleton, the section rules, and the callout rules
+- `references/house-style.md` — the section rules and the callout rules (the skeleton is in `readme-template.md`)
 - `references/prose-style.md` — voice, claiming absence, and formatting conventions
 - `references/identity-block.md` — wordmark, badges, nav row, hero image
 - `references/visuals.md` — mermaid, screenshot capture, the shot list, the wordmark SVG
