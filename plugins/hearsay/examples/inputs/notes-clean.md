@@ -1,0 +1,2 @@
+- Adds a `--format` option that accepts `json`.
+- Removes the `parseHtml` export.

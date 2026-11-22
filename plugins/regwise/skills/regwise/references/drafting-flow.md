@@ -34,6 +34,30 @@ follows from `targetMarkets`, not from what the user asked for by name.
 If the user asks for one that does not apply, produce it and say why it appeared unnecessary.
 They may know something the configuration does not.
 
+US-only sites with trackers get `do-not-sell-notice.md`, not the cookie banner; Israel has no
+cookie template. Say so instead of staying silent.
+
+If the repo shows any form, analytics tag or cookie, treat rank as 1 and say so.
+
+**Prune before output.** Delete the sections whose tied jurisdiction is not in `targetMarkets`,
+and list every removed section in the closing unfilled list (section 5). Unserved-market
+obligations are requirements nobody agreed to. For `privacy-policy.md` this means:
+
+- the section 2 GDPR lawful-basis text, unless `EU` or `UK_APAC` is a market;
+- `### California` in section 6, unless `US` is a market;
+- `### Israel` in section 6, unless `Israel` is a market.
+
+Every template: remove any section, bold-led paragraph, sentence or list item tied to a non-target
+jurisdiction, and list each removal. Known cases:
+
+- `terms-of-service.md`: cut the EU, UK, Israel and Australia names from "Consumer rights are not
+  affected" to the target markets; drop the Hebrew bullet and the EU or Israel forum notes unless
+  that market is served.
+- `subscription-disclosure.md`: drop "Israel — add this" and the Israeli notes unless `Israel` is a
+  market; drop the California text unless `US` is.
+- `cookie-banner-copy.md`, `accessibility-statement.md`: drop the `## Israel` section unless served.
+- Every template: the "Hebrew is required" note applies only if `Israel` is a market.
+
 ## 2. The disclaimer goes first, unchanged
 
 Every generated document begins with the block in `templates/_disclaimer.txt`, byte for byte,
@@ -114,7 +138,7 @@ generation.
 - **Never claims currency.** The templates carry a `last_verified` context through the modules
   they cite. If those are stale, say so before the document, not after.
 
-## 6. After counsel review
+## 8. After counsel review
 
 The disclaimer stays in every generated draft. When qualified counsel has reviewed a document,
 the user deletes the blockquote and the two trailing "delete before publishing" sections

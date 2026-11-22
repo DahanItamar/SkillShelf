@@ -1,4 +1,4 @@
-> ⚠️ **DISCLAIMER**: This document is an AI-generated template intended for MVP/early-stage testing. It does not constitute formal legal advice. Before scaling, accepting paying customers, or entering regulated markets, have this document reviewed by qualified legal counsel in your target jurisdiction.
+> **DISCLAIMER**: This document is an AI-generated draft template. It is not legal advice and no lawyer has reviewed it. Before you publish it or rely on it, have qualified legal counsel in each jurisdiction you serve review it.
 
 # Audit transcript: examples/broken-saas
 
@@ -50,6 +50,8 @@ recorded run yet. Recall and run-to-run variance are untested; see `examples/REA
 how to score one.
 
 ## Scored runs
+
+The hand-written transcript above is illustrative and unscored.
 
 One row per run, added by whoever ran it (procedure: `examples/score.md`). Fixtures are
 author-seeded. No row below is invented: an empty table means no scored run has been recorded

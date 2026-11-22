@@ -7,7 +7,7 @@ placeholders: ["INSERT_COMPANY_NAME", "INSERT_CONTACT_EMAIL", "INSERT_PHYSICAL_A
 license: "CC0-1.0"
 ---
 
-> ⚠️ **DISCLAIMER**: This document is an AI-generated template intended for MVP/early-stage testing. It does not constitute formal legal advice. Before scaling, accepting paying customers, or entering regulated markets, have this document reviewed by qualified legal counsel in your target jurisdiction.
+> **DISCLAIMER**: This document is an AI-generated draft template. It is not legal advice and no lawyer has reviewed it. Before you publish it or rely on it, have qualified legal counsel in each jurisdiction you serve review it.
 
 # Marketing Consent and Opt-Out Copy
 

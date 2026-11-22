@@ -1,0 +1,7 @@
+{
+  "name": "quick-commit",
+  "displayName": "Quick Commit",
+  "version": "0.0.1",
+  "description": "Writes tidy commit messages.",
+  "license": "MIT"
+}

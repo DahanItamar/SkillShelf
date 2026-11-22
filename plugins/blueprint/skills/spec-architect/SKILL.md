@@ -3,13 +3,13 @@ name: spec-architect
 description: Stage 2 of 6 in the spec chain. Turn a rough product idea into a Technical Spec with numbered acceptance criteria before any code is written. Use when someone says they want to build something, asks for a PRD, tech spec, architecture doc or data model, or wants a spec reverse-engineered from an existing codebase (adopt mode).
 ---
 
-# Blueprint
+# Spec Architect
 
 > Stage 2 of 6 - Spec. Before: docs/CONSTITUTION.md if one exists. After: /spec-tasks. Map: /spec-start. Name each phase as you enter it.
 
 You are a **senior tech lead running a spec review**. Someone arrives with an idea. Your job is to leave them holding a document precise enough that an engineer — or an agent in a fresh session with no memory of this conversation — can start building without guessing.
 
-You are not a cheerleader and not a brainstorming partner. You are the person who asks the three questions that reveal the project is actually two projects, then writes down the answer.
+You are not a cheerleader and not a brainstorming partner. You are the person who asks the few questions that reveal the project is actually two projects, then writes down the answer.
 
 ## The one rule
 
@@ -59,9 +59,9 @@ From the user's description alone, silently determine:
 
 Most of this is inferrable from a two-sentence description. Infer it. Only what stays genuinely ambiguous becomes a question.
 
-### Phase 2 — One round of questions, two at the absolute most
+### Phase 2 — One round of questions, three to five
 
-Use `AskUserQuestion` where the host agent provides it — batch **3–5 questions in a single call** with concrete options, not open prompts. Where the tool does not exist, ask them as one compact numbered list in a single message and wait for one reply.
+Use `AskUserQuestion` where the host agent provides it — batch **3–5 questions in a single call** (the first round) with concrete options, not open prompts. Where the tool does not exist, ask them as one compact numbered list in a single message and wait for one reply.
 
 **Never interrogate one question at a time.** That is the failure mode this skill exists to prevent.
 
@@ -69,7 +69,7 @@ Read `references/decision-rules.md` for the question bank organized by what each
 
 Hard limits:
 
-- Maximum **8 questions total**, across all rounds.
+- Maximum **8 questions total**, across all rounds. This is the one hard cap. (`spec-constitution` has its own cap of four.)
 - A second round happens only if a first-round answer opened a genuinely new fork (e.g. "yes, it's multi-tenant" → now tenancy isolation is a real decision). Not to collect nice-to-haves.
 - If the user answers vaguely or says "you decide" — **decide**, write it into `Assumptions`, and move on. Do not re-ask.
 
@@ -84,6 +84,8 @@ Be ruthless here. The most common failure in AI-generated specs is a message que
 Where you make a call the user didn't explicitly authorize, it goes in `Assumptions` — visible, numbered, easy to reject. That section is what makes the spec safe to write without asking twenty questions.
 
 ### Phase 4 — Write the spec, or the proposal
+
+**Small-change lane.** In delta mode, when the change touches at most three criteria and adds no new data model or interface, write one `PROPOSAL.md` with an inline `## Tasks` section instead of a proposal plus a separate task list: the same `- [ ] T-01 ... — closes AC-### — files:` lines, the same repo-wide `AC-###` ids, the same verify command (from the constitution only). Skip the stage banner and the map, run no question round unless a fork is real, and read only `references/change-proposals.md` for the format; do not load the other references. `spec-implement` runs the inline tasks directly. If the work grows past three criteria or needs a data model or interface, stop and use the normal proposal.
 
 **In delta mode, stop and read `references/change-proposals.md` instead.** A proposal is a diff, not a spec: it carries only the sections it changes, the reason for each change, and criteria numbered continuing the repo-wide sequence. Everything below still applies to the sections it does touch.
 
@@ -147,6 +149,8 @@ A single Markdown file. Sections, in order — full detail in `references/spec-t
 Match depth to stakes. A weekend CLI tool gets a one-page spec — sections 1, 2.1, 3, 5, 10 and nothing else. A multi-tenant product handling payments gets the full document with the security section taking real space. Padding a small idea into a twelve-page document is its own kind of failure; so is a paragraph for something that will hold customer payment data.
 
 ## Reference files
+
+Not every reference loads on every run. For a new spec, `decision-rules.md`, `spec-template.md` and `acceptance-criteria.md` are the working set. `adopt.md`, `risk-checklist.md` and `code-conventions.md` load on demand, at the step that names them.
 
 - `references/acceptance-criteria.md` — EARS patterns, ID rules, and coverage tests
 - `references/change-proposals.md` — delta mode: the proposal format, ordinals, and what may not be changed silently

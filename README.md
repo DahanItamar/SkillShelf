@@ -1,21 +1,20 @@
 <div align="center">
 
-# claude-skills
+# SkillShelf
 
-**Four Claude Code skills that do one job each, and do it properly.**
+**AI coding skills that each stand on their own. Install only what you need.**
 
-Plain Markdown that Claude reads. No dependencies, no build step, nothing runs when you install.
+Plain Markdown in the open Agent Skills format. Works in Claude Code, Codex, Cursor, GitHub Copilot and Gemini CLI. No dependencies, nothing runs when you install.
 
-<a href="https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/DahanItamar/claude-skills/ci.yml?branch=main&style=flat-square&label=verify&color=0F766E" alt="Verify workflow status" /></a>
-<img src="https://img.shields.io/badge/plugins-4-0F766E?style=flat-square" alt="4 plugins" />
+<a href="https://github.com/DahanItamar/SkillShelf/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/DahanItamar/SkillShelf/ci.yml?branch=main&style=flat-square&label=verify&color=0F766E" alt="Verify workflow status" /></a>
+<img src="https://img.shields.io/badge/skills-5-0F766E?style=flat-square" alt="5 skills" />
+<img src="https://img.shields.io/badge/works%20in-5%20tools-0F766E?style=flat-square" alt="Works in 5 tools" />
 <img src="https://img.shields.io/badge/dependencies-0-0F766E?style=flat-square" alt="Zero dependencies" />
-<img src="https://img.shields.io/badge/Claude%20Code-marketplace-0F766E?style=flat-square" alt="Claude Code plugin marketplace" />
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-0F766E?style=flat-square" alt="License: MIT" /></a>
 
 <p>
   <a href="#the-skills">The skills</a> ·
   <a href="#install">Install</a> ·
-  <a href="#how-they-fit-together">How they fit together</a> ·
   <a href="#license">License</a>
 </p>
 
@@ -25,65 +24,92 @@ Plain Markdown that Claude reads. No dependencies, no build step, nothing runs w
 
 | Skill | What it does | Version |
 |---|---|---|
-| [**Regwise**](plugins/regwise) | Works out which compliance and security rules actually apply to your project (US, EU, UK and APAC, Israel, payments, accessibility, desktop binaries), audits the repo against exactly those, and drafts the documents they require. | 0.2.0 |
-| [**Edgecase**](plugins/edgecase) | Catches the UI states everyone forgets: loading, empty, error, success and partial. 40 rules applied while the interface is written; it blocks "done" only on the ones that silently hurt users. | 1.4.0 |
-| [**Blueprint**](plugins/blueprint) | Spec-driven development in six stages: constitution, spec, tasks, implement, drift, refactor. Every requirement gets an `AC-###` id that every later stage cites. Start with `/spec-start`. | 3.3.0 |
-| [**Showcase**](plugins/showcase) | Writes your README after running your project. Every number in it is one it observed, and anything it could not observe, it says so. | 2.1.0 |
+| [**Regwise**](plugins/regwise) | Works out which compliance and privacy rules apply to your project, audits the repo against exactly those, and drafts the documents they need. | 0.3.0 |
+| [**Edgecase**](plugins/edgecase) | Catches the UI states everyone forgets: loading, empty, error, success and partial. 34 rules, split into blocking and non-blocking. | 1.5.0 |
+| [**Blueprint**](plugins/blueprint) | Spec-driven development in six stages. Every requirement gets an id that every later stage cites. Start with `spec-start`. | 3.4.0 |
+| [**Showcase**](plugins/showcase) | Writes your README after running your project. Every number in it is one it observed. | 2.2.0 |
+| [**Casebook**](plugins/casebook) | Debugging with a case file: a repro, ranked guesses with one experiment each, and no code changes until one is tested. | 0.1.0 |
 
-Each skill has its own README with examples, limits and what it will not do.
+Each skill has its own README with examples and limits.
 
 ## Install
 
-You need **Claude Code**. Add the marketplace once, then install only the skills you want:
+Pick your tool. Each skill is a folder with a `SKILL.md`; copy only the ones you want.
+
+<details open>
+<summary><b>Claude Code</b> &nbsp;plugin marketplace, updates included</summary>
 
 ```bash
-/plugin marketplace add DahanItamar/claude-skills
-
-/plugin install regwise@claude-skills
-/plugin install edgecase@claude-skills
-/plugin install blueprint@claude-skills
-/plugin install showcase@claude-skills
+/plugin marketplace add DahanItamar/SkillShelf
+/plugin install edgecase@skillshelf     # or regwise, blueprint, showcase, casebook
 ```
-
-In the VS Code extension the command is `/plugins` (plural) and opens a dialog.
-
-<details>
-<summary>Installed one of these under its old name?</summary>
-
-The skills were renamed: acsm is now Regwise, uilint is Edgecase, spec-architect is Blueprint and readme-architect is Showcase. Remove the old plugin and install the new one:
-
-```bash
-/plugin uninstall uilint          # the old name
-/plugin install edgecase@claude-skills
-```
-
-Regwise still reads an existing `acsm.config.yml`, so saved answers carry over.
 
 </details>
 
-## How they fit together
+<details>
+<summary><b>OpenAI Codex</b> &nbsp;~/.codex/skills or .agents/skills</summary>
 
-```mermaid
-flowchart LR
-    B["Blueprint<br/>spec and tasks"] --> R["Regwise<br/>which laws apply"]
-    R --> E["Edgecase<br/>UI states while building"]
-    E --> S["Showcase<br/>README from real output"]
+```bash
+git clone https://github.com/DahanItamar/SkillShelf
+cp -r SkillShelf/plugins/edgecase ~/.codex/skills/      # for you, in every project
+cp -r SkillShelf/plugins/edgecase .agents/skills/       # or for one project, shared with your team
 ```
 
-Each skill works on its own. Used together, Blueprint's acceptance criteria give the others something to check against: Regwise adds the compliance pass after the task list, Edgecase runs while the interface is written, and Showcase documents what actually shipped.
+</details>
 
-## Repository layout
+<details>
+<summary><b>Cursor</b> &nbsp;.cursor/skills or .agents/skills</summary>
 
-```
-.claude-plugin/marketplace.json   lists the four plugins
-plugins/
-  regwise/     compliance routing, audit and drafting
-  edgecase/    UI-state linter
-  blueprint/   spec-driven development chain
-  showcase/    evidence-based READMEs
+```bash
+git clone https://github.com/DahanItamar/SkillShelf
+cp -r SkillShelf/plugins/edgecase .cursor/skills/
 ```
 
-CI runs Regwise's structural verification, Blueprint's before-and-after proof, and a check that every marketplace entry resolves to a plugin with a matching name and version.
+Cursor picks skills up on start. Type `/` in Agent chat to run one by name.
+
+</details>
+
+<details>
+<summary><b>GitHub Copilot</b> &nbsp;.github/skills or ~/.copilot/skills</summary>
+
+```bash
+git clone https://github.com/DahanItamar/SkillShelf
+cp -r SkillShelf/plugins/edgecase .github/skills/
+```
+
+</details>
+
+<details>
+<summary><b>Gemini CLI</b> &nbsp;.gemini/skills or ~/.gemini/skills</summary>
+
+```bash
+git clone https://github.com/DahanItamar/SkillShelf
+cp -r SkillShelf/plugins/edgecase .gemini/skills/
+```
+
+Run `/skills` inside Gemini CLI to see what loaded.
+
+</details>
+
+**Which folders to copy.** Edgecase and Showcase are one folder each. The others keep their skills one level down:
+
+| Skill | Copy |
+|---|---|
+| Regwise | `plugins/regwise/skills/regwise` |
+| Edgecase | `plugins/edgecase` |
+| Blueprint | every folder in `plugins/blueprint/skills/` (eight stages) |
+| Showcase | `plugins/showcase` |
+| Casebook | every folder in `plugins/casebook/skills/` |
+
+> [!TIP]
+> Codex and Cursor both read `.agents/skills/`, so one copy in a repo serves a mixed team.
+
+<details>
+<summary>Installed one of these under an old name?</summary>
+
+acsm is now Regwise, uilint is Edgecase, spec-architect is Blueprint and readme-architect is Showcase, and the marketplace is now `skillshelf`. In Claude Code, remove the old plugin and marketplace, then install from SkillShelf. Regwise still reads an existing `acsm.config.yml`.
+
+</details>
 
 ## License
 

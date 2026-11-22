@@ -1,0 +1,16 @@
+diff --git a/src/cli.js b/src/cli.js
+index d7205fc..970616a 100644
+--- a/src/cli.js
++++ b/src/cli.js
+@@ -4,9 +4,10 @@ import { fetchPage } from "./fetch.js";
+ const { values, positionals } = parseArgs({
+   allowPositionals: true,
+   options: {
++    format: { type: "string", default: "text" },
+     timeout: { type: "string", default: "30" },
+   },
+ });
+ 
+ const page = await fetchPage(positionals[0], { timeout: Number(values.timeout) });
+-console.log(page.body);
++console.log(values.format === "json" ? JSON.stringify(page) : page.body);

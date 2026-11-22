@@ -222,3 +222,17 @@ Say so. To the user, in your handover — not silently in the README.
   exist — a broken image on the front page costs more than a missing one.
 - **Cannot verify a claim the author made**: ask, or leave it out. Do not launder someone
   else's assertion into evidence by restating it more confidently.
+
+---
+
+## The ledger (`docs/EVIDENCE.md`)
+
+One table, columns exactly: `claim | command | extracted value | tolerance | date | replay (yes/no)`.
+
+| claim | command | extracted value | tolerance | date | replay |
+| --- | --- | --- | --- | --- | --- |
+| 3 source files | `ls src \| wc -l` | 3 | exact | 2026-01-01 | yes |
+
+Default tolerance: exact for counts, versions, exit codes, byte and line sizes; +/-20% for timings
+and throughput; never compared for timestamps, ids and ports (mark `volatile, re-measure on
+request`). A run may tighten a tolerance only with a stated reason. The example row is a sample.

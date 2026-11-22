@@ -1,13 +1,13 @@
 {
   "name": "regwise",
   "description": "Routes a project to the compliance obligations that actually apply to it, audits a repository against them, and drafts the user-facing legal documents they require.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Itamar Dahan",
     "url": "https://github.com/DahanItamar"
   },
-  "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/regwise",
-  "repository": "https://github.com/DahanItamar/claude-skills",
+  "homepage": "https://github.com/DahanItamar/SkillShelf/tree/main/plugins/regwise",
+  "repository": "https://github.com/DahanItamar/SkillShelf",
   "license": "MIT",
   "keywords": [
     "compliance",

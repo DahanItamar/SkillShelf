@@ -381,3 +381,7 @@ A vague error message gets flagged and rewritten.
   Retired IDs are never reused.
 - **Does the gate hold for prototypes?** Answered in 1.4.0: an opt-out writes the happy path only and is
   honoured once per component. Teams can also set paths to ignore in a `edgecase:` block in `CLAUDE.md`.
+
+---
+
+Note added in 1.5.0: this document is the original design rationale and is partly out of date. The core is now 34 rules (R-STATE-17 and R-STATE-18 added; the design laws moved to `references/opt-in/laws.md` and no longer count). `CHANGELOG.md` and `README.md` are current.

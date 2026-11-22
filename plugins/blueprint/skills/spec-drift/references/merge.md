@@ -10,7 +10,7 @@ A `docs/changes/NNNN-mN-slug/` directory with `docs/changes/*/TASKS.md` and no `
 
 All four must hold:
 
-1. **Every task in its `TASKS.md` is ticked.** A pending proposal describes intent, not obligation.
+1. **Every task in its `TASKS.md` is ticked** (or, for a small-change proposal, every task in its inline `## Tasks`). A pending proposal describes intent, not obligation.
 2. **The code actually satisfies its criteria.** Verify them like any other claim — a ticked checkbox is a report, not proof. A criterion the code doesn't meet is a regression to report, and it blocks the merge.
 3. **No unarchived proposal edits the same section.** See Conflicts below.
 4. **Every `replace` or `remove` against §3, §8, or §9 carries a reason.** Without one, the proposal is asking you to delete a recorded decision silently. Refuse, and say which edit is missing its reason.
@@ -48,7 +48,7 @@ The proposal's `## Motivation` was written for a reviewer who is about to disapp
 
 ## Criteria
 
-- **Added criteria keep their IDs.** They were allocated from the repo-wide sequence when the proposal was written. Never renumber to close gaps — gaps are normal and every archived task list still cites these IDs.
+- **Added criteria keep their IDs.** They were allocated from the repo-wide sequence when the proposal was written. The exception is a proposal written on a branch with provisional ids (`0000-slug`, `AC-NEW-n`): allocate the next real ordinal and the next free `AC-###` numbers by scanning `main` now, rename the directory, and replace every provisional id in the proposal and its `TASKS.md` in the same commit. See the Teams section of `spec-architect/references/change-proposals.md`. Never renumber to close gaps — gaps are normal and every archived task list still cites these IDs.
 - **Retired criteria become tombstones** in §2.1, struck through, naming the ordinal that retired them:
 
   ```markdown
