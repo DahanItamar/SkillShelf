@@ -451,7 +451,7 @@ Read-only except one file, and that one requires consent.
 
 | Path | Invocation | Resolves to |
 | --- | --- | --- |
-| Plugin | `/plugin marketplace add <owner>/acsm` then install `acsm` | `.claude-plugin/marketplace.json` → plugin at `./` → `skills/acsm/` |
+| Plugin | `/plugin marketplace add <owner>/claude-skills` then install `acsm@claude-skills` | root `.claude-plugin/marketplace.json` → plugin at `./plugins/acsm` → `skills/acsm/` |
 | Plain skill | `cp -r skills/acsm ~/.claude/skills/acsm` | `~/.claude/skills/acsm/SKILL.md` |
 | Project skill | `cp -r skills/acsm <project>/.claude/skills/acsm` | project-scoped, same tree |
 

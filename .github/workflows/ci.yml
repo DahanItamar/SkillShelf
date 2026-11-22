@@ -1,0 +1,52 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  acsm-verify:
+    name: acsm / structural verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Structural verification
+        working-directory: plugins/acsm
+        run: sh scripts/verify.sh
+
+  spec-architect-proof:
+    name: spec-architect / before-and-after proof
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Run the before/after proof
+        working-directory: plugins/spec-architect
+        run: node --test examples/proof/proof.test.mjs
+
+  marketplace:
+    name: marketplace / every plugin resolves
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Each listed source has a plugin.json with a matching name and version
+        run: |
+          python3 - <<'EOF'
+          import json, os, sys
+          m = json.load(open(".claude-plugin/marketplace.json"))
+          bad = 0
+          for p in m["plugins"]:
+              f = os.path.join(p["source"], ".claude-plugin", "plugin.json")
+              if not os.path.isfile(f):
+                  print(f"FAIL {p['name']}: {f} missing"); bad += 1; continue
+              pj = json.load(open(f))
+              for k in ("name", "version"):
+                  if pj.get(k) != p.get(k):
+                      print(f"FAIL {p['name']}: {k} {pj.get(k)!r} != {p.get(k)!r}"); bad += 1
+              print(f"ok   {p['name']} {p['version']}")
+          sys.exit(1 if bad else 0)
+          EOF
