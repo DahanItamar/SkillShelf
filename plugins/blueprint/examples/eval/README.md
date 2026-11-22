@@ -8,7 +8,7 @@ The cases follow the [Agent Skills evaluation method](https://agentskills.io/ski
 
 ### 1. Shift planner brief
 
-Prompt: the one-paragraph brief in [shift-planner-spec.md](../shift-planner-spec.md) section 1, "implement conflict detection". With the skills, ask the agent to use the spec-architect, spec-tasks and spec-implement skills in turn.
+Prompt: the one-sentence input quoted at the top of [shift-planner-spec.md](../shift-planner-spec.md), "I want to build a desktop app for managing employee shifts", then "build conflict detection". With the skills, ask the agent to use the spec-architect, spec-tasks and spec-implement skills.
 
 Assertions:
 - the overnight shift is stored as `endMinute > 1440`, not as a negative duration;

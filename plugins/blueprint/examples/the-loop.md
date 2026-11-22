@@ -173,7 +173,7 @@ AC-016  If the week has no shifts, then the system shall download a CSV with onl
 - [ ] T-01 Write the CSV serialiser, including the midnight case — closes AC-014, AC-015, AC-016
 ```
 
-The commit is `T-01 closes AC-014`. The linter then reads the files the same way it did for the fixture in [`spec-check-fixture/`](spec-check-fixture/); its real output on that fixture, with its three deliberate orphans, is in the README.
+The commit is `T-01 closes AC-014, AC-015, AC-016`. The linter then reads the files the same way it did for the fixture in [`spec-check-fixture/`](spec-check-fixture/); its real output on that fixture, with its three deliberate orphans, is in the README.
 
 ---
 
