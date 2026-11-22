@@ -34,7 +34,7 @@ Line numbers in the golden files are for the files as shipped.
 
 ## Self-test
 
-Paste this into Claude Code from the plugin folder. It shows the answer key to the model, so it is a
+Paste this into your coding agent from the plugin folder. It shows the answer key to the model, so it is a
 check that the skill loads and the IDs resolve, not a blind score:
 
 ```text

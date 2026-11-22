@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "edgecase",
   "displayName": "Edgecase",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Stable-ID review of the UI states everyone forgets (loading, empty, error, success, partial): 34 rules with Applies lines, split into blocking and non-blocking, applied while the interface is written. A review the model runs before it reports done; it advises and does not enforce.",
   "author": {
     "name": "Itamar Dahan",

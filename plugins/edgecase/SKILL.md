@@ -1,6 +1,6 @@
 ---
 name: edgecase
-description: Stable-ID review of UI failure states - 34 rules, each with an Applies line, split into blocking `required` and non-blocking `recommended`, plus /edgecase screen, init and probe - for loading, empty, error, success and partial states. Use when building or reviewing an interface that fetches data, submits a form, or navigates, and when a user describes an interface problem in symptoms - "nothing happens when I click", "it just spins forever", "the page goes blank", "users don't know if it worked", "review this component", "/edgecase". Also use while writing UI, so the states exist in the first draft. Does NOT trigger for pure visual styling, copy edits, or static pages with no async work.
+description: Stable-ID review of UI failure states (loading, empty, error, success, partial): 34 rules, each with an Applies line, split into blocking `required` and non-blocking `recommended`. Use when building or reviewing an interface that fetches data, submits a form, or navigates, and when a user describes an interface problem in symptoms - "nothing happens when I click", "it just spins forever", "the page goes blank", "users don't know if it worked", "review this component". Also handles plain requests for a screen audit, a suggested policy block, a probe recipe or the opt-in design rules (where the tool supports skill commands, `/edgecase` is an optional shortcut). Use it while writing UI too, so the states exist in the first draft. Does NOT trigger for pure visual styling, copy edits, or static pages with no async work.
 ---
 
 # edgecase
@@ -9,8 +9,7 @@ Interfaces get built along the path where everything works, so the states for sl
 accounts and failed requests never get written. Your job is to notice what is missing before the
 user does. This is a review the model runs before it reports done; it advises and does not enforce.
 
-**This skill covers behaviour, not appearance.** Spacing, colour, typography, elevation and motion
-belong to the `craft` skill. Contrast and ARIA belong to `accessibility`; the one accessibility rule here is R-FEEDBACK-10. If one of those is clearly relevant, name it once; if it is not installed, add a single line "outside this skill's scope: <issue>". Never drop a finding just because its home skill is missing. If the `uilint` skill is also installed and both trigger, use this one for review output (it has stable IDs) and do not run both.
+**This skill covers behaviour, not appearance.** If you notice a spacing, colour, contrast or ARIA problem beyond R-FEEDBACK-10, add one line "outside this skill's scope: <issue>" and move on.
 
 ## The five states
 
@@ -52,9 +51,9 @@ lists these lines as candidates, not findings. If the stack is unknown, read `st
 
 Write the loading, error and empty handling into the first draft for the paths the change touches,
 then state in one line what was added ("Added: error + loading for Orders"). Before reporting the work
-complete, walk the five states against what you wrote. If a `required` rule is unmet, the component is
-not finished: say so, name the gap in terms of what the user experiences, and offer the fix. Do not
-report completion with a known hole.
+complete, walk the five states against what you wrote. A `required` gap must be fixed or named in the
+completion message as open, in terms of what the user experiences, with the fix offered. If the user
+says ship it, list the open required IDs in one line and proceed.
 
 **Review mode** - you are given existing code, or asked why something feels wrong. Read the reference
 files for the domains in play, not all by reflex. Check rules against the real code rather than from
@@ -75,8 +74,8 @@ condition decides.
 | `references/states.md` | Loading, empty, partial, loader choice, bounded waits, status checks, stale responses, control states |
 | `references/feedback.md` | Error content and placement, success confirmation, announcing state changes |
 | `references/forms.md` | Validation timing, required fields, prefill, input tolerance, disabled submits |
-| `references/modes.md` | `/edgecase screen`, `init`, `laws`, `probe`, and the `edgecase:` policy block |
-| `references/opt-in/laws.md` | Jacob's, Hick's, Tesler's Laws. Opt-in only, never blocks, not counted in the 34 core rules |
+| `references/modes.md` | Optional modes: screen audit, policy block, probe recipes, design laws (no rules of its own) |
+| `references/opt-in/laws.md` | 8 opt-in design rules: Jakob's, Hick's and Tesler's laws plus progressive disclosure, per-platform conventions, RTL mirroring, one primary action and do not bury a primary path (not eight named laws). Never blocks, not counted in the 34 core rules |
 
 ## Output - review mode
 
@@ -101,8 +100,8 @@ every finding to a real location. "Consider reviewing your error handling" is no
 
 ## Team policy (optional)
 
-If the repo's `CLAUDE.md` has an `edgecase:` block (`ignore`, `demote`, `strict`), read
-`references/modes.md`. `strict` raises `recommended` rules to `required` only for rules in `states.md`,
+If one of `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md` has an
+`edgecase:` block (`ignore`, `demote`, `strict`), use the first that does and read `references/modes.md`. `strict` raises `recommended` rules to `required` only for rules in `states.md`,
 `feedback.md` and `forms.md`, never for the opt-in laws. Say in the verdict line when a policy applied.
 
 ## Judgment
@@ -116,5 +115,8 @@ If the repo's `CLAUDE.md` has an `edgecase:` block (`ignore`, `demote`, `strict`
 - **Never invent a rule.** If something looks wrong but no rule covers it, say it is your own read.
 - **From a screenshot**, retry logic, error content and partial-failure behaviour are unverifiable.
   Say "verify in code" instead of guessing.
-- **Honour an opt-out once.** If the user says it is a prototype, write the happy path only,
-  acknowledge it and stop raising it for that component.
+- **Honour an opt-out for this task only.** If the user says it is a prototype, write the happy path
+  only for the named component or file, for this task only, and reply with the single line
+  `edgecase: skipped (prototype)` and no IDs.
+- **Scripts.** You may run the read-only `scripts/candidates.sh` (grep and awk only). Never run a
+  probe recipe or start a server.
