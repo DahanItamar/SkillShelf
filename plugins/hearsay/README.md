@@ -129,10 +129,12 @@ source (read, never applied); `--path <dir>` scopes release mode to one package 
 layouts only); `--rows 41-80` prints the next block after the 40-row cap; `--json` adds one JSON block
 with the same rows, advisory only because runs are not deterministic.
 
-To check a PR: save the PR body to a file, then run `/hearsay <path>`. Cost, estimated from byte counts at about 4 bytes per token (not measured), before any
-repository reads: fast path about 9 KB; a normal run (SKILL.md plus claim-rubric, verdicts and
+To check a PR: save the PR body to a file, then run `/hearsay <path>`.
+
+Cost, estimated from byte counts at about 4 bytes per token (not measured), before any repository
+reads: fast path about 9 KB; a normal run (SKILL.md plus claim-rubric, verdicts and
 ledger-template) about 21 KB, about 24 KB with rewrite-rules; release mode loads all six references,
-about 33 KB, roughly 8k tokens. Text of 10 non-blank lines or fewer and at most 1,200 characters skips the six reference files and loads about 9 KB.
+about 33 KB, roughly 8k tokens. Text of 10 non-blank lines or fewer and at most 1,200 characters takes the fast path (SKILL.md only).
 
 **Release mode** compares the tag with HEAD, classifies each change (Breaking, Feature, Fix,
 Dependency, Docs, Internal) using a per-ecosystem public-surface checklist, and proposes a SemVer bump
