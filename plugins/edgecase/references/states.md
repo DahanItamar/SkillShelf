@@ -140,7 +140,7 @@ most common way a missing failure path is reported, and the user has no move exc
 ### R-STATE-17 · A non-2xx response is a failure
 **DO:** Check `response.ok` or the status before treating a fetch as a success, and branch on the cases the user can act on: 401 (session expired: sign in again and keep what the user typed), 404 (gone or empty), 5xx (offer a retry). Axios-style clients that throw on non-2xx already satisfy this.
 *Why:* `fetch` resolves on 4xx and 5xx and rejects only on a network failure, so a `try/catch` alone never sees a server error. The code then runs its success path: the row is removed, the toast says "saved", and nothing was. (MDN, `fetch()` and `Response.ok`; the whatwg/fetch discussion "Why doesn't fetch reject if 400 <= status < 600".)
-*Applies:* any fetch or XHR call whose result changes the UI or local state
+*Applies:* any fetch or XHR call whose result changes the UI or local state. A 200 response whose body carries an error (GraphQL `errors`, `{ok:false}`, `{error:...}`) also counts as a failure when the code reads that body; the GraphQL spec says `errors` may be present beside `data` (Response, 7.1.2).
 *Check:* make the endpoint return 500. Does the user see an error, and is local state unchanged?
 *Severity:* required
 
@@ -153,6 +153,18 @@ most common way a missing failure path is reported, and the user has no move exc
 
 ---
 
+## Where the fix belongs (read only when the stack is recognised)
+
+| Stack | Use the framework mechanism, not a hand-rolled flag | Source |
+|---|---|---|
+| TanStack Query | The `error` field holds the failure after retries are exhausted; `retry` sets the attempt count (default 3 in the browser) | https://tanstack.com/query/v5/docs/framework/react/guides/query-retries |
+| Next.js (App Router) | `error.js` in a route segment is the error boundary for uncaught exceptions; model expected failures such as `!res.ok` as return values | https://nextjs.org/docs/app/getting-started/error-handling |
+| SvelteKit | `+error.svelte` renders for the nearest error in rendering or `load` | https://svelte.dev/docs/kit/errors |
+| React | A client-side render error goes to the closest Error Boundary; Suspense covers waiting, not failure. Boundaries do not catch event-handler errors, so store those in state | https://react.dev/reference/react/Suspense and the Next.js page above |
+| Vue | `onErrorCaptured` handles a descendant error; return `false` to stop propagation | https://vuejs.org/api/composition-api-lifecycle.html#onerrorcaptured |
+
+---
+
 ## Probe (optional, on request)
 
 For any finding the user disputes, or on an explicit `/edgecase probe`, print that rule's `Check:` line
@@ -160,3 +172,5 @@ as a recipe the user runs, not something you run. Give one handler per failure: 
 Playwright `route.fulfill` returning a 500, one that never resolves (a `new Promise(() => {})` body or
 `route.abort` after the timeout), and one returning `[]`. Name the screen state the user should then
 see. Never run a script or start a server for a probe. Write nothing to the repo unless asked, and if asked to write the file, show it first; the `Check:` lines already hold the content.
+
+A Probe may be offered once, as one sentence, after a blocking finding.

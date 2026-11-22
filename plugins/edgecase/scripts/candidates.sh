@@ -1,6 +1,8 @@
 #!/bin/sh
 # edgecase candidate finder. ADVISORY ONLY: it prints lines worth a look, not findings.
 # A model review of the same code is not deterministic and may disagree in either direction.
+# Noise: R-STATE-16 is the noisiest class (it fires on every plain fetch) and server-component fetches are recommended, not blocking.
+# Measured on examples/ by running it: 0 candidates on pass.jsx and files.jsx; flags status.jsx:8 (R-STATE-17), list.jsx and search.jsx (R-STATE-18); also flags one-shot graphql-or-checked.jsx (R-STATE-18, which does not apply there).
 # Usage: sh scripts/candidates.sh [path ...]   (default: current directory)
 # Output: file:line  pattern  (R-ID)     Nothing is written or executed beyond grep and awk.
 [ $# -eq 0 ] && set -- .

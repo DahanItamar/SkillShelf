@@ -1,3 +1,5 @@
+> Version 1.5.0 rules have not yet been measured against a model; see Measured so far.
+
 <div align="center">
 
 # Edgecase
@@ -143,7 +145,7 @@ want no ambiguity.
 | `node scripts/score.mjs <reply> <golden>` | Reads the `edgecase-ids:` line of a saved reply and prints matched, missed and extra against a golden file. |
 | `sh scripts/candidates.sh [path]` | Greps for candidate lines (empty catch, a fetch with no `ok` check or timeout, an effect fetch with no abort) and prints `file:line  pattern  (R-ID)`. **Advisory only:** these are candidates, not findings. The model review is not deterministic, and the script does not replace it. |
 
-**Measured so far:** one self-test run, `claude-sonnet-5-5`, 2026-11-22, on version 1.4.0, 1 run, not blind for four of ten files: 28 of 32 expected IDs matched, 4 missed, 1 extra, 0 findings on the clean control (see [`examples/results/`](examples/results/claude-sonnet-5-5-2026-11-22.md)). Version 1.5.0 added rules and examples that have **not** been run against a model, and no no-skill baseline exists yet. The goldens are expectations written by the skill author. Server-rendered templates have one seeded case (ERB); other template
+**Measured so far:** one self-test run, `claude-sonnet-5-5`, 2026-11-22, on version 1.4.0 only, 1 run, not blind for four of ten files: 28 of 32 expected IDs matched, 4 missed, 1 extra, 0 findings on the clean control (see [`examples/results/`](examples/results/claude-sonnet-5-5-2026-11-22.md)). Nothing has been run on version 1.5.0 (no runs of the new rules, the build-mode case or the new examples), and no no-skill baseline exists. The goldens are expectations written by the skill author. Server-rendered templates have one seeded case (ERB); other template
 engines have none.
 
 **Roadmap, not built:** domain packs as separate plugins (payments, streaming AI chat with a stalled
@@ -171,7 +173,7 @@ three reference files, [states](references/states.md) 16, [feedback](references/
 [forms](references/forms.md) 8, each read only when a row of the Build-mode table matches.
 [`references/modes.md`](references/modes.md) holds the screen audit, policy block and `init`, and is read
 only on those subcommands. The 8 opt-in laws are in [`references/opt-in/laws.md`](references/opt-in/laws.md) and are read only on `/edgecase laws`. File sizes in bytes:
-states.md 11,289 and feedback.md 5,875 are the largest; no per-run token figure is published because none has been measured. Every rule has the same
+states.md 12730 and feedback.md 5,875 are the largest; no per-run token figure is published because none has been measured. Estimate from file sizes, not measured: SKILL.md (7,719 bytes) is always loaded; a fetch change adds states.md (12730 bytes), about 20 KB total, roughly 5,000 tokens at 4 bytes per token. Every rule has the same
 shape:
 
 ```markdown
@@ -191,7 +193,11 @@ The core set is capped at 40 rules, and the cap is hard: new material merges int
 rather than accumulating, because every rule is context cost on every unrelated prompt. It stands at 34;
 in 1.5.0 the design laws moved to the opt-in file to pay for two new rules. Spacing,
 colour and typography are out of scope by design and belong to the `craft` skill. The design rationale is
-in [`docs/SPEC.md`](docs/SPEC.md) (20,442 bytes, written for maintainers, never referenced by `SKILL.md`, so it is not loaded when the skill runs); version history is in [`CHANGELOG.md`](CHANGELOG.md).
+in [`docs/SPEC.md`](docs/SPEC.md) (20,721 bytes, written for maintainers, never referenced by `SKILL.md`, so it is not loaded when the skill runs); version history is in [`CHANGELOG.md`](CHANGELOG.md).
+
+## Other skills read
+
+Read on 2026-11-22; this says what their pages do not define, not which is better, and edgecase has not been benchmarked against them. `ux-feedback` (sickn33/antigravity-awesome-skills) lists 4 states and 17 unnumbered rules; its page defines no stable IDs, no per-rule severity, no `response.ok` or status handling and no stale-response rule. `review-loading-error-empty-states` (Ritual, clawhub.ai) lists 5 checks; its page defines no IDs, severity, output format, status or stale-response handling, and mentions an optional paid cloud service. `react-ui-patterns` was not read and is not described here.
 
 ## Credits
 

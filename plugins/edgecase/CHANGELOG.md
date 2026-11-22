@@ -14,6 +14,9 @@ Release checklist: version in `plugin.json` == the edgecase entry (version and d
 - Four new examples (`status.jsx`, `search.jsx`, `dashboard.jsx`, `app-orders.jsx`), a build-mode case in `examples/build/`, and a blind and a no-skill-baseline prompt in `examples/README.md`. None of these has been run against a model yet.
 - Reworded two uncited claims in `states.md` as design judgment, removed an uncited comparison from the README, added an "If you also have uilint" section, and changed "gate" wording to a review the model runs before it reports done. Removed "race conditions" from the will-not-catch list for the covered case.
 - Marketplace entry (root `.claude-plugin/marketplace.json`) must be bumped to 1.5.0 with the new description; `scripts/check.mjs` fails until it is.
+- Later in 1.5.0: R-STATE-17 also covers a 200 response whose body carries an error (GraphQL spec Response 7.1.2 read and cited). New example `graphql-or-checked.jsx` (status checked, failure never rendered: R-FEEDBACK-02 and not R-STATE-17); not yet run against a model. New "where the fix belongs" table at the end of `references/states.md` (TanStack Query, Next.js, SvelteKit, React, Vue, each with a docs URL read on 2026-11-22; Next.js `loading.tsx` omitted because its docs were not read). A Probe may be offered once after a blocking finding. `candidates.sh` header states its noise and measured result. README: unmeasured banner, size-based token estimate, factual note on two other skills.
+- Name search 2026-11-22: no plugin named edgecase found in the registries searched; similar names exist.
+- Not done in this release: no model runs, so no 1.5.0 results file and no fixtures check (see README, Measured so far).
 
 ## 1.4.0 - 2026-11-22
 - Build mode now writes loading, error and empty handling into the first draft for the paths the change touches, and states in one line what it added. The earlier "do not silently add states" line is gone.

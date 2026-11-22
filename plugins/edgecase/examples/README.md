@@ -1,6 +1,6 @@
 # Examples and self-test
 
-Fourteen small files and one build-mode case: twelve with seeded state bugs and two clean controls
+Fifteen small files and one build-mode case: thirteen with seeded state bugs and two clean controls
 (`pass.jsx`, `files.jsx`). Each has a golden list in `expected/`. Nothing here runs and none of it is loaded while
 you use the skill; it exists so the claims can be checked.
 
@@ -25,6 +25,7 @@ with what the user experiences and a Fix, `Worth fixing:`, and a last `edgecase-
 | [`search.jsx`](search.jsx) | React | [`expected/search.md`](expected/search.md) | Search as you type where an older response can overwrite a newer one (R-STATE-18) |
 | [`dashboard.jsx`](dashboard.jsx) | React Query | [`expected/dashboard.md`](expected/dashboard.md) | Longer mixed file: one correct region, one with no states, one that crashes the page, one silent invite |
 | [`app-orders.jsx`](app-orders.jsx) | Next.js App Router | [`expected/app-orders.md`](expected/app-orders.md) | Server components and a server action with no status checks, no error boundary, no pending state |
+| [`graphql-or-checked.jsx`](graphql-or-checked.jsx) | React | [`expected/graphql-or-checked.md`](expected/graphql-or-checked.md) | Inverse of `status.jsx`: the status IS checked, but the failure sets state that is never rendered (R-FEEDBACK-02, and NOT R-STATE-17) |
 | [`build/`](build/orders-prompt.md) | any React project | [`build/orders-expected.md`](build/orders-expected.md) | Build mode: a prompt, and the states the first draft must already contain |
 
 Each expected ID carries a one-line reason, so a miss or an extra can be judged. The goldens were written by the skill author and have not been blind-reviewed; open a PR to dispute any ID. Goldens are expectations, not measurements; scored runs live in [`results/`](results/). In 1.5.0 `list.jsx`, `form.jsx`, `panel.vue` and `feed.svelte` gained an expected R-STATE-17, so the 1.4.0 result file was scored against older goldens and is not comparable without that adjustment.
