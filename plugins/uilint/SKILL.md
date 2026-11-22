@@ -1,6 +1,6 @@
 ---
 name: uilint
-description: Catch the UI states and failure paths that get skipped — loading, empty, error, success, and partial. Use whenever building or reviewing an interface that fetches data, submits a form, or navigates, and whenever a user describes an interface problem in symptoms rather than terms — "nothing happens when I click", "it just spins forever", "the page goes blank", "users don't know if it worked", "review this component", "/uilint". Not for pure visual styling or copywriting questions. Also use proactively while writing UI, so the states exist in the first draft instead of being retrofitted after someone complains. Does NOT trigger for pure styling, copy edits, or static pages with no async work.
+description: Catch the UI states and failure paths that get skipped — loading, empty, error, success, and partial. Use whenever building or reviewing an interface that fetches data, submits a form, or navigates, and whenever a user describes an interface problem in symptoms rather than terms — "nothing happens when I click", "it just spins forever", "the page goes blank", "users don't know if it worked", "review this component", "/uilint". Also use proactively while writing UI, so the states exist in the first draft instead of being retrofitted after someone complains. Does NOT trigger for pure visual styling, copy edits, copywriting questions, or static pages with no async work.
 ---
 
 # uilint
@@ -126,7 +126,7 @@ uilint:
 ```
 
 `ignore` paths are skipped, `demote` rules become `recommended`, `strict` paths treat every
-`recommended` rule as `required`. Overrides in `CLAUDE.md` win over this file. When any applied,
+`recommended` rule as `required`. Overrides in `CLAUDE.md` win over this file. When any is applied,
 say so in the verdict line ("2 rules demoted by CLAUDE.md"). Nothing else is read from it.
 
 ## Judgment

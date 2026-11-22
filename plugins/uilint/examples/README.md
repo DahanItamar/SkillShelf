@@ -1,6 +1,6 @@
 # Examples and self-test
 
-Eight small files: seven with seeded state bugs and one clean control. Each has a golden list of the
+Seven small files: six with seeded state bugs and one clean control. Each has a golden list of the
 rule IDs `uilint` should report, in `expected/`. Nothing here runs and none of it is loaded while
 you use the skill; it exists so the claims can be checked.
 

@@ -75,7 +75,7 @@ Apply these?
 The code is correct on the happy path; the failures are invisible by construction. Findings lead
 with what the user experiences rather than which rule fired. A correct component
 ([`pass.jsx`](examples/pass.jsx)) should get the verdict line and nothing else. The
-[self-test](examples/README.md#self-test) scores matched, missed and extra rule IDs across eight files.
+[self-test](examples/README.md#self-test) scores matched, missed and extra rule IDs across seven files.
 
 ## Install
 
