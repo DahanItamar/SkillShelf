@@ -1,6 +1,6 @@
 # The Refactoring Directory
 
-Where a run is written, how smells are numbered across runs, and the line format `spec-implement`
+Where a run is written, how smells are numbered across runs, and the line format an executor
 reads.
 
 ---
@@ -26,10 +26,9 @@ one by scanning both directories; do not guess from the highest you happen to se
 **Slugs** are ASCII kebab-case, truncated at 40 characters, naming what the run is *for* — the
 milestone it unblocks, or the sweep it performs.
 
-**A run is archived by `/spec-drift`**, not here. Once every entry is ticked or explicitly
-abandoned, stage 5 re-checks that the smells really are gone, records the outcome of each `SM-###`
-in the registry, and moves the directory to `archive/`. Leaving that to the stage that reads the
-document and the code as two separate sources is what stops a ticked box from becoming a permanent
+**A run is archived only after a check.** Once every entry is ticked or explicitly
+abandoned, the closing step re-checks that the smells really are gone, records the outcome of each `SM-###`
+in the registry, and moves the directory to `archive/`. Doing that check, rather than trusting the boxes, is what stops a ticked box from becoming a permanent
 untruth in the registry.
 
 ## Why a registry, and not just the reports
@@ -121,7 +120,7 @@ New smells that failed the gate. Recorded in `SMELLS.md`; no work proposed here.
 | --- | --- | --- |
 | SM-008 | Message Chains in the export path | Nothing scheduled touches it |
 
-## 4. Routed to spec-architect
+## 4. Out of scope (needs a change proposal)
 
 Findings that cannot be fixed without changing behaviour. These are not refactorings.
 
@@ -153,8 +152,8 @@ the judgment diff lands on code that has already been tidied.
 
 **If a line cannot name a criterion to preserve**, the code it touches is uncovered by the spec.
 Write `preserves: none recorded` and say in the notes that verification is by characterization test
-or by inspection. Never invent a criterion to fill the field — §2.1 belongs to `spec-architect`, and
-one invented here would be checked by stage 5 forever.
+or by inspection. Never invent a criterion to fill the field — §2.1 belongs to the spec owner, and
+one invented here would be checked by a drift check forever.
 
 `CL-` and `R-` are scoped to one report and restart at 01 in the next one. They cite `SM-` and
 `AC-###`; nothing cites them back, which is why they can restart and `SM-###` cannot.

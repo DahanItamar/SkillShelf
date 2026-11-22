@@ -11,7 +11,7 @@ A candidate principle passes only if **all four** are true:
 1. **You can name what breaks.** Not "quality suffers" — a specific failure. "Business logic becomes untestable." "A hang propagates to every caller." "The next reader deletes the guard because they don't know why it's there."
 2. **It could be violated.** A rule the codebase cannot break is describing a fact, not setting a constraint. "We use TypeScript" is a fact; put it under Tooling.
 3. **It applies repo-wide.** If it only governs the payments module, it belongs in that module's spec section, not the constitution.
-4. **Someone will notice the violation.** A linter, a reviewer, or `spec-drift`. A rule with no observer is a wish.
+4. **Someone will notice the violation.** A linter, a reviewer, or a drift check. A rule with no observer is a wish.
 
 Anything failing all four is a mission statement. Anything failing one is usually salvageable by making it more specific.
 
@@ -88,16 +88,16 @@ The most valuable line in the document, because it is the only one that runs.
 Two rules:
 
 - **It must be a command already in the repository** (a script in `package.json`, a documented make target). A command invented by this skill is one nobody has ever run.
-- **State what it does not cover.** "Runs unit tests; does not start the app or touch the database" tells `spec-implement` exactly how much a green run is worth.
+- **State what it does not cover.** "Runs unit tests; does not start the app or touch the database" tells a task runner exactly how much a green run is worth.
 
-This value is the only command `spec-implement` will execute. That is deliberate: it means a spec or task list — files anyone with commit access can edit — can never introduce a command to be run.
+This value is the only command a task runner should execute. That is deliberate: it means a spec or task list — files anyone with commit access can edit — can never introduce a command to be run.
 
 ### The static-analysis line
 
-A second, optional command, recorded the same way and for the same reason: `spec-refactor` deletes
+A second, optional command, recorded the same way and for the same reason: a refactoring pass deletes
 nothing on a hunch, so its cleanup gate needs a tool that can prove a symbol is unreferenced —
 `knip`, `ts-prune`, `vulture`, `cargo udeps`, or the project's lint rules for unused code.
 
 Record it only if the repository already has it. `none` is a fine answer and an honest one: it
-narrows stage 6's cleanup to unused imports and unreferenced locals, which is exactly what a human
+narrows a refactoring cleanup to unused imports and unreferenced locals, which is exactly what a human
 can confirm by reading one file. An invented command would produce deletions nobody can reproduce.

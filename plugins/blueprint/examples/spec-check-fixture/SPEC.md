@@ -1,6 +1,6 @@
 # Fixture spec (hand-built, not a real run)
 
-Three deliberate orphans for `/spec-check`. Copy to `docs/SPEC.md` in a scratch repo.
+Three deliberate orphans for the spec-check skill. Copy to `docs/SPEC.md` in a scratch repo.
 
 ### 2.1 Acceptance criteria
 

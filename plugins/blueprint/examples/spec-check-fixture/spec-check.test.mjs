@@ -1,5 +1,5 @@
 // Run by a maintainer: node --test examples/spec-check-fixture/spec-check.test.mjs
-// Runs the optional scripts/spec-check.sh against the hand-built fixture. Needs `sh` and `awk`.
+// Runs the optional skills/spec-check/scripts/spec-check.sh against the hand-built fixture. Needs `sh` and `awk`.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
@@ -9,7 +9,7 @@ import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const run = spawnSync(
   'sh',
-  ['scripts/spec-check.sh', 'examples/spec-check-fixture/SPEC.md', 'examples/spec-check-fixture/TASKS.md'],
+  ['skills/spec-check/scripts/spec-check.sh', 'examples/spec-check-fixture/SPEC.md', 'examples/spec-check-fixture/TASKS.md'],
   { cwd: root, encoding: 'utf8' },
 );
 

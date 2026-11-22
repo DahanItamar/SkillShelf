@@ -38,7 +38,7 @@ Instead of: SQLite — the original choice, correct while the app was single-use
 Revisit if: the second writer is removed
 ```
 
-The record of *why* is the most valuable content in the document. A merge that quietly drops it turns the spec back into prose, and the next `spec-drift` run has nothing to distinguish a regression from an intended change.
+The record of *why* is the most valuable content in the document. A merge that quietly drops it turns the spec back into prose, and the next drift run has nothing to distinguish a regression from an intended change.
 
 ### Promote the motivation
 
@@ -48,7 +48,7 @@ The proposal's `## Motivation` was written for a reviewer who is about to disapp
 
 ## Criteria
 
-- **Added criteria keep their IDs.** They were allocated from the repo-wide sequence when the proposal was written. The exception is a proposal written on a branch with provisional ids (`0000-slug`, `AC-NEW-n`): allocate the next real ordinal and the next free `AC-###` numbers by scanning `main` now, rename the directory, and replace every provisional id in the proposal and its `TASKS.md` in the same commit. See the Teams section of `spec-architect/references/change-proposals.md`. Never renumber to close gaps — gaps are normal and every archived task list still cites these IDs.
+- **Added criteria keep their IDs.** They were allocated from the repo-wide sequence when the proposal was written. The exception is a proposal written on a branch with provisional ids (`0000-slug`, `AC-NEW-n`): allocate the next real ordinal and the next free `AC-###` numbers by scanning `main` now, rename the directory, and replace every provisional id in the proposal and its `TASKS.md` in the same commit. Never renumber to close gaps — gaps are normal and every archived task list still cites these IDs.
 - **Retired criteria become tombstones** in §2.1, struck through, naming the ordinal that retired them:
 
   ```markdown

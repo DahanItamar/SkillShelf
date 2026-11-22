@@ -3,8 +3,8 @@
 # Never run by install, never wired to a hook. Reads files, writes only a
 # temporary directory, runs no command found in your repository.
 #
-#   sh scripts/spec-check.sh                          # docs/ layout, run from the repo root
-#   sh scripts/spec-check.sh SPEC.md TASKS.md ...     # explicit files (no REPORT.md or directory checks)
+#   sh <skill folder>/scripts/spec-check.sh                          # docs/ layout, run from the repo root
+#   sh <skill folder>/scripts/spec-check.sh SPEC.md TASKS.md ...     # explicit files (no REPORT.md or directory checks)
 #
 # Flags (first, before any file):
 #   --main     also report leftover provisional ids (docs/changes/0000-*, AC-NEW-n in 2.1).
@@ -100,9 +100,9 @@ if [ "$explicit" -eq 0 ]; then
     grep -v ^0000 | sort | uniq -d | while read -r o; do echo "ordinal $o used by more than one change directory"; done >> "$tmp/orphans"
 fi
 
-# With --main: leftover provisional ids mean the /spec-drift merge step was skipped.
+# With --main: leftover provisional ids mean the merge step was skipped.
 if [ "$main" -eq 1 ] && [ "$explicit" -eq 0 ]; then
-  for d in docs/changes/0000-*; do [ -d "$d" ] && echo "$d exists, run /spec-drift merge"; done >> "$tmp/orphans"
+  for d in docs/changes/0000-*; do [ -d "$d" ] && echo "$d exists, merge step skipped"; done >> "$tmp/orphans"
   grep ^AC-NEW- "$tmp/known" | while read -r id; do echo "$id in SPEC.md section 2.1"; done >> "$tmp/orphans"
 fi
 

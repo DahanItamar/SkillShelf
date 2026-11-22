@@ -1,11 +1,9 @@
 ---
 name: spec-constitution
-description: Stage 1 of 6 in the spec chain. Write the repository's constitution — the principles, conventions, and verification command that every later spec, task list, and implementation inherits. Use at the start of a project, before running spec-architect on a new repo, when conventions live only in reviewers' heads, when a team keeps re-litigating the same review comments, or when an agent keeps producing code that doesn't match the house style. Writes docs/CONSTITUTION.md. Does not describe features — that is spec-architect's job.
+description: Write the repository's constitution — the principles, conventions, and verification command that specs, task lists, and implementation work should follow. Use at the start of a project, when conventions live only in reviewers' heads, when a team keeps re-litigating the same review comments, or when an agent keeps producing code that doesn't match the house style. Writes docs/CONSTITUTION.md. Does not describe features.
 ---
 
 # Spec Constitution
-
-> Stage 1 of 6 - Constitution. Before: nothing (start of chain; optional). After: /spec-architect. Map: /spec-start. Name each phase as you enter it.
 
 A constitution answers one question: *what is true about this repository regardless of what we are building this week?*
 
@@ -42,11 +40,11 @@ For an empty repository, skip to Phase 1 and derive from the stack instead.
 
 ### Phase 1 — Questions, at most four
 
-Use `AskUserQuestion` where the host agent provides it — one call, all questions batched. Where it does not exist, ask them as a single numbered list in one message and wait for one reply. Never ask one at a time.
+Ask all questions in one message as a numbered list with a concrete default for each, and wait for one reply; if your tool has a structured-question feature you may use it. Never ask one at a time.
 
 Only these four are ever worth asking, and only when the repo doesn't already answer them:
 
-1. **What command proves the code works?** (`npm test`, `cargo test`, `pytest -q`, or "nothing automated yet") — this becomes `verifyCommand`, and it is the single most valuable line in the document. `spec-implement` runs it after every task and nothing else.
+1. **What command proves the code works?** (`npm test`, `cargo test`, `pytest -q`, or "nothing automated yet") — this becomes `verifyCommand`, and it is the single most valuable line in the document. a task runner runs it after every task and nothing else.
 2. **Which existing inconsistency should become the rule?** Only when Phase 0 found the repo doing the same thing two ways.
 3. **What is non-negotiable here that an outsider wouldn't guess?** Regulatory constraint, a performance budget, a platform that must keep working, a dependency that may never be added.
 4. **Who reads this code?** Solo · a small team · outside contributors. Decides how much the document explains versus states.
@@ -65,7 +63,7 @@ Each principle is one sentence stating the rule, plus one clause stating the con
 
 These come from the repository, not from taste. Layout, dependency direction, naming, size limits, tooling, and the verify command. State only rules this repo will actually follow.
 
-**Size limits are the section most often written and least often honored.** Include only limits the linter enforces, or that you are willing to have `spec-drift` report as a finding. A limit nobody checks teaches readers the rest of the document is optional too.
+**Size limits are the section most often written and least often honored.** Include only limits the linter enforces, or that you are willing to have a drift check report as a finding. A limit nobody checks teaches readers the rest of the document is optional too.
 
 ### Phase 4 — Write `docs/CONSTITUTION.md`
 
@@ -97,7 +95,7 @@ Follow this structure exactly:
 ## Verification
 **Verify command:** `<the command, or "none — verified by reading">`
 **Static analysis:** `<the dead-code / lint command, or "none">`
-**Reviewed:** `<who read the verify command and when, or "not reviewed">`
+**Reviewed:** `<verify command verbatim> - <name> <date>, or "not reviewed">`
 <What each covers, and what it does not.>
 
 ## Standing decisions
@@ -105,13 +103,13 @@ Follow this structure exactly:
 1. <decision> — <what changes if it's wrong>
 ```
 
-Then tell the user the path and the verify command you recorded. Say that `spec-implement` will print the command and ask for confirmation before running it, and again whenever it changes; in a non-interactive run it runs the command only if the `Reviewed:` line names a reviewer. Record `Reviewed:` only when the user told you who reviewed it; never fill it in yourself.
+Then tell the user the path and the verify command you recorded. Say that a task runner following this file should print the command and ask for confirmation before running it, and again whenever it changes. The `Reviewed:` line must contain the exact command, `Reviewed: <command verbatim> - <name> <date>`; a non-interactive run may execute the command only if it equals the text on that line, so editing the command in a pull request means editing the `Reviewed:` line in plain view. Record `Reviewed:` only when the user told you who reviewed it; never fill it in yourself.
 
 ---
 
 ## Boundaries
 
-**This skill never describes a feature.** No entities, no endpoints, no user stories. If you find yourself writing about shifts or invoices or users, you have crossed into `spec-architect`.
+**This skill never describes a feature.** No entities, no endpoints, no user stories. If you find yourself writing about shifts or invoices or users, you have crossed into spec writing; stop.
 
 **This skill never writes code.** It documents what code must look like.
 
@@ -124,7 +122,3 @@ A solo weekend project gets principles, verify command, and naming — three sec
 ## Reference files
 
 - `references/principles.md` — the test a principle must pass, and a catalog by project shape
-
-## Related
-
-`spec-architect` writes the spec that inherits this document. Run this one first on a new repo; where no constitution exists, `spec-architect` falls back to writing conventions inline.

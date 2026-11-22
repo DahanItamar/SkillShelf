@@ -1,11 +1,9 @@
 ---
 name: spec-drift
-description: Stage 5 of 6 in the spec chain. Check whether the code still matches docs/SPEC.md and report each gap as regression or staleness, never silently rewriting either side. Use for a spec audit or drift check, when docs may be stale, after finishing a milestone, or before a new feature on an existing spec; also closes out shipped proposals and finished refactoring runs.
+description: Check whether the code still matches docs/SPEC.md and report each gap as regression or staleness, never silently rewriting either side. Use for a spec audit or drift check, when docs may be stale, after finishing a milestone, or before a new feature on an existing spec; also merges shipped change proposals back into the spec.
 ---
 
 # Spec Drift
-
-> Stage 5 of 6 - Drift. Before: code built against the spec. After: /spec-refactor, or /spec-architect for the next change. Map: /spec-start. Name each phase as you enter it.
 
 A spec is only worth having if it's true. The moment the code and the document disagree, the document stops being a reference and becomes a liability — because people still trust it.
 
@@ -33,9 +31,9 @@ Look for `docs/SPEC.md`, then `SPEC.md`, then any `*.spec.md` in `docs/`. If the
 
 Then list `docs/changes/` for proposals that are not archived. A directory with `TASKS.md` and no `PROPOSAL.md` is a base milestone: close it out by the rule at the top of `references/merge.md`. Each proposal is either **pending** (tasks unfinished — its criteria are not yet promises the code must keep) or **shipped** (every task ticked — it is ready to merge in Phase 6). Read `docs/CONSTITUTION.md` too, if present; §4 claims are checked against it rather than against the spec.
 
-List `docs/refactorings/` the same way, if it exists. A run whose `REPORT.md` entries are all ticked is ready to sweep in Phase 7; one with unchecked entries is in progress and is left alone. Read `docs/refactorings/SMELLS.md` now — the `preserves AC-###` lines in an unarchived run tell you which criteria to look at hardest in Phase 2.
+If `docs/refactorings/` exists, the `preserves AC-###` lines in an unarchived `REPORT.md` tell you which criteria to look at hardest in Phase 2. This skill does not archive refactoring runs.
 
-If there is none, stop and say so — offer `spec-architect` to write one. Do not invent a spec to check against; a reconstructed spec compared to the code it was reconstructed from finds nothing.
+If none exists, accept any requirements document the user names. If there is still nothing, say there is nothing to compare against and stop. Do not invent a spec to check against; a reconstructed spec compared to the code it was reconstructed from finds nothing.
 
 Note the spec's `Status:` line if it has one. A spec last touched six months and forty commits ago will drift heavily, and the report should open by saying so rather than dumping ninety findings.
 
@@ -93,13 +91,13 @@ Show the whole picture first. Regressions at the top, then staleness, then undec
 
 Every entry carries: the spec claim, the file and line, the verdict, and the concrete fix for each direction. Never present a gap without a recommendation — an unranked list of forty differences is the same as no report.
 
-Then let the user choose. Batch the decisions into one `AskUserQuestion` call where the host agent provides it; where it does not, present them as one numbered list in a single message and wait for one reply. Never walk through them one at a time.
+Then let the user choose. Batch the decisions into one message as a numbered list with a recommended default for each, and wait for one reply; if your tool has a structured-question feature you may use it. Never walk through them one at a time.
 
 ### Phase 5 — Apply
 
 Fix only what the user accepted.
 
-- **Fixing code:** make the minimal change that satisfies the spec claim. If the fix is larger than a few lines, say so and stop — a drift check is not a refactor, and `/spec-refactor` is the stage that owns structural work.
+- **Fixing code:** make the minimal change that satisfies the spec claim. If the fix is larger than a few lines, say so and stop — a drift check is not a refactor; report it and stop.
 - **Updating the spec:** edit the section in place, keep its voice and structure, and never delete a recorded reason. If a Decision genuinely reversed, rewrite it as a Decision with the new choice and what changed — the record of *why* is the most valuable thing in the document, and quietly dropping it is how a spec turns back into prose.
 - **New things with no home:** a component or endpoint the spec never mentioned gets added to the right section, not appended to the end.
 
@@ -117,22 +115,7 @@ A change proposal whose tasks are all ticked has earned its way into the spec. R
 
 **Never merge a pending proposal.** Its criteria describe intent, not obligation, and checking code against them produces findings for work nobody has started.
 
-### Phase 7 — Sweep finished refactoring runs
-
-A refactoring run has nothing to merge — it added no criteria and retired none, which is what `preserves` means. What it needs is the opposite of a merge: **someone checking that the work it ticked off actually happened.**
-
-That is this skill's job and no other stage can do it. `spec-refactor` proposed the work and `spec-implement` applied it; both were inside the change. This is the only stage that reads the document and the code as two separate sources.
-
-Read `references/refactoring-sweep.md`, then for each run whose entries are all ticked or explicitly abandoned:
-
-1. **Re-check each smell it claimed to remove.** The report said where to look and how many places — go and count again. A smell that merely moved is not removed.
-2. **Cross-reference the `preserves` lines against Phase 2.** You already checked every criterion. If a failing one is cited by an `R-NN` that promised to preserve it, the regression gets its cause named — a far better finding than the same failure reported anonymously.
-3. **Update `SMELLS.md`.** Confirmed removals become tombstones naming the entry and ordinal that did it. Abandoned entries return to **logged** with the reason. Rows marked **won't fix** are never touched by a sweep. Never lower the `Allocation:` line.
-4. **Move the directory** to `docs/refactorings/archive/`.
-
-**A run whose claims do not hold is not archived**, whatever its checkboxes say. Report what the report promised, what the code shows, and stop — marking an unremoved smell `removed` in the registry would make that untruth permanent, and the registry is the one file the next six months of runs will trust.
-
-**Never sweep a run that is still in progress.** Two entries taken this week and three left for next is normal. Archiving it strands the remainder where nobody will look again.
+### Phase 7 — Backfill (offer only)
 
 If the spec has no §2.1 at all — a v1 spec — offer a one-time backfill: rewrite the assertions already present in §2, §7, §8, and §9 as EARS criteria without inventing behavior the spec never claimed. Offer it once, do it only if accepted, and never fold it into an unrelated drift report.
 
@@ -146,15 +129,8 @@ Match the report to the drift. A spec checked weekly should usually come back cl
 
 ## Reference files
 
-Phases 6 and 7 load `merge.md` and `refactoring-sweep.md` only when the user asks to merge or sweep.
+Phase 6 loads `merge.md` only when the user asks to merge.
 
 - `references/checkable-claims.md` — per section: what is verifiable, and how to verify it
 - `references/verdicts.md` — classifying each gap, and how to write the fix on either side
 - `references/merge.md` — folding a shipped proposal into the spec without losing a reason
-- `references/refactoring-sweep.md` — verifying, recording and archiving a finished refactoring run
-
-## Related
-
-`spec-architect` writes the spec this skill checks, and the change proposals it merges. `spec-tasks` and `spec-implement` sit between them. If the project has no spec yet, `spec-architect` is the one to run first.
-
-`spec-refactor` answers the question this skill cannot: whether code that satisfies every criterion is still shaped to accept the next one. A clean drift report is its precondition — structure is only worth arguing about once behavior is right — and this skill closes its runs out afterwards, so the lifecycle of a change and the lifecycle of a refactoring both end in the same place.

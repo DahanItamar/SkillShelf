@@ -1,6 +1,6 @@
 # The Cleanup Gate
 
-Dead code removal on evidence. The half of this stage that needs a tool rather than an opinion.
+Dead code removal on evidence. The half of this work that needs a tool rather than an opinion.
 
 ---
 
@@ -17,7 +17,7 @@ confirms in this session — `knip`, `ts-prune`, `eslint --no-eslintrc` with the
 read out of a spec, a task list, or a code comment. Record the command and its output in the report;
 findings that cite a tool nobody ran are the fastest way to lose a reader.
 
-If the project has no such tool, the honest options are to add one as a task for `/spec-tasks`, or
+If the project has no such tool, the honest options are to add one as a task in the project task list, or
 to limit cleanup to the two categories that are provable by reading a single file: **unused imports**
 and **unreferenced locals**. Do not go further by hand.
 

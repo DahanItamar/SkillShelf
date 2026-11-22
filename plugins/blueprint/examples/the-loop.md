@@ -1,15 +1,15 @@
 # The loop
 
-One project, six months, six stages. This is the whole workflow.
+An illustrative walkthrough of one imagined project over six months. It is built around the hand-written files in [`proof/`](proof/), not a recorded run of any model.
 
 Everything below is backed by files in [`proof/`](proof/) — `node --test examples/proof/proof.test.mjs`, 17 tests, no dependencies.
 
 ---
 
-## Day 1 — `/spec-architect`
+## Day 1 — spec-architect
 
 ```
-/spec-architect I want a desktop app for managing employee shifts
+Ask your agent to use the spec-architect skill: I want a desktop app for managing employee shifts
 ```
 
 Four questions. One of them is *"do shifts ever cross midnight?"* — you answer yes, night shifts are normal.
@@ -34,7 +34,7 @@ AC-003  If two shifts for one employee overlap by any minute, then the
 
 `AC-003` is the identifier every later stage refers to. Nothing else survives the handoff between them.
 
-## Day 2 — `/spec-tasks`, then `/spec-implement`
+## Day 2 — spec-tasks, then spec-implement
 
 ```
 - [ ] T-04 Detect overlaps on a continuous minute timeline — closes AC-003 — files: src/scheduler.js
@@ -75,10 +75,10 @@ Same silence as having no spec at all. Three weeks later.
 > ✔ and the rejection is silent: the overlap is simply never detected
 > ```
 
-## Day 24 — `/spec-drift`
+## Day 24 — spec-drift
 
 ```
-/spec-drift
+Ask your agent to use the spec-drift skill.
 ```
 
 It reads the spec, reads the code, and compares the claims that are actually checkable:
@@ -123,12 +123,12 @@ So the rule is:
 
 ---
 
-## Month 6 — `/spec-refactor`
+## Month 6 — spec-refactor
 
 Four features later, drift comes back **clean**. Every criterion holds, the overnight case works, nothing contradicts the spec. And adding the next rule — a minimum rest period between shifts — is four days of work.
 
 ```
-/spec-refactor
+Ask your agent to use the spec-refactor skill.
 ```
 
 `docs/refactorings/0003-m3-rest-period/REPORT.md`:
@@ -146,17 +146,17 @@ SM-002  Duplicate Code — the same day arithmetic, copied three times,
 - [ ] R-02 Extract `toRange` and delete the two copies — removes SM-002 — preserves AC-003 — kind: mechanical
 ```
 
-Both lines say **preserves**, not **closes**. That is the difference between this stage and stage 3: a refactoring that needs `AC-003` reworded is not a refactoring, it is a change proposal, and it goes back to `/spec-architect`.
+Both lines say **preserves**, not **closes**. That is the difference between a refactoring and a task: a refactoring that needs `AC-003` reworded is not a refactoring, it is a change proposal.
 
 > Asserted in [`proof.test.mjs`](proof/proof.test.mjs) against [`smelly.mjs`](proof/smelly.mjs):
 > ```
-> ✔ behaves exactly like the spec-derived version — spec-drift finds nothing
+> ✔ behaves exactly like the spec-derived version — a drift check finds nothing
 > ✔ SM-001 Shotgun Surgery: one rule kind is known in four places
 > ✔ SM-002 Duplicate Code: the same day arithmetic, copied three times
 > ✔ and the copies have already diverged, in the one path no criterion covers
 > ```
 
-The divergence is in the grid tooltip, which no criterion mentions — so an overnight shift displays as `-960` minutes, every test stays green, and stage 5 is right to say nothing. Correctness and changeability are different properties.
+The divergence is in the grid tooltip, which no criterion mentions — so an overnight shift displays as `-960` minutes, every test stays green, and a drift check is right to say nothing. Correctness and changeability are different properties.
 
 ---
 
@@ -164,13 +164,13 @@ The divergence is in the grid tooltip, which no criterion mentions — so an ove
 
 ```mermaid
 flowchart LR
-    I["your idea"] --> A["/spec-architect<br/><i>docs/SPEC.md</i>"]
-    A -- "AC-###" --> T["/spec-tasks<br/><i>TASKS.md</i>"]
-    T --> M["/spec-implement<br/><i>code</i>"]
-    M --> D{"/spec-drift"}
+    I["your idea"] --> A["spec-architect<br/><i>docs/SPEC.md</i>"]
+    A -- "AC-###" --> T["spec-tasks<br/><i>TASKS.md</i>"]
+    T --> M["spec-implement<br/><i>code</i>"]
+    M --> D{"spec-drift"}
     D -- "code contradicts a reason" --> R["regression<br/><i>fix the code</i>"]
     D -- "nothing forbade it" --> S["staleness<br/><i>fix the spec</i>"]
-    D -- "clean, but expensive<br/>to change" --> F["/spec-refactor<br/><i>preserves AC-###</i>"]
+    D -- "clean, but expensive<br/>to change" --> F["spec-refactor<br/><i>preserves AC-###</i>"]
     R --> A
     S --> A
     F --> A

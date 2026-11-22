@@ -4,6 +4,28 @@ All notable changes to this plugin. Format follows [Keep a Changelog](https://ke
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-11-22
+
+### Changed
+- Each skill now works on its own. None of them names or requires another, and each takes its input from a file you name or from your message when the shared `docs/` files are missing.
+- The verify command must be pinned in plain text: a non-interactive run executes it only if it equals the command written on the constitution's `Reviewed:` line. With no constitution command, one candidate is read from project config and confirmed with you.
+- Questions are asked as one numbered list in one message; a structured-question tool is optional.
+- `spec-check` defines its handoff (you paste the script output; it never runs the script) and which checks decide pass or fail.
+- `spec-refactor` now closes out its own finished runs.
+- Parallel branches: the README and change-proposal notes describe who renumbers at merge, with a worked example.
+- The README leads with how to use it, in tool-neutral words, and points to the repository README for other tools.
+
+### Removed
+- `spec-start`, the stage banners and the slash-command hand-offs between skills.
+- The refactoring sweep from `spec-drift`.
+- The "Extending it" section and the comparison table from the README.
+
+### Moved
+- `spec-check.sh` now lives in `skills/spec-check/scripts/`, so it travels with the skill.
+
+### Added
+- `scripts/verify.sh`: a maintainer-run structural check (names, description length, line limit, no sibling-skill names).
+
 ## [3.4.0] - 2026-11-22
 
 ### Added

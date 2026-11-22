@@ -7,7 +7,7 @@ Loaded only when the input is an existing codebase with no spec, not an idea.
 3. **Mark provenance.** Every drafted criterion ends with `(observed, unconfirmed)` and the file it came from. The user's confirmation removes the label; until then it is a hypothesis about intent.
 4. **Never infer reasons.** Sections 3 (Decisions), 8 and 9 hold reasons and recorded rejections. Code shows what was done, never why or what was ruled out. Write what the code does, mark the reason `unknown`, and ask.
 5. **One round of questions, as in Phase 2 of SKILL.md**, and only those whose answer changes the architecture. The spec's value is the human decisions the code cannot show.
-6. **Do not run the code or its tests** to confirm behavior. Reading is enough for a draft; confirmation is `spec-drift`'s job later.
+6. **Do not run the code or its tests** to confirm behavior. Reading is enough for a draft; confirmation is a later drift check's job.
 
 Output shape only, not a recorded run:
 

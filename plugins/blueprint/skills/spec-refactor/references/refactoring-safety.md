@@ -19,7 +19,7 @@ refactoring and does not belong in the report.
    a deploy step, it is a change, not a refactoring.
 
 If the answer is no, stop and write down which criterion would have to change. That sentence is the
-input `/spec-architect` needs, and it is worth more than the refactoring you were about to do.
+input a change proposal needs, and it is worth more than the refactoring you were about to do.
 
 ## The tells that it is really a change proposal
 
@@ -34,7 +34,7 @@ input `/spec-architect` needs, and it is worth more than the refactoring you wer
 | "Rename this concept everywhere" | A refactoring — but the spec uses the old name, so §3 and §5 move too. Say so |
 
 That last row is the common one. A rename that leaves the spec talking about `Employee.name` while
-the code says `displayName` has manufactured drift for stage 5 to find. Rename in both, in one
+the code says `displayName` has manufactured drift for a drift check to find. Rename in both, in one
 commit, and note it in the handover.
 
 ## Mechanical or judgment
@@ -80,7 +80,7 @@ Then choose one of three, in this order of preference:
    rename, inline. Skip anything that changes control flow.
 3. **Do nothing and report that.** Untested code with no scheduled change against it is not an
    emergency. Untested code with a milestone landing on it needs the test, and that is a task for
-   `/spec-tasks`, not something to smuggle into a refactoring.
+   a task in the project task list, not something to smuggle into a refactoring.
 
 ## Diff discipline
 
