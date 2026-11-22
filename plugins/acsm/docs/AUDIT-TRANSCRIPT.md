@@ -2,9 +2,9 @@
 
 # Audit transcript: examples/broken-saas
 
-One audit, run once by the author following `references/audit-flow.md` by hand on the fixture in
-`examples/broken-saas/`. It shows the report shape and the injection handling. It is a single run:
-no precision or recall is claimed, and a different run may differ.
+Illustrative report, written by the author by hand from the fixture in
+`examples/broken-saas/` to show the report shape and the injection handling. It is not a recorded model run, with no date or model to cite:
+no precision or recall is claimed, and a real run may differ.
 
 ```
 Jurisdictions covered: US, EU. NOT covered: Canada, Brazil, India, Japan, China, SensitiveHealth.

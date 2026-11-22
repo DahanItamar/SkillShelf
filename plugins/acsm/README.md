@@ -160,7 +160,7 @@ Point it at code that already exists and every check in every loaded module is e
 | `n/a` | The obligation cannot arise here, with the reason |
 | `unverifiable` | Could not be decided, with what would settle it |
 
-A short sample from the seeded fixture [`examples/broken-saas`](examples/broken-saas/EXPECTED-FINDINGS.md), full run in [`docs/AUDIT-TRANSCRIPT.md`](docs/AUDIT-TRANSCRIPT.md):
+A short sample from the seeded fixture [`examples/broken-saas`](examples/broken-saas/EXPECTED-FINDINGS.md), illustrative report in [`docs/AUDIT-TRANSCRIPT.md`](docs/AUDIT-TRANSCRIPT.md):
 
 ```text
 AUDIT-5-01  blocker   No card data on own infrastructure
@@ -168,7 +168,7 @@ AUDIT-5-01  blocker   No card data on own infrastructure
   src/api/checkout.js:2     req.body cardNumber read server-side
 ```
 
-Every audit ends with a **Questions for counsel** block built from the unverifiable rows, assumptions and volatile instruments, each tied to a citation. That was one run; no precision or recall figure is claimed.
+Every audit ends with a **Questions for counsel** block built from the unverifiable rows, assumptions and volatile instruments, each tied to a citation. The sample is hand-written, not a recorded run; no precision or recall figure is claimed.
 
 `unverifiable` is the one that makes the report honest. Encryption at rest on a managed database lives in a console, not a repository — reporting that as `pass` claims a control nobody checked, and someone will rely on it.
 
