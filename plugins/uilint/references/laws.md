@@ -59,7 +59,7 @@ for. Nothing is removed by deferring it; it simply stops competing.
 *Why:* Progressive disclosure fails in the other direction too. A feature nobody discovers was not
 worth building, and the user cannot ask for something they do not know exists.
 *Applies:* anything hidden behind menus, overflow controls, or keyboard-only entry points
-*Check:* give someone the goal and watch. Do they find it without being told?
+*Check:* in code, trace from the app's entry point to the primary action. Count the clicks and menus, and note any that are keyboard-only or hover-only. More than two levels deep, or reachable only by a shortcut, is a finding.
 *Severity:* required
 
 ### R-LAW-08 · Absorb the complexity yourself — Tesler's Law

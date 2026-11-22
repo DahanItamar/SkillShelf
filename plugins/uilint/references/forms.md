@@ -6,7 +6,7 @@ placement are in `feedback.md`.
 ---
 
 ### R-FORM-01 · Do not disable the submit to enforce validity
-**DON'T:** Grey out a submit control to communicate that the form is not finished.
+**DON'T:** Grey out a submit control to communicate that the form is not finished. Exception: disable it while a submission is in flight (see R-STATE-15) or where the reason is self-evident.
 *Why:* It hands the user the job of finding what is missing, on a form mixing required and optional
 fields — and disabled controls are skipped by keyboard and screen-reader navigation, so the button
 and the reason it is off are both hard to discover. Disabling is right only where the reason is

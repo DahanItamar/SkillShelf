@@ -8,7 +8,7 @@
 
 **A linter for the interface states everyone forgets.**
 
-<img alt="version 1.2.0" src="https://img.shields.io/badge/version-1.2.0-2b2e3a?style=flat-square">
+<img alt="version 1.3.0" src="https://img.shields.io/badge/version-1.3.0-2b2e3a?style=flat-square">
 <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2b2e3a?style=flat-square"></a>
 
 </div>
@@ -43,8 +43,9 @@ detail on screen. A gate that blocks on everything gets switched off in week two
 
 ## A review
 
-Against the front end of a working local tool, a 1,023-line page polling a Python server every five
-seconds. Two of the four findings:
+Real output from a working local tool (a 1,023-line page polling a Python server every five
+seconds; the project is private, so this one is not reproducible). For a reproducible run, use the
+seeded components in [`examples/`](examples/README.md), each with the findings it should produce.
 
 ```text
 web/index.html:1019 · R-FEEDBACK-02 · blocking
@@ -84,16 +85,33 @@ git clone https://github.com/DahanItamar/claude-skills.git
 cp -r claude-skills/plugins/uilint ~/.claude/skills/uilint
 ```
 
-Pick one route, not both, or the same rules load twice. **In the VS Code extension the command is
+The second route installs it as a plain skill: the same rules, but the skill is invoked as
+`/uilint` without the plugin namespace, and `.claude-plugin/` is ignored. On Windows, copy to
+`%USERPROFILE%\.claude\skills\uilint`. Pick one route, not both, or the same rules load twice. **In the VS Code extension the command is
 `/plugins`, plural, and opens a dialog** — the lines above are terminal syntax and fail silently
 there, which looks identical to the install not working.
 
-It also triggers on its own while you are building UI, or when you describe a symptom rather than a
+To confirm the install, open any component and run `/uilint`; you should get a verdict line. It
+also triggers on its own while you are building UI (to turn that off in one repo, disable the plugin
+there or add a line to that repo's CLAUDE.md telling Claude not to use uilint), or when you describe a symptom rather than a
 category: *"nothing happens when I click"*, *"it just spins forever"*.
+
+## When to use it instead of a prompt
+
+A 20-line "check my UI states" prompt finds the obvious gaps. What this adds is stable rule IDs you
+can cite in review, an `Applies` line per rule that suppresses false positives, a short blocking
+list so the gate does not get switched off, and a build mode that checks the states while the
+code is written. It overlaps in places with the `craft` and `accessibility` skills, which are
+separate and not bundled here; uilint reports out-of-scope findings in one line rather than
+skipping them.
+
+**What it will not catch:** race conditions between requests, retry and backoff behaviour, offline
+and stale-data states, permission-denied states, optimistic-update rollback, internationalisation
+beyond layout mirroring. The five states are the scope, not the whole of UI correctness.
 
 ## How it is built
 
-[`SKILL.md`](SKILL.md) holds the trigger and the output contract in 104 lines. The 40 rules sit in
+[`SKILL.md`](SKILL.md) holds the trigger and the output contract in about 120 lines. The 40 rules sit in
 four reference files — [states](references/states.md) 13, [feedback](references/feedback.md) 9,
 [forms](references/forms.md) 8, [laws](references/laws.md) 10 — read only when the work touches that
 domain, so a question about a form does not drag Tesler's Law into context. Every rule has the same
@@ -114,8 +132,8 @@ IDs are permanent, so a review that cites one still reads correctly years later.
 
 The set is capped at 40 rules, and the cap is hard: new material merges into the rules already there
 rather than accumulating, because every rule is context cost on every unrelated prompt. Spacing,
-colour and typography are out of scope by design and belong to the `craft` skill. The reasoning is
-in [`docs/SPEC.md`](docs/SPEC.md).
+colour and typography are out of scope by design and belong to the `craft` skill. The design rationale is
+in [`docs/SPEC.md`](docs/SPEC.md); version history is in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Credits
 

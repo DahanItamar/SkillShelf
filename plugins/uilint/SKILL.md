@@ -1,6 +1,6 @@
 ---
 name: uilint
-description: Catch the UI states and failure paths that get skipped — loading, empty, error, success, and partial. Use whenever building or reviewing an interface that fetches data, submits a form, or navigates, and whenever a user describes an interface problem in symptoms rather than terms — "nothing happens when I click", "it just spins forever", "the page goes blank", "users don't know if it worked", "this form is annoying", "why does this feel broken", "review this component", "/uilint". Also use proactively while writing UI, so the states exist in the first draft instead of being retrofitted after someone complains.
+description: Catch the UI states and failure paths that get skipped — loading, empty, error, success, and partial. Use whenever building or reviewing an interface that fetches data, submits a form, or navigates, and whenever a user describes an interface problem in symptoms rather than terms — "nothing happens when I click", "it just spins forever", "the page goes blank", "users don't know if it worked", "review this component", "/uilint". Not for pure visual styling or copywriting questions. Also use proactively while writing UI, so the states exist in the first draft instead of being retrofitted after someone complains.
 ---
 
 # uilint
@@ -13,7 +13,7 @@ Your job is to notice what is missing before the user does.
 
 **This skill covers behaviour, not appearance.** Spacing, colour, typography, elevation and motion
 belong to the `craft` skill — do not comment on them here. Contrast, ARIA and screen-reader
-semantics belong to `accessibility`. Name those skills once if clearly relevant, then move on.
+semantics belong to `accessibility`. Those are separate skills and may not be installed. If one is clearly relevant, name it once; if it is not installed, add a single line "outside this skill's scope: <issue>" and move on. Never drop a finding just because its home skill is missing.
 
 ## The five states
 
@@ -34,7 +34,22 @@ to be a decision, not an oversight.
 
 **Build mode** — you are writing or editing UI.
 
-Apply the rules as you write, not afterwards. Before reporting the work complete, walk the five
+Apply the rules as you write, not afterwards. Pick files by what the code does:
+
+| You are writing | Read | Check first |
+| --- | --- | --- |
+| A fetch, query or async load (fetch, React Query, SWR, `load`, HTMX swap) | `states.md` | R-STATE-01, 02, 11, 12 |
+| A catch, error boundary or failed-request path | `feedback.md` | R-FEEDBACK-01, 02, 03 |
+| A form or submit handler | `forms.md`, `feedback.md` | R-FORM-01, 02, 03, R-FEEDBACK-07 |
+| A button or control that triggers async work | `states.md` | R-STATE-15 |
+| Menus, navigation, dense screens | `laws.md` | R-LAW-07 |
+
+Grep for the code patterns that hide failures: empty `catch {}`, `.catch(() => {})`, a query hook
+whose `isError` / `error` is never read, a `disabled=` bound to validity, a loader set to true with
+no matching reset on rejection. If the stack is unknown, read `states.md` and `feedback.md` and
+state the framework assumption. If the change contains no UI code, say so in one line and stop.
+
+Before reporting the work complete, walk the five
 states against what you just wrote. If a `required` rule is unmet, the component is not finished:
 say so, name the gap in terms of what the user experiences, and offer the fix. Do not silently add
 states nobody asked for, and do not report completion with a known hole.

@@ -18,7 +18,7 @@ users actually hit.
 *Severity:* required
 
 ### R-STATE-02 · Never show an unexplained blank
-**DO:** Render an indicator as soon as a wait begins.
+**DO:** Render an indicator as soon as a wait begins — unless the wait is expected to stay under ~1 second, where R-STATE-06 says render nothing, and keep any prior content on screen.
 *Why:* A blank screen is indistinguishable from a broken one, and people give up on it within a few
 seconds.
 *Applies:* any wait with no existing content on screen
@@ -52,7 +52,7 @@ occupy the same footprint the real content will?
 *Why:* Making someone wait and then telling them it failed spends their patience to deliver bad
 news, which reads as contempt for their time.
 *Applies:* validation that can fail early, requests that reject fast
-*Check:* force a failure. Does the error appear when it is known, or when the timer ends?
+*Check:* in code, find the loader's stop condition. Does a rejected request or failed local validation end it immediately, or only a timeout or a fixed delay? Force a failure to confirm.
 *Severity:* required
 
 ### R-STATE-08 · An empty state must say what it is for
