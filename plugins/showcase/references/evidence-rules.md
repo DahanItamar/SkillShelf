@@ -189,6 +189,25 @@ $ curl -H "Authorization: Bearer sk-ant-…REDACTED" https://api.example.com/v1/
 An unmarked redaction is a fabricated line — the reader believes they are seeing what came back,
 and they are seeing something edited. A marked one costs a word and stays true.
 
+### Personal and internal data
+
+Beyond secrets, redact or avoid: personal data about a person (patient or health record fields, ids,
+emails, phone numbers, addresses), internal hostnames, IPs, tenant or account ids, and anything
+visible in a screenshot. Prefer seeded or synthetic data for runs. If the only data available is
+real, do not paste its output; show the shape (field names, counts) instead.
+
+### Pre-write scan
+
+Before writing `README.md` or `docs/EVIDENCE.md`, scan the draft for email-, IP-, token- and
+long-digit-shaped strings, and list every hit in the handover under unverified or redacted:
+
+```sh
+grep -nEi '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}|([0-9]{1,3}\.){3}[0-9]{1,3}|(sk|ghp|xox[bp]|akia)[-_a-z0-9]{8,}|[a-z0-9+/_-]{32,}|[0-9]{9,}' README.md docs/EVIDENCE.md
+```
+
+A loopback address (127.0.0.1) in a run command is expected; every other hit needs a decision. This
+scan lowers the leak risk. It does not replace human review, and it is not a compliance claim.
+
 If output cannot be shown without redacting so much that it no longer demonstrates anything, it is
 not evidence. Find a different path through the system that produces publishable output, or cut the
 claim. Never publish the secret to make the example better.
