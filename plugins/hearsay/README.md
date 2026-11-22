@@ -172,11 +172,11 @@ the cited pages as read on 2026-11-22 and may have changed. Not a claim of being
 
 | Tool | What it is | Use that instead when |
 |---|---|---|
-| [`hearsay-pr`](https://pypi.org/project/hearsay-pr/) (PyPI) | Deterministic CLI that checks PR descriptions against the diff with patterns, no LLM, no network. Its README advises against gating on `contradicted` until calibrated | You want repeatable verdicts or a CI check for PR text |
+| [`hearsay-pr`](https://pypi.org/project/hearsay-pr/) (PyPI; [repo](https://github.com/hearsay-dev/hearsay)) | Deterministic CLI that checks PR descriptions against the diff with patterns, no LLM, no network. Its README advises against gating on `contradicted` until calibrated | You want repeatable verdicts or a CI check for PR text |
 | [truth](https://github.com/blasrodri/truth) | Local MCP fact-checker for an agent's claims about its own work, using recorded command runs and the working-tree diff | You want an agent's claims checked as it works, with command runs as evidence |
 | [README Clew](https://dev.to/earlgreyhot1701d/i-always-worried-my-own-readmes-disagreed-with-my-own-repos-so-i-built-readme-clew-42i5) | Checks a README against code (verified, unverifiable, missing, contradicted) | You only need README checks |
 | [RealityLint](https://pypi.org/project/realitylint/) | Static checks of README claims (scripts, links, env vars, license), no LLM | You want mechanical README checks in CI |
-| [semver-checks](https://dev.to/kyungseopk1m/i-got-tired-of-guessing-semver-bumps-in-prs-so-i-built-a-tool-15o) | TypeScript API diff between two refs with a bump recommendation | You need a precise TypeScript API diff. It sees only the API surface, as does Hearsay for behavior it cannot read |
+| [semver-checks](https://dev.to/kyungseopk1m/i-got-tired-of-guessing-semver-bumps-in-prs-so-i-built-a-tool-15o) | TypeScript API diff between two refs with a bump recommendation | You need a precise TypeScript API diff. It sees only the API surface, so behavior changes are outside what it can see (Hearsay marks those `needs-maintainer`) |
 
 Unrelated to the `hearsay-pr` PyPI package, which is a separate deterministic CLI by other authors.
 Hearsay is the prose-versus-code sibling of the `spec-drift` skill in Blueprint (spec versus code); they
