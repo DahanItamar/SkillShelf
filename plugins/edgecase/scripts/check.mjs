@@ -122,3 +122,12 @@ test("a results file exists for the current version, or the README says it is un
   const has = results.some((f) => new RegExp(`Skill version: ${v.replace(/\./g, "\.")}\b`).test(read(f)));
   if (!has) assert.match(read("README.md"), new RegExp(`Version ${v.replace(/\./g, "\.")} has not been measured`), "no results file for " + v + " and README does not say so");
 });
+
+test("README 'Measured so far' claims no run on a version newer than the newest results file", () => {
+  const ver = (s) => s.split(".").map(Number);
+  const newer = (a, b) => { const x = ver(a), y = ver(b); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i]; return false; };
+  const recorded = walk("examples/results").flatMap((f) => [...read(f).matchAll(/Skill version: (\d+\.\d+\.\d+)/g)].map((m) => m[1]));
+  const para = (read("README.md").match(/\*\*Measured so far:\*\*[^\n]*/) || [""])[0];
+  const claimed = [...para.matchAll(/\b(?:on|for) version (\d+\.\d+\.\d+)/g)].map((m) => m[1]);
+  for (const c of claimed) assert.ok(recorded.some((r) => !newer(c, r)), `README claims a run on ${c}, newer than any results file`);
+});

@@ -75,7 +75,7 @@ condition decides.
 | `references/feedback.md` | Error content and placement, success confirmation, announcing state changes |
 | `references/forms.md` | Validation timing, required fields, prefill, input tolerance, disabled submits |
 | `references/modes.md` | Optional modes: screen audit, policy block, probe recipes, design laws (no rules of its own) |
-| `references/opt-in/laws.md` | 8 opt-in design rules (Jakob's, Hick's and Tesler's laws plus progressive disclosure, per-platform conventions, RTL mirroring, one primary action, do not bury a primary path). Never blocks, not counted in the 34 core rules |
+| `references/opt-in/laws.md` | 8 opt-in design rules: Jakob's, Hick's and Tesler's laws plus progressive disclosure, per-platform conventions, RTL mirroring, one primary action and do not bury a primary path, not eight named laws. Never blocks, not counted in the 34 core rules |
 
 ## Output - review mode
 

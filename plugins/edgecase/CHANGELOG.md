@@ -13,6 +13,9 @@ Release checklist: version in `plugin.json` == the edgecase entry (version and d
 - `scripts/check.mjs` gains tests for the standalone wording, an `expected/` file per example source, and a results file (or an honest README statement) for the current version.
 - `node --test scripts/check.mjs` on a fresh clone of main (65cf7d6): 7 of 7 pass, so the reported failure did not reproduce; no fix was needed.
 - README: the `list.jsx` sample is labelled as hand-written, not a recorded run. Not done: the blind recorded run, the baseline and the build-mode run.
+- Fixed unterminated lines in `references/states.md` (R-STATE-02, R-STATE-16, R-STATE-18) and `references/feedback.md` (R-FEEDBACK-01, R-FEEDBACK-10); the R-STATE-02 sentence now ends "at most, never R-STATE-02". The laws row in `SKILL.md` uses the same wording as the README and `modes.md`. No rule was added.
+- Docs: a "Track state debt with a plain diff" section in `references/modes.md` (compare the `edgecase-ids:` lines of two branches); a one-line other-tools pointer in the README quick start; the README no longer quotes exact byte, line or token figures. `scripts/check.mjs` gains one test that the README's "Measured so far" claims no run newer than the newest results file.
+- Still not done, and the README still says so: a blind recorded run of this version, a no-skill baseline and the hand-judged build-mode case. They need fresh isolated sessions on neutral file names; the session that edited the goldens must not run them.
 
 ## 1.5.0 - 2026-11-22
 - New rule R-STATE-17 (a non-2xx response is a failure): `fetch` resolves on 4xx and 5xx, so check `response.ok` or the status before treating a call as a success. New rule R-STATE-18 (the latest request wins) for input-driven and param-driven fetches. Both are in the Build-mode table and the grep list.

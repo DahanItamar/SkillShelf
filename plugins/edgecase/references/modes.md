@@ -52,6 +52,10 @@ per-platform conventions, RTL mirroring, one primary action and do not bury a pr
 not eight named laws. These are design opinions: report them as recommended, never blocking, never
 under `strict`, and keep them out of the `edgecase-ids:` line unless the user asked for laws.
 
+## Track state debt with a plain diff
+
+Every review ends with an `edgecase-ids:` line. To see new state debt, run the review on the base branch and on the feature branch, save each last line, and compare them with an ordinary diff, or with `sort` and `comm -13 base.txt feature.txt`. An ID that appears only on the feature branch is new debt. This uses only the output contract: no script, hook or dependency.
+
 ## Probe recipes
 
 When the user asks for a probe recipe (or types `/edgecase probe`), or disputes a finding: read the

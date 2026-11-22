@@ -15,7 +15,7 @@
 
 **Quick start**
 
-1. Install: `/plugin marketplace add DahanItamar/SkillShelf`, then `/plugin install edgecase@skillshelf` (other tools: see Use it in other tools below).
+1. Install: `/plugin marketplace add DahanItamar/SkillShelf`, then `/plugin install edgecase@skillshelf` Other tools: copy this folder to your agent skills directory, see Use it in other tools.
 2. Open a component that fetches or submits, and say: `review this with edgecase`.
 3. Expected result: a one-line verdict, any findings, and a last line `edgecase-ids: ...` (or `edgecase: no findings.` and `edgecase-ids: none`).
 
@@ -177,12 +177,11 @@ fetches (R-STATE-18). The five states are the scope, not the whole of UI correct
 
 ## How it is built
 
-[`SKILL.md`](SKILL.md) holds the trigger, the Build-mode table with a one-line summary of the rules to check first, and the output contract: 7,976 bytes, 122 lines, loaded when it triggers. The 34 core rules sit in
+[`SKILL.md`](SKILL.md) holds the trigger, the Build-mode table with a one-line summary of the rules to check first, and the output contract. SKILL.md is about 8 KB; the rule files load only when a task needs them. The 34 core rules sit in
 three reference files, [states](references/states.md) 16, [feedback](references/feedback.md) 10 and
 [forms](references/forms.md) 8, each read only when a row of the Build-mode table matches.
 [`references/modes.md`](references/modes.md) holds the screen audit, policy block, suggested-policy and probe modes (it has no rules of its own), and is read
-only when one of those is asked for. The 8 opt-in design rules are in [`references/opt-in/laws.md`](references/opt-in/laws.md) and are read only when the design laws are asked for. File sizes in bytes:
-states.md 13,045 and feedback.md 6,106 are the largest; no per-run token figure is published because none has been measured. Estimate from file sizes, not measured: SKILL.md (7,976 bytes) is always loaded; a fetch change adds states.md (13,045 bytes), about 21 KB total, roughly 5,000 tokens at 4 bytes per token. Every rule has the same
+only when one of those is asked for. The 8 opt-in design rules are in [`references/opt-in/laws.md`](references/opt-in/laws.md) and are read only when the design laws are asked for. No per-run token figure is published because none has been measured; any token estimate would come from file sizes, not from a run. Every rule has the same
 shape:
 
 ```markdown

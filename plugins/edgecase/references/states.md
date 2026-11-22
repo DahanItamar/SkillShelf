@@ -23,7 +23,7 @@ users actually hit.
 difference will reload or leave.
 *Applies:* required only when a request has no loading indicator AND no prior or cached content on
 screen. Whether a wait is short enough to skip the indicator is the author's call, stated in one line
-in the code or the reply. A loader that is wrong for the wait is R-STATE-06 (recommended) at most
+in the code or the reply. A loader that is wrong for the wait is R-STATE-06 (recommended) at most, never R-STATE-02.
 *Check:* for a request that is not cached or prefetched, is there a spinner, skeleton or prior content?
 Throttle the network and load the page to confirm: is anything on screen immediately?
 *Severity:* required
@@ -134,7 +134,7 @@ nothing? Then tab to it (focus ring?) and tap it on a phone (does hover latch?).
 retry or leave.
 *Why:* A request that never resolves leaves the loader on forever. "It just spins forever" is the
 most common way a missing failure path is reported, and the user has no move except closing the tab.
-*Applies:* hand-rolled fetch, XHR, uploads and polls. A framework loader with a built-in timeout, or a configured client default (a React Query fetcher that passes a `signal`, a Next server fetch with a configured timeout), satisfies it. A fetch in a server component reports as recommended, not blocking
+*Applies:* hand-rolled fetch, XHR, uploads and polls. A framework loader with a built-in timeout, or a configured client default (a React Query fetcher that passes a `signal`, a Next server fetch with a configured timeout), satisfies it. A fetch in a server component reports as recommended, not blocking.
 *Check:* make the request never resolve. After the timeout does the user get an error and a next step?
 *Severity:* required for hand-rolled requests; recommended for server-component fetches
 
@@ -148,7 +148,7 @@ most common way a missing failure path is reported, and the user has no move exc
 ### R-STATE-18 · The latest request wins
 **DO:** When a fetch is driven by input or route parameters, ignore or abort every response except the one for the latest request: an `AbortController`, a request id compared before `setState`, or the query library's cache key.
 *Why:* Responses can arrive out of order. An older, slower answer then overwrites the newer one and the screen shows data for something the user is no longer asking about.
-*Applies:* input-driven or param-driven fetches (search as you type, filters, route changes, pagination). Required when it applies; a one-shot load on mount does not apply
+*Applies:* input-driven or param-driven fetches (search as you type, filters, route changes, pagination). Required when it applies; a one-shot load on mount does not apply.
 *Check:* delay the first response past the second. Does the screen show the newer data?
 *Severity:* required when Applies holds
 

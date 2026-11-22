@@ -9,7 +9,7 @@ exists at all is covered in `states.md`.
 **DON'T:** Render a raw exception, stack trace, database message, or backend identifier to an end user.
 *Why:* It is unreadable to the person who has to act on it, and it discloses your internal structure
 to everyone else. This is a security control as much as a usability one.
-*Applies:* every user-facing error path. Error copy must also not echo personal data from the request or response
+*Applies:* every user-facing error path. Error copy must also not echo personal data from the request or response.
 *Check:* force a backend failure. Does any part of the message come from the framework rather than
 from you, or repeat the user's own data back?
 *Severity:* required
@@ -89,6 +89,6 @@ to assistive tech: `role="status"` or `aria-live="polite"` for progress and succ
 *Why:* A sighted user sees the toast or banner appear. A screen-reader user hears nothing, so the
 failure is as silent for them as an empty catch block is for everyone. This covers only state changes;
 the rest of ARIA is out of scope here.
-*Applies:* inline errors, toasts, banners, in-place loading and success messages that are inserted after a user action. A state that is already in the page on first render does not need a live region. Keep the live-region container in the DOM before its content changes; a container created together with its text is often not announced
+*Applies:* inline errors, toasts, banners, in-place loading and success messages that are inserted after a user action. A state that is already in the page on first render does not need a live region. Keep the live-region container in the DOM before its content changes; a container created together with its text is often not announced.
 *Check:* trigger the change with a screen reader on, or inspect the node. Is it in a live region or role?
 *Severity:* required when the state is inserted after a user action; recommended otherwise
