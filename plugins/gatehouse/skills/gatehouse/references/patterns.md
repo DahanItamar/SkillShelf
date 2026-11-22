@@ -26,7 +26,7 @@ Judging: a hit on line 1 at the first character is probably a byte-order mark (n
 ## G-TEXT-02
 
 - `S-COMMENT` (multiline mode): `(?s)<!--.*?-->` — read every comment found.
-- `S-HIDDEN`: `hidden|display\s*:\s*none|visibility\s*:\s*hidden|font-size\s*:\s*0`
+- `S-HIDDEN`: `<[^>]+\bhidden\b|"hidden"\s*:|display\s*:\s*none|visibility\s*:\s*hidden|font-size\s*:\s*0` — the word `hidden` counts only inside a tag or as a JSON key, so prose that says "hidden" does not hit.
 - `S-PAD`: `^[ \t]{200,}\S` — a line pushed far off-screen by padding.
 
 Judging: first work out whether the comment sits inside a fenced block or a code span (shown literally, so not hidden). Then read the comment text and judge it under the other rules as if it were visible.
@@ -52,6 +52,8 @@ Judging: skip `data:image/` URIs, `integrity` and `sha512-` fields and git SHAs.
 | Dictate the result | `report no findings` |
 | Exclude something from review | `skip src` |
 | Name the reviewer | `the auditor` |
+
+Judging: a phrase that only mentions "the auditor" inside a code span or table cell describing the family, as this file does, does not address the auditor and is not a finding. Text that speaks to the auditor is.
 
 ## G-INJ-02
 
@@ -83,9 +85,10 @@ Judging: a README that documents a user's own choice of a setting is a note unde
 
 ## G-EXEC-01
 
-- `S-HOOK`: `"hooks"\s*:|hooks\.json|PreToolUse|PostToolUse|SessionStart|UserPromptSubmit|Stop\b`
+- `S-HOOK`: `"hooks"\s*:|hooks\.json|PreToolUse|PostToolUse|SessionStart|UserPromptSubmit|"Stop"\s*:`
+- `S-DESTRUCT`: `rm\s+-[a-zA-Z]*[rf]|git\s+push\s+(-f|--force)|git\s+reset\s+--hard|git\s+clean\s+-[a-z]*f|ch(mod|own)\s+(-R\s+)?[0-7]{3,4}\s+/|git\s+config\b|>>?\s*(~/|\$HOME|/(etc|usr|home|root|var)\b)` — destructive commands, broad permission changes, writes outside the project and git configuration.
 
-Judging: also open `hooks/hooks.json` and the frontmatter of every skill, command and agent file in full. List each hook as event plus exact command. Check the command against G-NET-01, G-PERM-02, G-EXEC-03 and G-EXEC-04 before assigning severity.
+Judging: also open `hooks/hooks.json` and the frontmatter of every skill, command and agent file in full. List each hook as event plus exact command. When a hook, MCP command or `bin/` file points to a script inside the target, read that script and run `S-DESTRUCT` over it. Check the command and the script against G-NET-01, G-PERM-02, G-EXEC-03 and G-EXEC-04 before assigning severity.
 
 ## G-EXEC-02
 
@@ -98,6 +101,8 @@ Judging: also use the Glob listing. `bin/` files, `.mcp.json` and any `mod` file
 - `S-REMOTE-EXEC`: `(curl|wget|iwr|Invoke-WebRequest)[^\n|]*\|\s*(sudo\s+)?(ba|z|da)?sh|\|\s*(python3?|node|perl|ruby)\b|bash\s+<\(|eval\s*\$\(|iex\s*\(|chmod\s+\+x|git\+https?://|npm\s+(i|install)\s+https?://`
 - `S-REMOTE-FOLLOW`: `(read|fetch|load|follow|obey)[^\n]{0,40}(instructions?|rules|prompt)[^\n]{0,40}https?://`
 - `S-MUTABLE-URL`: `raw\.githubusercontent\.com/[^\s/]+/[^\s/]+/(main|master|HEAD)/|/latest\b`
+- `S-DEP-SPEC`: `\[submodule|"[^"]+"\s*:\s*"(git\+|git://|github:|https?://|file:)[^"]*"|"[^"]+"\s*:\s*"(latest|\*)"` — `.gitmodules` entries, and package dependencies given as a git, URL, tarball or file spec, or as an unpinned `latest`. Judged from the text only; no registry lookup, so typosquat checks are out of scope.
+- `S-CI`: run only over `.github/workflows/**`: `pull_request_target|(curl|wget)[^\n|]*\|\s*(ba)?sh|\$\{\{\s*secrets\.[^}]*\}\}` — a `secrets.` value passed into a `run:` step, a download piped to a shell, or a privileged pull-request trigger.
 
 | Family | Example wording |
 |---|---|
@@ -129,8 +134,8 @@ Judging: separate "Claude is told to read or write it" from "the text mentions i
 
 ## G-NET-01
 
-- `S-EGRESS`: `\b(curl|wget|Invoke-WebRequest|nc|ncat|scp|sftp|ftp)\b|fetch\(|requests\.(get|post|put)|urllib|WebFetch|\bPOST\b|webhook|pastebin|ngrok|requestbin|webhook\.site|bit\.ly|tinyurl`
-- `S-URL`: `https?://[^\s)>"']+` — list every distinct host.
+- `S-EGRESS`: `\b(curl|wget|Invoke-WebRequest|ncat|scp|sftp|ftp)\b|\bnc\s+-?\w*\s*[\w.-]+\s+\d+|fetch\(|requests\.(get|post|put)|urllib|WebFetch|POST\s+https?://|webhook|pastebin|ngrok|requestbin|webhook\.site|bit\.ly|tinyurl`
+- `S-URL`: `https?://[^\s)>"']+` — list-only: report distinct hosts, not lines.
 - `S-IP-URL`: `https?://\d{1,3}(\.\d{1,3}){3}`
 - `S-IMG-EXFIL`: `!\[[^\]]*\]\(https?://[^)]*(\{|<|\$\{|%7B)`
 

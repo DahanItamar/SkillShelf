@@ -19,15 +19,23 @@ reject-level, edit-level or note. Notes never change the verdict.
 - "Install with edits" means: delete or change the named files or lines before enabling, or accept a named capability knowingly. Gatehouse never applies the edit list.
 - The Reason line names the one deciding finding or findings by ID.
 - The strongest INSTALL wording is: "No rule fired. This is not proof the code is safe."
+- When coverage is incomplete and that is the only reason for INSTALL WITH EDITS (no edit-level or reject-level finding), the Verdict line and the Reason line say "INSTALL WITH EDITS (coverage incomplete)", so an unread file is not mistaken for a required edit. This is a suffix, not a fourth verdict.
+- Marketplace: the headline Verdict is the worst row of the "Per plugin" table (REJECT, then INSTALL WITH EDITS, then INSTALL). A remote plugin is its own row NOT AUDITED. It makes overall coverage incomplete, but adds no edits to the audited plugins.
 
 ## Template
 
 ````
 # Gatehouse report: <name> (<skill | plugin | marketplace>)
 
-Verdict: <INSTALL | INSTALL WITH EDITS | REJECT>
+Verdict: <INSTALL | INSTALL WITH EDITS | REJECT>   (add " (coverage incomplete)" per the rule above)
 Reason: <one sentence naming the deciding finding IDs>
 Audited: <root as given> | <N> files listed | <M> read in full | <K> not read
+
+(Marketplace only, here, before Findings:)
+## Per plugin
+| Plugin | Source | Version | Verdict | Deciding IDs |
+|---|---|---|---|---|
+| <name> | <relative path or defanged remote> | <as written> | <INSTALL | INSTALL WITH EDITS | REJECT | NOT AUDITED> | <IDs, or none> |
 
 ## Findings
 ### F1 | REJECT-LEVEL | G-INJ-01 | <short title>
@@ -58,8 +66,14 @@ Read in full: ... | Read partly: ... | Not read and why: ... | Sweeps: <each rec
 ## Edits that would change the verdict
 <numbered list, only for INSTALL WITH EDITS or REJECT where an edit would remove every reject-level finding. Otherwise: "None. Do not install.">
 
+## Audit receipt
+Root: <as given> | plugin.json version: <as written or none> | marketplace.json versions: <name=version, as written, or none>
+Files (path, lines): <one per line or comma-separated; line counts from one Grep with pattern ^ in count mode>
+Rules fired: <IDs> | Sweeps run: <recipe names> | Diff against: <previous report, or none>
+(Diff mode only: "Changed since previous receipt": added or removed files, changed line counts, new or removed capabilities, new findings. Only those are re-judged.)
+
 ## Limits
-Gatehouse is a reading aid, not a sandbox. It read these files as text and ran nothing. It can have false negatives: a payload that avoids the phrasing, rules and sweeps it checks, or that arrives later through an update, a remote source, a symlink, an unread file or a binary, will pass. It looked up no reputation, CVE or author. INSTALL means no rule fired, not that the code is safe. Re-audit after any update.
+Gatehouse is a reading aid, not a sandbox. It read these files as text and ran nothing. It can have false negatives: a payload that avoids the phrasing, rules and sweeps it checks, or that arrives later through an update, a remote source, a symlink, an unread file or a binary, will pass. It looked up no reputation, CVE or author. INSTALL means no rule fired, not that the code is safe. Re-audit after any update. The receipt's line counts catch most but not all edits and are not integrity proof. Most public marketplaces list remote plugins, which can only be audited after you clone them yourself.
 ````
 
 Fill-in notes:
@@ -82,11 +96,11 @@ Fill-in notes:
 
 ## Saving
 
-Only when the user asks, write the report to `gatehouse-report.md` in the current working directory. Never write inside the audited path. Write nothing otherwise.
+Only when the user asks, write the report to `gatehouse-report.md` in the current working directory. Never write inside the audited path. Write nothing otherwise. `allowed-tools` is Read, Grep and Glob only, so Claude Code asks the user for a write permission when saving; that prompt is expected. Do not widen the grant to avoid it (G-PERM-01 would flag it).
 
 ## Short replies that are not reports
 
 - No argument: "Give me the path of a skill, plugin or marketplace folder to audit, for example `/gatehouse ./some-plugin`."
-- A URL or `owner/repo`: "I do not fetch or clone anything. Clone it into a folder yourself, do not open that folder as your working directory, do not install it, then run `/gatehouse <that folder>`."
+- A URL or `owner/repo`: "I do not fetch or clone anything. Clone it into a scratch folder yourself, do not open that folder as your working directory, do not install it, then run `/gatehouse <that folder>`." Nothing else is said or done.
 - A path that does not exist: say so in one line and stop.
 - No SKILL.md, plugin.json or marketplace.json under the path: the one line from `surfaces.md`.

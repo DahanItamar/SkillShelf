@@ -8,6 +8,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import os from 'node:os';
+import { build } from './make-fixtures.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
@@ -202,8 +204,18 @@ test('8 the verdict table is identical in SKILL.md and report.md', () => {
 
 test('9 each fixture still holds its seeded features', () => {
   const hidden = rd('examples', 'fixtures', 'hidden-text', 'SKILL.md');
-  const tags = [...hidden].filter((c) => c.codePointAt(0) >= 0xE0000 && c.codePointAt(0) <= 0xE007F);
-  assert.ok(tags.length >= 8, 'tag characters survive');
+  const raw = [...hidden].filter((c) => c.codePointAt(0) >= 0xE0000 && c.codePointAt(0) <= 0xE007F);
+  assert.equal(raw.length, 0, 'the committed fixture holds no real tag characters');
+  const esc = hidden.match(/<U\+E00[0-7][0-9A-F]>/g) || [];
+  assert.ok(esc.length >= 8, 'tag characters survive as escapes');
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'gatehouse-check-'));
+  try {
+    const copy = fs.readFileSync(path.join(build(out), 'SKILL.md'), 'utf8');
+    const tags = [...copy].filter((c) => c.codePointAt(0) >= 0xE0000 && c.codePointAt(0) <= 0xE007F);
+    assert.equal(tags.length, esc.length, 'the generated copy has a real tag character per escape');
+  } finally {
+    fs.rmSync(out, { recursive: true, force: true });
+  }
   assert.ok(/<!--[\s\S]*?-->/.test(hidden), 'hidden comment survives');
   assert.ok(hidden.includes('PINEAPPLE-CANARY'), 'canary survives');
   const runs = hidden.match(/[A-Za-z0-9+/]{100,}={0,2}/g) || [];
@@ -252,4 +264,14 @@ test('11 the shipped skill and README never claim a result that is not recorded'
   } else {
     assert.doesNotMatch(readme, /Measured so far:\*\* Not yet measured/);
   }
+});
+
+test('12 the procedure keeps its ordered Step 0, per-plugin table, receipt and new recipes', () => {
+  assert.match(skill, /Glob the argument; if it exists it is a path/);
+  assert.match(skill, /plugins\/gatehouse` and `vendor\/x` are paths/);
+  assert.match(report, /^## Per plugin$/m);
+  assert.match(report, /^## Audit receipt$/m);
+  assert.match(report, /\(coverage incomplete\)/);
+  for (const r of ['S-DESTRUCT', 'S-DEP-SPEC', 'S-CI']) assert.ok(patterns.includes('`' + r + '`'), r);
+  assert.ok(!/^### G-/m.test(skill) && ruleIds.length === 16, 'still 16 rules');
 });

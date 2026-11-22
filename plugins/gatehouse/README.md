@@ -30,6 +30,16 @@ anything or look anything up.
 It is a reading aid, not a sandbox. It can miss things, and a verdict is one reader's opinion. It does
 not replace the review steps on Anthropic's page; it automates the reading part of them.
 
+## Quickstart
+
+```text
+/gatehouse ./some-folder
+/gatehouse ./some-marketplace ./old-gatehouse-report.md
+```
+
+The first line audits a folder you already have on disk. The second also compares against a saved
+report and re-judges only what changed. Install steps are below.
+
 ## A report
 
 This is the **expected format, not yet measured**: the shape the golden file
@@ -113,11 +123,23 @@ Three kinds of target, detected from the folder:
 - a **plugin** (it has `.claude-plugin/plugin.json`);
 - a **skill** (it has a `SKILL.md`).
 
-Anything else gets one line saying there is nothing to audit.
+Anything else gets one line saying there is nothing to audit. An argument that exists on disk is always
+treated as a path, even if it looks like `owner/repo`.
+
+A marketplace gets a **Per plugin** table, with one verdict per plugin; the headline verdict is the
+worst row, and a remote plugin is its own row, NOT AUDITED. Every report ends with an **audit receipt**:
+root, versions as written, a file list with line counts, the rules that fired and the sweeps run. Pass a
+previous `gatehouse-report.md` as a second argument and Gatehouse compares receipts and re-judges only
+the added, removed or changed files and capabilities. Line counts catch most but not all edits and are
+not integrity proof; Gatehouse cannot hash files.
+
+A full audit reads about 10k tokens of reference files before it reads the target. That is an estimate,
+not a measurement. A target that is a single `SKILL.md` loads only the rule blocks it needs.
 
 To get a folder to audit: clone the repository yourself into a scratch folder, **do not open that folder
 as your working directory** (a `CLAUDE.md`, `.mcp.json` or `.claude/settings.json` inside it would load),
-do not install it, and run Gatehouse from somewhere else with the path. Gatehouse refuses a URL.
+do not install it, and run Gatehouse from somewhere else with the path. Gatehouse refuses a URL. Most
+public marketplaces list remote plugins, which can only be audited after you clone them yourself.
 
 | Verdict | Means |
 |---|---|
@@ -127,7 +149,8 @@ do not install it, and run Gatehouse from somewhere else with the path. Gatehous
 
 The verdict comes from a fixed table, not a score. Gatehouse reads and reports; it never edits the
 target. If you ask, it saves the report as `gatehouse-report.md` in your working directory, never
-inside the audited folder.
+inside the audited folder. The skill pre-approves only Read, Grep and Glob, so Claude Code asks for a
+write permission when it saves; that prompt is expected.
 
 ## What it checks
 
@@ -202,16 +225,20 @@ check that needs no packages is `node --test examples/check.test.mjs`; it checks
 **Measured so far:** Not yet measured. No model-run audit has been recorded in
 [`examples/results/`](examples/results/), so this README makes no detection claim.
 
-Gatehouse auditing itself does not come out as INSTALL, and the result is recorded openly in
-[`examples/expected/self.md`](examples/expected/self.md): the `hidden-text` fixture contains Unicode
-tag characters, which no rule lets it excuse. The marketplace's other four plugins are in
+Gatehouse auditing itself is predicted to come out as INSTALL WITH EDITS, not INSTALL, and the
+prediction is recorded openly in [`examples/expected/self.md`](examples/expected/self.md): the
+fixtures contain hostile text on purpose, and the labelled-fixture cap lowers those findings to
+edit-level. The `hidden-text` fixture is committed with its Unicode tag characters written as escapes,
+and `node examples/make-fixtures.mjs` writes a temporary copy with the real ones, so the repository holds
+no invisible text and the tag-character rule is still tested. The installable skill folder alone is
+predicted to give INSTALL. These are predictions, not measurements. The marketplace's other four plugins are in
 [`examples/expected/own-plugins.md`](examples/expected/own-plugins.md), with the one finding that is
 open to argument.
 
 ## How it is built
 
 [`SKILL.md`](skills/gatehouse/SKILL.md) holds the trigger, the hard rules, the ten-step procedure (Step 0 to Step 9) and
-the verdict table in about 80 lines (7 KB). Four reference files, all read at the start of every audit:
+the verdict table in about 80 lines (9 KB). Four reference files, read at the start of an audit (a single-skill target reads only the rule blocks it needs):
 [`surfaces.md`](skills/gatehouse/references/surfaces.md) (what to inventory),
 [`rules.md`](skills/gatehouse/references/rules.md) (the 16 rules),
 [`patterns.md`](skills/gatehouse/references/patterns.md) (Grep recipes and phrase tables) and

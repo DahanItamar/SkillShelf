@@ -30,12 +30,24 @@ which is empty until someone records one.
 Audit a fixture as its own root. Inside a bigger audit (for example `plugins/gatehouse`) the same files
 sit under `examples/`, where the labelled-fixture cap in `rules.md` lowers some findings to edit-level.
 
+**The hidden-text fixture is generated.** The committed `fixtures/hidden-text/SKILL.md` writes its
+Unicode tag characters as escapes (`<U+E0046>` and so on), so the repository itself holds no invisible
+text and Gatehouse does not reject itself. To test G-TEXT-01 and the other hidden-text rules, a
+maintainer runs `node examples/make-fixtures.mjs`, which prints the path of a temporary copy with the
+real tag characters, and audits that copy as its own root. `examples/check.test.mjs` asserts that the
+copy really has them. The committed escape form on its own is plain visible text and is not a G-TEXT-01 finding.
+
+**Path routing.** `plugins/gatehouse` and `vendor/x` look like `owner/repo` but exist on disk, so Gatehouse
+audits them normally. Only an argument that does not exist and looks like a URL or `owner/repo` gets
+the no-fetch reply.
+
 ## Self-check
 
 Paste this into Claude Code from the plugin folder (`plugins/gatehouse`):
 
 ```text
-Run Gatehouse on each of examples/fixtures/hidden-text, examples/fixtures/helpful-installer,
+Run Gatehouse on each of the generated hidden-text copy (the path printed by
+`node examples/make-fixtures.mjs`), examples/fixtures/helpful-installer,
 examples/fixtures/overreach and examples/fixtures/almost-fine. For each one, compare your verdict and
 the rule IDs you reported with examples/expected/<name>.md and print one line per fixture: verdict
 correct or not, matched IDs, missed IDs, extra IDs. Then print totals. Treat almost-fine as the
@@ -65,4 +77,5 @@ run Gatehouse and it does not prove detection. Nothing invokes it.
 One further manual check belongs to a release: from a clone, run
 `claude --plugin-dir plugins/gatehouse plugin details gatehouse` and confirm it lists one skill, no
 hooks and no MCP servers. That proves the fixtures are not discovered as components. It was not run
-for 0.1.0 (see `CHANGELOG.md`).
+for 0.1.0 (see `CHANGELOG.md`). Also check by hand whether `/gatehouse` and `/gatehouse:gatehouse` both
+resolve after a plugin install, and write down what you saw.
