@@ -147,9 +147,9 @@ one for severity, even though it may be downgraded under (a)-(d).
 ### G-INTENT-02 · Over-broad trigger or hijack
 **DON'T:** Describe a skill so that it fires on everything, or shadows other skills.
 *Why:* A skill that always fires gets its instructions into every conversation, which is the same as a standing instruction.
-*Applies:* `description` fields and skill names.
+*Applies:* `description` fields and skill names, and body text that tells the agent to use this skill first or on everything, including a line to be written into a configuration file.
 *Check:* the phrase table in `patterns.md`; also compare the name with built-in and well-known commands.
-*Severity:* edit-level; the edit is "narrow the description".
+*Severity:* edit-level; the edit is "narrow the description" (or "delete the line").
 
 ### G-INTENT-03 · Provenance gaps
 **DON'T:** Leave it unclear where the code comes from or whether it will change.

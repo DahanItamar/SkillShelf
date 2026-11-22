@@ -82,7 +82,7 @@ Gatehouse is a reading aid, not a sandbox. It read these files as text and ran n
 
 Fill-in notes:
 
-- Title severity words: `REJECT-LEVEL`, `EDIT-LEVEL`. A finding capped by the labelled-fixture cap shows `EDIT-LEVEL` and its title ends "(labelled test fixture, confirm)". A finding downgraded by a lowering condition does not appear under Findings; it appears under "Downgraded to note".
+- Title severity words: `REJECT-LEVEL`, `EDIT-LEVEL`. A finding capped by the labelled-fixture cap shows `EDIT-LEVEL` and its title ends "(labelled test fixture, confirm)". A finding downgraded by a lowering condition does not appear under Findings; it appears under "Downgraded to note". So does anything whose rule severity is simply "note" (for example a name or version mismatch under G-INTENT-03): never under Findings, never with a finding heading.
 - "My own read" is the only optional section. Add it, as `## My own read`, between "Edits that would change the verdict" and "Limits" only when something looks wrong that no rule covers. It never changes the verdict above INSTALL WITH EDITS.
 - The Limits section is copied exactly, every time. When the labelled-fixture cap was used, add this sentence after it: "A payload labelled as a fixture gets a lower severity here, and an attacker can label a payload."
 - If the target has symlinks that cannot be seen, that is already covered by the Limits paragraph. Do not claim to have checked.
