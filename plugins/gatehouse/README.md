@@ -208,7 +208,7 @@ The skill asks the agent to behave this way. In Claude Code the optional `allowe
 - **The model reading hostile text can in principle be influenced by it.** The mitigations are the treat-as-data rules, the fenced quoting and the defanging. They are mitigations, not proof. The fixtures test this once per model; they do not show immunity.
 - **No dynamic analysis.** A binary is listed by name and size and never read.
 - **Remote marketplace sources are not audited.** They are reported as NOT AUDITED and coverage is incomplete.
-- **Symlinks, and anything not visible to Glob, are not handled.**
+- **Symlinks, and anything your file-listing tool cannot see, are not handled.**
 - **Auto-updates can change what you audited.** Re-audit after an update.
 - **A payload can be labelled as a fixture.** Findings under `examples/`, `fixtures/`, `test/` or `tests/` in a folder that says it is test data are capped one level lower; an attacker can use that. Tag characters, text addressed to Gatehouse by name, and files the root manifest, a hook, an MCP command or `bin/` names are never capped.
 - **Invisible-character sweeps depend on your tool.** A Unicode-aware search or a byte-level `LC_ALL=C grep -P` can run them; if neither can, the report says coverage is incomplete and the verdict cannot be INSTALL. Directional marks are allowed in a file with Hebrew, Arabic or Indic text, so an attacker could add one such letter; override characters (U+202A to U+202E) are never allowed.
