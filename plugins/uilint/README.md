@@ -75,7 +75,7 @@ Apply these?
 The code is correct on the happy path; the failures are invisible by construction. Findings lead
 with what the user experiences rather than which rule fired. A correct component
 ([`pass.jsx`](examples/pass.jsx)) should get the verdict line and nothing else. The
-[self-test](examples/README.md#self-test) scores matched, missed and extra rule IDs across seven files.
+[self-test](examples/README.md#self-test) scores matched, missed and extra rule IDs across nine files.
 
 ## Install
 
@@ -111,6 +111,18 @@ category: *"nothing happens when I click"*, *"it just spins forever"*.
 Teams can tune it without a config file: a `uilint:` block in the repo's `CLAUDE.md` can `ignore`
 paths, `demote` rules or mark paths `strict`. See [`SKILL.md`](SKILL.md#team-policy-optional).
 
+`/uilint init` reads your routes and prints a suggested `uilint:` block for you to paste; it writes
+nothing. When you dispute a finding, `/uilint probe` turns its `Check:` line into a runnable recipe
+(MSW or Playwright, with 500, never-resolving and empty-array bodies) that you run yourself.
+
+**Measured so far:** not yet measured. The goldens in `examples/` are expectations, and no scored
+self-test run is committed. Server-rendered templates have one seeded case (ERB); other template
+engines have none.
+
+**Roadmap, not built:** domain packs as separate plugins (payments, streaming AI chat with a stalled
+stream and a partial response, uploads, realtime) so the core stays at 40 rules; a regression test per
+finding, offered only on request.
+
 ## When to use it instead of a prompt
 
 A 20-line "check my UI states" prompt finds the obvious gaps. What this adds is stable rule IDs you
@@ -129,11 +141,10 @@ beyond layout mirroring. The five states are the scope, not the whole of UI corr
 
 ## How it is built
 
-[`SKILL.md`](SKILL.md) holds the trigger and the output contract in about 150 lines, roughly 2k tokens, loaded when it triggers. The 40 rules sit in
+[`SKILL.md`](SKILL.md) holds the trigger and the output contract in about 150 lines (about 8 KB), loaded when it triggers. The 40 rules sit in
 four reference files — [states](references/states.md) 14, [feedback](references/feedback.md) 10,
 [forms](references/forms.md) 8, [laws](references/laws.md) 8 — each read only when a row of the
-Build-mode table matches, so a question about a form does not drag Tesler's Law into context. The
-token figure is an estimate, not a measurement. Every rule has the same
+Build-mode table matches, so a question about a form does not drag Tesler's Law into context. Every rule has the same
 shape:
 
 ```markdown

@@ -1,5 +1,7 @@
 # Changelog
 
+Release checklist: version in `plugin.json` == the uilint entry in the marketplace's `marketplace.json` == the head of this file, and the rule count in both == `grep -c '^### R-' references/*.md` summed (14+10+8+8 = 40 today). Nothing here runs; check by hand.
+
 ## 1.4.0 - 2026-11-22
 - Build mode now writes loading, error and empty handling into the first draft for the paths the change touches, and states in one line what it added. The earlier "do not silently add states" line is gone.
 - Quick path first: no fetch, submit or navigation in the change means one line and stop. Added a "does not trigger" note for pure styling, copy edits and static pages.
@@ -9,6 +11,9 @@
 - Wider stack coverage in one line: server actions, Suspense, loaders, Vue, SvelteKit, Angular, SwiftUI.
 - `examples/` now holds real files (React, Vue, Svelte, HTMX, plus a clean control) with golden findings in `examples/expected/`, and a paste-in self-test in its README.
 - README sample review now matches the output contract; credits cite checkable public sources; install warnings moved to the top of the section; SPEC cleaned of private notes.
+- Added a Probe option (`references/states.md`, opt-in via `/uilint probe`) and `/uilint init`, which prints a suggested policy block and writes nothing. Team policy now states monorepo precedence.
+- Two more examples: `files.jsx` (only a recommended rule fires; a removed row must not report R-FEEDBACK-07) and `profile.html.erb` (server-rendered form). Every golden ID now carries a reason.
+- Removed the unmeasured token estimate from the README.
 
 ### Rule changes
 - Demoted to `recommended`: R-STATE-01 (it is the checklist in `SKILL.md`), R-FORM-03.

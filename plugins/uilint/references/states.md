@@ -134,3 +134,13 @@ most common way a missing failure path is reported, and the user has no move exc
 *Applies:* any fetch, upload or poll on a network the code does not control
 *Check:* make the request never resolve. After the timeout does the user get an error and a next step?
 *Severity:* required
+
+---
+
+## Probe (optional, on request)
+
+For any finding the user disputes, or on an explicit `/uilint probe`, print that rule's `Check:` line
+as a recipe the user runs, not something you run. Give one handler per failure: an MSW handler or a
+Playwright `route.fulfill` returning a 500, one that never resolves (a `new Promise(() => {})` body or
+`route.abort` after the timeout), and one returning `[]`. Name the screen state the user should then
+see. Write nothing to the repo unless asked; the `Check:` lines already hold the content.

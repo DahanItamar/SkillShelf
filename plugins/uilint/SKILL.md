@@ -5,11 +5,9 @@ description: Catch the UI states and failure paths that get skipped — loading,
 
 # uilint
 
-Interfaces get built along the path where everything works. The person building it clicks the
-buttons in the order that succeeds; the states for slow networks, empty accounts, and failed
-requests never get written, because nobody asked for them.
-
-Your job is to notice what is missing before the user does.
+Interfaces get built along the path where everything works, so the states for slow networks, empty
+accounts and failed requests never get written. Your job is to notice what is missing before the
+user does.
 
 **This skill covers behaviour, not appearance.** Spacing, colour, typography, elevation and motion
 belong to the `craft` skill — do not comment on them here. Contrast and ARIA belong to `accessibility`; the one accessibility rule here is R-FEEDBACK-10 (announce a state change). Those are separate skills and may not be installed. If one is clearly relevant, name it once; if it is not installed, add a single line "outside this skill's scope: <issue>" and move on. Never drop a finding just because its home skill is missing.
@@ -128,6 +126,15 @@ uilint:
 `ignore` paths are skipped, `demote` rules become `recommended`, `strict` paths treat every
 `recommended` rule as `required`. Overrides in `CLAUDE.md` win over this file. When any is applied,
 say so in the verdict line ("2 rules demoted by CLAUDE.md"). Nothing else is read from it.
+
+Precedence in a monorepo: the `CLAUDE.md` nearest the file wins over one higher up. For the same
+rule on the same file, `strict` beats `demote`, and `ignore` beats both. Example: root demotes
+R-FORM-03, `payments/CLAUDE.md` marks `payments/**` strict, so R-FORM-03 is required there.
+
+`/uilint init`: read the routes, propose a `uilint:` block (ignore for admin and prototypes, strict
+for payments and auth) and print it for the user to paste. Write nothing.
+
+`/uilint probe`, or a finding the user disputes: read the Probe section of `references/states.md`.
 
 ## Judgment
 
