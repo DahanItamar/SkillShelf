@@ -1,4 +1,6 @@
-# Laws
+# Laws (opt-in)
+
+Not part of the 34-rule core. This file is read only on `/edgecase laws`, or when a user asks about Jacob's, Hick's or Tesler's Law by name. The default review never loads it, `strict` never applies to it, and nothing here blocks completion.
 
 Eight rules drawn from established principles, stated as things to do rather than things to know. Each has a named
 origin, but the citation is not the point — the applied rule is.
@@ -60,7 +62,7 @@ for. Nothing is removed by deferring it; it simply stops competing.
 worth building, and the user cannot ask for something they do not know exists.
 *Applies:* anything hidden behind menus, overflow controls, or keyboard-only entry points
 *Check:* in code, trace from the app's entry point to the primary action. Count the clicks and menus, and note any that are keyboard-only or hover-only. More than two levels deep, or reachable only by a shortcut, is a finding.
-*Severity:* required
+*Severity:* recommended (was required before 1.5.0; laws no longer block)
 
 ### R-LAW-08 · Absorb the complexity yourself — Tesler's Law
 **DO:** Take irreducible complexity into the build rather than exporting it to the user.

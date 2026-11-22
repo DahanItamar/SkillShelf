@@ -89,6 +89,6 @@ to assistive tech: `role="status"` or `aria-live="polite"` for progress and succ
 *Why:* A sighted user sees the toast or banner appear. A screen-reader user hears nothing, so the
 failure is as silent for them as an empty catch block is for everyone. This covers only state changes;
 the rest of ARIA belongs to the `accessibility` skill.
-*Applies:* inline errors, toasts, banners, in-place loading and success messages
+*Applies:* inline errors, toasts, banners, in-place loading and success messages that are inserted after a user action. A state that is already in the page on first render does not need a live region
 *Check:* trigger the change with a screen reader on, or inspect the node. Is it in a live region or role?
-*Severity:* required
+*Severity:* required when the state is inserted after a user action; recommended otherwise

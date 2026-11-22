@@ -19,17 +19,19 @@ users actually hit.
 
 ### R-STATE-02 · Never show an unexplained blank
 **DO:** Render an indicator as soon as a wait begins — unless the wait is expected to stay under ~1 second, where R-STATE-06 says render nothing, and keep any prior content on screen.
-*Why:* A blank screen is indistinguishable from a broken one, and people give up on it within a few
-seconds.
-*Applies:* any wait with no existing content on screen
-*Check:* throttle the network to slow 3G and load the page. Is anything on screen immediately?
+*Why:* A blank screen is indistinguishable from a broken one, and a user who cannot tell the
+difference will reload or leave.
+*Applies:* any wait with no existing content on screen. Whether a request is slow cannot be known from
+the code, so the check is on what exists, not on a time threshold
+*Check:* no spinner or skeleton exists for a request that is not cached or prefetched. Throttle the
+network and load the page to confirm: is anything on screen immediately?
 *Severity:* required
 
 ### R-STATE-04 · Long waits need words, then a measure
 **DO:** Put text on a wait that runs past a few seconds and advance it as the work moves; past ~10
 seconds, switch to determinate progress or an explicit step list.
 *Why:* An indefinite animation with no words reads as stuck, while text that advances shows the
-system still working — people wait substantially longer for it. But a loop that never resolves
+system still working, which is design judgment rather than a measured figure. But a loop that never resolves
 inverts patience, because the user cannot tell progress from a hang.
 *Applies:* multi-step or network-bound operations — uploads, imports, builds, batch jobs
 *Check:* past ~5 seconds, does the screen say what is happening? Can it exceed ~10 seconds? Then it
@@ -131,9 +133,23 @@ nothing? Then tab to it (focus ring?) and tap it on a phone (does hover latch?).
 retry or leave.
 *Why:* A request that never resolves leaves the loader on forever. "It just spins forever" is the
 most common way a missing failure path is reported, and the user has no move except closing the tab.
-*Applies:* any fetch, upload or poll on a network the code does not control
+*Applies:* hand-rolled fetch, XHR, uploads and polls. A framework loader with a built-in timeout, or a configured client default (a React Query fetcher that passes a `signal`, a Next server fetch with a configured timeout), satisfies it. A fetch in a server component reports as recommended, not blocking
 *Check:* make the request never resolve. After the timeout does the user get an error and a next step?
+*Severity:* required for hand-rolled requests; recommended for server-component fetches
+
+### R-STATE-17 · A non-2xx response is a failure
+**DO:** Check `response.ok` or the status before treating a fetch as a success, and branch on the cases the user can act on: 401 (session expired: sign in again and keep what the user typed), 404 (gone or empty), 5xx (offer a retry). Axios-style clients that throw on non-2xx already satisfy this.
+*Why:* `fetch` resolves on 4xx and 5xx and rejects only on a network failure, so a `try/catch` alone never sees a server error. The code then runs its success path: the row is removed, the toast says "saved", and nothing was. (MDN, `fetch()` and `Response.ok`; the whatwg/fetch discussion "Why doesn't fetch reject if 400 <= status < 600".)
+*Applies:* any fetch or XHR call whose result changes the UI or local state
+*Check:* make the endpoint return 500. Does the user see an error, and is local state unchanged?
 *Severity:* required
+
+### R-STATE-18 · The latest request wins
+**DO:** When a fetch is driven by input or route parameters, ignore or abort every response except the one for the latest request: an `AbortController`, a request id compared before `setState`, or the query library's cache key.
+*Why:* Responses can arrive out of order. An older, slower answer then overwrites the newer one and the screen shows data for something the user is no longer asking about.
+*Applies:* input-driven or param-driven fetches (search as you type, filters, route changes, pagination). Required when it applies; a one-shot load on mount does not apply
+*Check:* delay the first response past the second. Does the screen show the newer data?
+*Severity:* required when Applies holds
 
 ---
 
