@@ -1,0 +1,16 @@
+diff --git a/src/html.js b/src/html.js
+deleted file mode 100644
+index 6181923..0000000
+--- a/src/html.js
++++ /dev/null
+@@ -1,3 +0,0 @@
+-export function parseHtml(html) {
+-  return html.replace(/<[^>]*>/g, "");
+-}
+diff --git a/src/index.js b/src/index.js
+index 952edb7..a536785 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -1,2 +1 @@
+ export { fetchPage } from "./fetch.js";
+-export { parseHtml } from "./html.js";

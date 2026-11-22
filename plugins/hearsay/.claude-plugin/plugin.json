@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "hearsay",
+  "displayName": "Hearsay",
+  "version": "0.1.0",
+  "description": "Fact-checks release notes, changelogs, PR descriptions and README feature lists against the repository. Marks every claim verified, unverified, contradicted or unmeasurable with file and line, and rewrites what the code does not support. Read-only.",
+  "author": {
+    "name": "Itamar Dahan",
+    "url": "https://github.com/DahanItamar"
+  },
+  "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/hearsay",
+  "repository": "https://github.com/DahanItamar/claude-skills",
+  "license": "MIT",
+  "keywords": [
+    "fact-check",
+    "release-notes",
+    "changelog",
+    "pull-request",
+    "readme",
+    "semver",
+    "verification",
+    "documentation",
+    "review"
+  ]
+}

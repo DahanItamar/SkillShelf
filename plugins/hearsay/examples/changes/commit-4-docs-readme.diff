@@ -1,0 +1,23 @@
+diff --git a/README.md b/README.md
+index 4c6de18..ea27931 100644
+--- a/README.md
++++ b/README.md
+@@ -2,4 +2,4 @@
+ 
+ Fetch one page and print it.
+ 
+-Usage: pagegrab [--timeout seconds] <url>
++Usage: pagegrab [--format text|json] [--timeout seconds] <url>
+diff --git a/src/cli.js b/src/cli.js
+index 970616a..75f3d7d 100644
+--- a/src/cli.js
++++ b/src/cli.js
+@@ -5,7 +5,7 @@ const { values, positionals } = parseArgs({
+   allowPositionals: true,
+   options: {
+     format: { type: "string", default: "text" },
+-    timeout: { type: "string", default: "30" },
++    timeout: { type: "string", default: "10" },
+   },
+ });
+ 

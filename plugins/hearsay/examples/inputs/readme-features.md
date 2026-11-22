@@ -1,0 +1,5 @@
+- Zero dependencies.
+- Requires Node 20 or newer.
+- Supports JSON output via `--json`.
+- Run `npm test` to run the suite.
+- Caches responses on disk.
