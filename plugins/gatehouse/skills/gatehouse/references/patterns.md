@@ -36,7 +36,7 @@ Judging: first work out whether the comment sits inside a fenced block or a code
 - `S-BLOB`: `[A-Za-z0-9+/=_-]{80,}` — base64-like runs.
 - `S-HEX`: `\b[0-9a-fA-F]{64,}\b` — long hex runs.
 
-Judging: skip `data:image/` URIs, `integrity` and `sha512-` fields and git SHAs. A long URL path is a false positive; look at what follows the run (a decoder or an interpreter raises the severity). Never decode. Write the first 40 characters, then `... N chars`.
+Judging: skip `data:image/` URIs, `integrity` and `sha512-` fields and git SHAs. A run made only of dashes, equals signs or underscores (a horizontal rule) is a false positive, and so is a long URL path; look at what follows the run (a decoder or an interpreter raises the severity). Never decode. Write the first 40 characters, then `... N chars`.
 
 ## G-INJ-01
 
