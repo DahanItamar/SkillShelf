@@ -15,8 +15,8 @@
 #   1  at least one rule failed; each printed as  FAIL L<n>: <file>:<line> <message>
 #   2  the script could not run (no file, not readable, no awk)
 #
-# What this cannot see: an edit Claude made to code without recording it. The
-# gate is a procedure Claude follows, not a lock; this script only checks that
+# What this cannot see: an edit the agent made to code without recording it. The
+# gate is a procedure the agent follows, not a lock; this script only checks that
 # the case file itself obeys the rules.
 
 RULE_COUNT=9
@@ -164,7 +164,7 @@ END {
 	else if (rstat != "observed failing" && rstat != "not observed") add(2, rsln, "Repro status must be \"observed failing\" or \"not observed\" (got \"" rstat "\")")
 
 	# L2 (header lines): approved-command marks, {test} placeholder, Runs
-	if (vcln && vc != "`none`" && vc !~ /^`[^`]+` \((constitution|user-approved)\)$/) add(2, vcln, "Verify command must be a backticked command followed by (constitution) or (user-approved), or `none`")
+	if (vcln && vc != "`none`" && vc !~ /^`[^`]+` \(user-approved\)$/) add(2, vcln, "Verify command must be a backticked command followed by (user-approved), or `none`")
 	if (voln && vo !~ /^`[^`]*\{test\}[^`]*` \(user-approved\)$/) add(2, voln, "Verify one must be a backticked command containing {test}, followed by (user-approved)")
 	if (runsln && runs !~ /^[1-9][0-9]*$/) add(2, runsln, "Runs must be a positive integer (got \"" runs "\")")
 	if (pcln && pc !~ /^`[^`]+` \(user-approved\)$/ && pc !~ /^manual checklist: ./) add(2, pcln, "Proof command must be a backticked command followed by (user-approved), or \"manual checklist: <name>\"")
@@ -224,7 +224,7 @@ END {
 			if (pcln == 0) add(8, checkline, "Check: needs a \"Proof command:\" header line")
 		}
 		if (before == "") add(8, (seen["Before and after"] ? seen["Before and after"] : 1), "no \"- Before:\" line")
-		else if (before !~ /^- Before: exit [0-9]+; observed by (Claude|user); ./) add(8, beforeln, "Before must read: exit <int>; observed by <Claude|user>; <excerpt>")
+		else if (before !~ /^- Before: exit [0-9]+; observed by (agent|user|Claude); ./) add(8, beforeln, "Before must read: exit <int>; observed by <agent|user>; <excerpt>")
 		else {
 			bx = before; sub(/^- Before: exit /, "", bx); sub(/;.*$/, "", bx)
 			if (bx + 0 == 0) add(8, beforeln, "Before exit must be non-zero (the repro must fail before the fix)")
@@ -238,7 +238,7 @@ END {
 			}
 		}
 		if (after == "") add(8, (seen["Before and after"] ? seen["Before and after"] : 1), "no \"- After:\" line")
-		else if (after !~ /^- After: exit [0-9]+; observed by (Claude|user); ./) add(8, afterln, "After must read: exit <int>; observed by <Claude|user>; <excerpt>")
+		else if (after !~ /^- After: exit [0-9]+; observed by (agent|user|Claude); ./) add(8, afterln, "After must read: exit <int>; observed by <agent|user>; <excerpt>")
 		else {
 			ax = after; sub(/^- After: exit /, "", ax); sub(/;.*$/, "", ax)
 			if (ax + 0 != 0) add(8, afterln, "After exit must be 0")

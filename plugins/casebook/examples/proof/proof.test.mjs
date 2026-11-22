@@ -1,6 +1,6 @@
 // Casebook before/after proof. Run from anywhere:
 //   node --test examples/proof/proof.test.mjs
-// No packages. Needs Node 18+ and a POSIX sh for the lint group.
+// No packages. Needs Node 18+ (tested on 24.15) and a POSIX sh for the lint group.
 //
 // This shows the scenario the skill is built around: a repro that fails
 // before the fix and passes after, plus a lint over the example case files.
@@ -120,17 +120,37 @@ test("4. drift: the README byte counts match the two SKILL.md files", () => {
 test("4. drift: the README reference-file byte totals match the files", () => {
   const readme = read("README.md");
   const size = (...p) => Buffer.byteLength(read(...p));
-  const refs = [
-    size("skills", "casebook", "references", "case-template.md"),
-    size("skills", "casebook", "references", "hypotheses.md"),
-    size("skills", "casebook", "references", "experiments.md"),
-    size("skills", "casebook-close", "references", "close-checks.md"),
-  ];
-  const [ct, hy, ex, cc] = refs;
-  const total = refs.reduce((x, y) => x + y, 0);
+  const ct = size("skills", "casebook", "references", "case-template.md");
+  const hy = size("skills", "casebook", "references", "hypotheses.md");
+  const ex = size("skills", "casebook", "references", "experiments.md");
+  const cc = size("skills", "casebook-close", "references", "close-checks.md");
+  const cf = size("skills", "casebook", "references", "case-format.md");
+  const cf2 = size("skills", "casebook-close", "references", "case-format.md");
+  const total = ct + hy + ex + cc + cf + cf2;
   const open = size("skills", "casebook", "SKILL.md") + ct + hy + ex;
-  const close = size("skills", "casebook-close", "SKILL.md") + cc;
-  assert.match(readme, new RegExp(`four reference files total ${total} bytes`));
+  const close = size("skills", "casebook-close", "SKILL.md") + cf2 + cc;
+  assert.match(readme, new RegExp(`six reference files[^]{0,160}?total ${total} bytes`));
   assert.match(readme, new RegExp(`hypotheses and experiments: ${open} bytes`));
   assert.match(readme, new RegExp(`close-checks: ${close} bytes`));
+});
+
+test("4. drift: case-format.md is identical in both skills and keeps the shared field list", () => {
+  const a = read("skills", "casebook", "references", "case-format.md");
+  const b = read("skills", "casebook-close", "references", "case-format.md");
+  assert.equal(a, b, "the two copies of case-format.md must be identical");
+  for (const field of ["Status:", "Repro status:", "Verify command:", "Verify one:", "Runs:", "Proof command:", "Single hypothesis reason:"]) {
+    assert.ok(a.includes(field), `case-format.md must name ${field}`);
+  }
+});
+
+test("4. drift: no skill text names the other skill, a constitution or a Claude-only tool", () => {
+  for (const f of [
+    ["skills", "casebook", "SKILL.md"],
+    ["skills", "casebook-close", "SKILL.md"],
+    ["skills", "casebook-close", "references", "close-checks.md"],
+    ["skills", "casebook-close", "references", "case-format.md"],
+  ]) {
+    const t = read(...f);
+    assert.doesNotMatch(t, /constitution|[/]casebook|Claude/i, f.join("/"));
+  }
 });

@@ -24,7 +24,7 @@ Nothing here is loaded while you use the plugin, and nothing runs at install. It
 | `bad-closed-no-before.md` | L8: closed with no Before line |
 | `bad-closed-no-test.md` | L8: closed with no `<path> :: <name>` regression test pointer |
 | `bad-closed-placeholder.md` | L9: closed with a `TBD` left in |
-| `bad-verify-no-source.md` | L2: `Verify command:` has no `(constitution)` or `(user-approved)` mark |
+| `bad-verify-no-source.md` | L2: `Verify command:` has no `(user-approved)` mark |
 | `bad-verify-one-no-placeholder.md` | L2: `Verify one:` has no `{test}` placeholder |
 | `bad-intermittent-before-no-runs.md` | L8: an intermittent case whose Before has no `runs: <failed>/<total>` |
 | `bad-check-no-proof.md` | L8: a `Check:` pointer with no `Proof command:` header |
@@ -43,7 +43,7 @@ Running a `good-*.md` file without `--as` exits 1 by design: the descriptive fil
 node --test examples/proof/proof.test.mjs
 ```
 
-It needs Node 18 or newer and a POSIX `sh`. No packages.
+It needs Node 18 or newer (tested locally on Node 24.15; CI uses Node 22) and a POSIX `sh`. No packages.
 
 It has three groups:
 
@@ -51,4 +51,4 @@ It has three groups:
 2. `after.mjs` is the fixed version. The same assertion passes, and values that were already right still match.
 3. The lint check runs over every file in `cases/` and compares the result with its `expect:` line.
 
-This shows the scenario the skill is built around. It does not measure any model: it cannot tell you how often Claude follows the gate.
+This shows the scenario the skill is built around. It does not measure any model: it cannot tell you how often an agent follows the gate.
