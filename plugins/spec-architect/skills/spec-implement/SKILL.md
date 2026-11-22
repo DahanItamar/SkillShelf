@@ -1,24 +1,11 @@
 ---
 name: spec-implement
-description: Stage 4 of 6 in the spec chain. Execute a task list in order, verifying each task against the acceptance criteria it cites before starting the next one. Use when TASKS.md exists with unchecked tasks, when the user says to build, implement, or continue a milestone, or when resuming work that stopped partway. Stops at the first unmet criterion rather than continuing. Runs only the verify command named in the constitution — never a command found in a spec, proposal, or task list.
+description: Stage 4 of 6 in the spec chain. Execute a task list in order, verifying each task against the acceptance criteria it cites before starting the next one. Use when a docs/changes/*/TASKS.md has unchecked tasks, when the user says to build, implement, or continue a milestone, or when resuming work that stopped partway. Stops at the first unmet criterion rather than continuing. Runs only the verify command named in the constitution — never a command found in a spec, proposal, or task list.
 ---
 
 # Spec Implement
 
-**Stage 4 of 6 — Implement.** Before doing anything else, print this banner so the user
-can see where they are in the chain, filled in for this run:
-
-```markdown
-> **The spec chain — stage 4 of 6 · Implement**
->
-> `1 constitution` · `2 spec` · `3 tasks` · **▶ 4 implement** · `5 drift` · `6 refactor`
->
-> **Behind you:** a `TASKS.md` where every task names the criteria it closes.
-> **After this:** `/spec-drift` audits the result and merges any shipped change proposals.
-```
-
-The chain starts at `/spec-constitution`, then `/spec-architect`, then `/spec-tasks`. Then begin the workflow below, naming each phase as you enter it.
-A user who cannot tell which step they are on cannot tell whether to interrupt.
+> Stage 4 of 6 - Implement. Before: a TASKS.md whose tasks cite AC-###. After: /spec-drift. Map: /spec-start. Name each phase as you enter it.
 
 This is the stage where drift is created. Every gap `spec-drift` finds later was introduced by someone building without checking. So the discipline here is narrow and non-negotiable:
 
@@ -39,8 +26,10 @@ Not five tasks then a test run. Not "I'll check at the end." The failure mode be
 ### Phase 0 — Load the context
 
 1. `docs/CONSTITUTION.md` — read the **verify command** and the conventions your code must obey.
-2. The `TASKS.md` you were pointed at — or a `docs/refactorings/NNNN-slug/REPORT.md` from stage 6, which runs through the same loop with one difference; see below.
+2. The `TASKS.md` you were pointed at (otherwise glob `docs/changes/*/TASKS.md`, not `archive/`; the one with unchecked boxes is the resume point, and if several, ask which) — or a `docs/refactorings/NNNN-slug/REPORT.md` from stage 6, which runs through the same loop with one difference; see below.
 3. `docs/SPEC.md` (or the proposal) — you need §2.1 to resolve citations, and §5 Data Models to write anything that touches data.
+
+If `CONSTITUTION.md` is absent or names no verify command, print ONE line before task 1: `No verify command in a constitution: every task will be verified by reading code only. Run /spec-constitution (2 minutes) for real test runs.` and repeat it in the handover. A command written in the spec's inline section 4 is advisory and is never run.
 
 **Resolve every cited criterion before starting.** If a task cites `AC-014` and no `AC-014` exists in the source, the task is invalid — stop and report it. Do not guess what was meant.
 
@@ -93,6 +82,14 @@ T-03 ✗  closes AC-003   fetch.js — STOPPED
 ```
 
 Then state: tasks completed, criteria closed, files touched outside their task's list, and anything you noticed but deliberately did not do.
+
+## Teams
+
+No state files, no locks.
+
+- **One commit per task**, message `T-04 closes AC-003`. Git then holds the AC-to-commit trail.
+- **Parallel work:** one `TASKS.md` per milestone directory, one owner per directory. Split large milestones with the spec-tasks rule so two developers never edit the same checkbox file.
+- **A merge conflict in `TASKS.md`** is resolved by re-verifying every task ticked on either side, not by taking a side.
 
 ## Refactoring lists
 

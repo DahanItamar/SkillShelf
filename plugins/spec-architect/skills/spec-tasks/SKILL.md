@@ -1,24 +1,11 @@
 ---
 name: spec-tasks
-description: Stage 3 of 6 in the spec chain. Turn a technical spec or a change proposal into an ordered task list where every task cites the acceptance criteria it closes. Use after spec-architect has written docs/SPEC.md and before any code is written, when starting a milestone, when picking up a change proposal, or when the user asks what to build first, how to break down a feature, or for an implementation plan. Writes TASKS.md. Writes no code — that is spec-implement's job.
+description: Stage 3 of 6 in the spec chain. Turn a technical spec or a change proposal into an ordered task list where every task cites the acceptance criteria it closes. Use after spec-architect has written docs/SPEC.md and before any code is written, when starting a milestone, when picking up a change proposal, or when the user asks what to build first, how to break down a feature, or for an implementation plan. Writes docs/changes/NNNN-slug/TASKS.md. Writes no code — that is spec-implement's job.
 ---
 
 # Spec Tasks
 
-**Stage 3 of 6 — Tasks.** Before doing anything else, print this banner so the user
-can see where they are in the chain, filled in for this run:
-
-```markdown
-> **The spec chain — stage 3 of 6 · Tasks**
->
-> `1 constitution` · `2 spec` · **▶ 3 tasks** · `4 implement` · `5 drift` · `6 refactor`
->
-> **Behind you:** `docs/SPEC.md` with numbered `AC-###` criteria in §2.1 — this stage cites them, it never invents them.
-> **After this:** `/spec-implement` executes the list, one task at a time.
-```
-
-The chain starts at `/spec-constitution`, then `/spec-architect`. Then begin the workflow below, naming each phase as you enter it.
-A user who cannot tell which step they are on cannot tell whether to interrupt.
+> Stage 3 of 6 - Tasks. Before: docs/SPEC.md with AC-### in 2.1. After: /spec-implement. Map: /spec-start. Name each phase as you enter it.
 
 A spec says what the system must do. A task list says what to do next, in what order, and how you will know each step worked.
 
@@ -78,7 +65,7 @@ An uncovered criterion is the more dangerous of the two, because nothing downstr
 
 ### Phase 4 — Write `TASKS.md`
 
-Location: `docs/changes/NNNN-slug/TASKS.md`. For a base-spec milestone with no proposal, create `docs/changes/NNNN-mN-slug/` and say so.
+Location: `docs/changes/NNNN-slug/TASKS.md`. For a base-spec milestone with no proposal, create `docs/changes/NNNN-mN-slug/` and say so. Its close-out is defined in spec-drift `references/merge.md` (base milestones).
 
 ```markdown
 # <Milestone or change title> — Tasks
@@ -108,7 +95,7 @@ Report: the path, the task count, the criteria covered, and — separately, beca
 
 ## Calibration
 
-A five-task milestone gets five lines and no commentary. A twenty-task milestone is a sign the milestone is too big — say so, and propose the split, before writing it out.
+A five-task milestone gets five lines and no commentary. Past 12 tasks (hard stop at 20) split along a dependency cut: take the smallest prefix that is independently shippable, name the directories `NNNN-mN-slug` and `NNNN-mN+1-slug`, give each its own slice of the criteria, and write `Continues in: <path>` in the first file. A criterion belongs to exactly one slice.
 
 ## Reference files
 

@@ -36,7 +36,7 @@ Order in the file **is** execution order. `spec-implement` walks the list top to
 | It closes nothing | Unnecessary, or the spec is missing a requirement | Delete, or go fix the spec |
 | It's "set up the project" | Not demoable, and it hides real decisions | Fold the setup into the first real task |
 
-Twelve tasks is a comfortable ceiling for one milestone. Past twenty, the milestone is too big — say so and propose the split rather than writing a wall.
+Twelve tasks is a comfortable ceiling for one milestone. Past twelve, split along a dependency cut (hard stop at twenty): the smallest independently shippable prefix becomes `NNNN-mN-slug`, the rest `NNNN-mN+1-slug`, each with its own slice of criteria and `Continues in: <path>` in the first file. A criterion belongs to exactly one slice.
 
 ### What is not a task
 

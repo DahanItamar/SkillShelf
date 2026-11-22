@@ -5,20 +5,7 @@ description: Stage 6 of 6 in the spec chain. Improve the structure of code that 
 
 # Spec Refactor
 
-**Stage 6 of 6 — Refactor.** Before doing anything else, print this banner so the user
-can see where they are in the chain, filled in for this run:
-
-```markdown
-> **The spec chain — stage 6 of 6 · Refactor**
->
-> `1 constitution` · `2 spec` · `3 tasks` · `4 implement` · `5 drift` · **▶ 6 refactor**
->
-> **Behind you:** code that ships and a drift report that came back clean. Structure is the only thing left to be wrong.
-> **After this:** back to `/spec-architect` for the next change — against a codebase that can accept it.
-```
-
-The chain starts at `/spec-constitution`. Then begin the workflow below, naming each phase as you enter it.
-A user who cannot tell which step they are on cannot tell whether to interrupt.
+> Stage 6 of 6 - Refactor. Before: a clean drift report. After: /spec-architect for the next change. Map: /spec-start. Name each phase as you enter it.
 
 Stage 5 asks whether the code does what the spec says. This stage exists because a codebase can answer **yes to every criterion and still be finished** — every test green, every `AC-###` satisfied, and the next feature a week of work because the thing it must extend is a 400-line function with three copies of the same date arithmetic in it.
 
@@ -72,7 +59,7 @@ Cleanup needs no gate because it is not a design opinion, but it does need evide
 
 1. **`docs/CONSTITUTION.md`** — the verify command, the static-analysis command if it names one, and the size and layout rules. A "smell" that contradicts the constitution is not a finding; the constitution wins.
 2. **`docs/SPEC.md` §2.1** — the criteria covering the code you are about to touch. These are the invariants of everything you propose. Note their IDs now; you will cite them.
-3. **`TASKS.md` and `docs/changes/`** — what is scheduled next. This is the gate's input. Without it you have no way to tell a Change Preventer from an aesthetic preference, and you will produce a wish list.
+3. **`docs/changes/*/TASKS.md` and `docs/changes/`** — what is scheduled next. This is the gate's input. Without it you have no way to tell a Change Preventer from an aesthetic preference, and you will produce a wish list.
 4. **`docs/refactorings/SMELLS.md`** — every smell this repository has ever recorded, and the next free id. A smell already logged there is not a new finding; a smell already marked **won't fix** has been argued once and does not get re-litigated without a reason.
 
 If there is no spec, say so and continue with a narrower promise: you can still find smells and remove dead code, but "behavior is preserved" degrades from a checked claim to a hope. Offer `/spec-architect` to reverse-engineer the criteria first — on a codebase worth refactoring, that is usually the better order.

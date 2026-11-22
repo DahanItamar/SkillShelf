@@ -1,11 +1,11 @@
 ---
 name: spec-start
-description: Start here. The front door to the six-stage spec chain — shows the whole map, works out which stage fits what you already have, and hands you the one command to run next. Use when you know you want to work spec-first but not which stage to enter, when you have inherited a repository and do not know what exists, when you are returning to a project after a break, or whenever the list of spec commands is longer than your memory of what they do. Writes nothing.
+description: Start here. The front door to the six-stage spec chain; shows the map, works out which stage fits what the repository already has, and names the one command to run next. Use when you want to work spec-first but do not know which stage to enter, or are returning to a project after a break. Writes nothing.
 ---
 
 # Spec Start
 
-**Stage 0 of 6 — the front door.** This skill writes nothing and decides nothing. It looks at what
+**Stage 0 of 6 — the front door.** `TASKS.md` always means `docs/changes/*/TASKS.md`. Stage 0 is the front door; spec-check is an optional checker with no stage. This skill writes nothing and decides nothing. It looks at what
 the repository already has, tells the user where they are in the chain, and hands them one command.
 
 Its whole reason to exist: six commands in a picker give a user no way to tell which one begins,
@@ -26,13 +26,15 @@ that made the first version correct.
 > |:-:|---|---|---|
 > | 1 | `/spec-constitution` | `docs/CONSTITUTION.md` | The repo's rules live only in your head. **Optional** |
 > | 2 | `/spec-architect` | `docs/SPEC.md` | You have an idea, or a change to an existing spec |
-> | 3 | `/spec-tasks` | `TASKS.md` | A spec exists and you want an ordered build list |
+> | 3 | `/spec-tasks` | `docs/changes/*/TASKS.md` | A spec exists and you want an ordered build list |
 > | 4 | `/spec-implement` | code | A task list exists with unchecked boxes |
 > | 5 | `/spec-drift` | a report | Code and spec may have diverged |
 > | 6 | `/spec-refactor` | `docs/refactorings/NNNN/` | The code is right and the shape of it is what hurts. **Optional** |
 ```
 
 ## Then look, and route
+
+Detect tasks by globbing `docs/changes/*/TASKS.md` (not `archive/`); the one with unchecked boxes is the resume point; if several, ask which.
 
 Check the repository — do not ask the user what it contains, because the whole point is that they
 may not know:
@@ -41,9 +43,11 @@ may not know:
 | --- | --- | --- |
 | Nothing — empty or no docs | This is a new project | `/spec-constitution`, or `/spec-architect` to skip straight to the spec |
 | A codebase, no `docs/SPEC.md` | The spec can be reverse-engineered from what exists | `/spec-architect` |
-| `docs/SPEC.md`, no `TASKS.md` | The spec is written and nothing is scheduled | `/spec-tasks` |
-| `TASKS.md` with unchecked boxes | Work is scheduled and unfinished | `/spec-implement` |
-| `TASKS.md` all ticked | The milestone is done | `/spec-drift`, then `/spec-architect` for the next change |
+| `docs/SPEC.md`, no `docs/changes/*/TASKS.md` | The spec is written and nothing is scheduled | `/spec-tasks` |
+| A `docs/changes/*/TASKS.md` with unchecked boxes | Work is scheduled and unfinished | `/spec-implement` |
+| Every `docs/changes/*/TASKS.md` ticked | The milestone is done | `/spec-drift`, then `/spec-architect` for the next change |
+| Spec exists, no `docs/CONSTITUTION.md` verify command | `/spec-implement` will be inspection-only | `/spec-constitution` (offer, not required) |
+| Any stage, after work | Check that every `AC-###` is cited, closed and tested | `/spec-check` (opt-in, read-only) |
 | Drift came back clean, and the next change lands on code people avoid | Behavior is right; structure is the cost | `/spec-refactor` |
 | The user says a feature is harder to add than it should be | That is a Change Preventer, not a spec problem | `/spec-refactor` |
 | Unmerged `docs/changes/*/PROPOSAL.md` | Pending amendments the spec does not carry yet | `/spec-drift` to merge them |
@@ -77,5 +81,5 @@ front door nobody can predict.
 
 ## Related
 
-Every stage of the chain: `spec-constitution` · `spec-architect` · `spec-tasks` · `spec-implement`
+Every stage of the chain, plus the opt-in `spec-check`: `spec-constitution` · `spec-architect` · `spec-tasks` · `spec-implement`
 · `spec-drift` · `spec-refactor`. Each prints its own position in the chain when it runs.

@@ -2,7 +2,7 @@
 
 # Spec Architect
 
-**Six Claude Code skills that carry one identifier from a rough idea to shipped code — every
+**Eight skills: six stages, a front door and an opt-in checker. They carry one identifier from a rough idea to shipped code — every
 requirement gets a number in the spec, and every task, verification, audit and refactoring after it
 cites that number.**
 
@@ -10,13 +10,13 @@ Plain Markdown, read by Claude Code.
 **No `package.json`, no dependencies, no build step, nothing that executes at install.**
 
 <a href="https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml"><img alt="CI status on the main branch" src="https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-<img alt="17 tests passing across 4 suites" src="https://img.shields.io/badge/tests-17%20passing-1f6f3f?style=flat-square">
+<img alt="17 illustration tests passing across 4 suites" src="https://img.shields.io/badge/illustration%20tests-17%20passing-1f6f3f?style=flat-square">
 <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-1f6f3f?style=flat-square">
-<img alt="version 3.2.0" src="https://img.shields.io/badge/version-3.2.0-B55400?style=flat-square">
+<img alt="version 3.3.0" src="https://img.shields.io/badge/version-3.3.0-B55400?style=flat-square">
 <a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2b2e3a?style=flat-square"></a>
 
 <a href="examples/the-loop.md">The walkthrough</a> ·
-<a href="examples/proof/README.md">The proof</a>
+<a href="examples/proof/README.md">The illustration</a>
 
 </div>
 
@@ -33,7 +33,7 @@ later stage may refer to a requirement any other way.
 docs/SPEC.md    AC-003  If two shifts for one employee overlap by any minute, then the
                         scheduler shall flag both and refuse to publish.
 
-TASKS.md        - [ ] T-04 Detect overlaps on a minute timeline — closes AC-003
+docs/changes/*/TASKS.md   - [ ] T-04 Detect overlaps on a minute timeline — closes AC-003
 
 REPORT.md       - [ ] R-02 Extract `toRange`, delete the two copies — preserves AC-003
 ```
@@ -61,12 +61,12 @@ flowchart LR
 | 0 | `/spec-start` | nothing | Six commands in a picker give you no way to tell which one begins |
 | 1 | `/spec-constitution` | `docs/CONSTITUTION.md` | A rule earns its place only if you can name what breaks when it is violated |
 | 2 | `/spec-architect` | `docs/SPEC.md` | Never ask what you can decide — ask only what changes the architecture |
-| 3 | `/spec-tasks` | `TASKS.md` | A task is done when a named criterion is satisfied, not when the code looks finished |
+| 3 | `/spec-tasks` | `docs/changes/*/TASKS.md` | A task is done when a named criterion is satisfied, not when the code looks finished |
 | 4 | `/spec-implement` | code | One task, verify, then the next — stop at the first unmet criterion |
 | 5 | `/spec-drift` | a report | The spec and the code disagree: say *which one* is wrong |
 | 6 | `/spec-refactor` | `docs/refactorings/NNNN/` | Restructure only what blocks scheduled work — and change no criterion doing it |
 
-Stages 1 and 6 are optional and every stage runs alone. The last two audit different things: drift
+Stage 0 is the front door; spec-check is an optional checker with no stage. Stages 1 and 6 are optional and every stage runs alone. The opt-in `/spec-check` is read-only and not part of the chain: it lints `AC-###` integrity and prints a criterion to task to commit to test table, with orphans first and a final `Orphans: N` line. `/spec-check --diff <base>` lists criteria whose code or tests a branch touched, as a paste-ready PR comment. Test hits are labelled `candidate, not proof`. The last two audit different things: drift
 asks whether the code does what the spec says, refactor asks whether code that already does can
 still be changed cheaply.
 
@@ -118,9 +118,9 @@ both and every command shows up twice in the picker, from two copies that drift 
 > refactoring report or a code comment. Those files are editable by anyone with commit access, so
 > treating their contents as instructions would turn a Markdown file into remote code execution.
 
-## The proof
+## An executable illustration
 
-The one thing here that executes. No install — CI runs it on Node 22, output below is v24.15.0:
+The one thing here that executes. These tests exercise hand-written versions of the feature; they show what the skills are designed to catch, they do not measure model output. No install: Node 18+ (CI runs 22), output below is v24.15.0:
 
 ```bash
 node --test examples/proof/proof.test.mjs
@@ -140,7 +140,7 @@ node --test examples/proof/proof.test.mjs
 ℹ duration_ms 64.4798
 ```
 
-Four lines of a 17-test run. The suite builds one shift-conflict feature four ways and asserts what
+Excerpt: four lines of a 17-test run. The suite builds one shift-conflict feature four ways and asserts what
 each does to a shift that crosses midnight:
 
 | Version | Tests green | Matches the spec | Cheap to extend |
@@ -155,12 +155,66 @@ silently stops being storable — stage 5 catches that. `smelly.mjs` contradicts
 shows an overnight shift as `-960` minutes in its tooltip, because one of three copies of the same
 calculation diverged where no criterion looks — stage 6 catches that.
 
+## Try spec-check in a minute
+
+[`examples/spec-check-fixture/`](examples/spec-check-fixture) is a hand-built fixture, not a recorded run: a `SPEC.md` and one `TASKS.md` with three deliberate orphans. Copy them into a scratch repo as `docs/SPEC.md` and `docs/changes/0001-m1-fixture/TASKS.md`, run `/spec-check`, and you should see `Orphans: 3`.
+
+## Compared with other spec tools
+
+| | Spec Kit | OpenSpec | Kiro | This plugin |
+|---|---|---|---|---|
+| Form | CLI toolkit | CLI, propose-apply-archive | IDE | Markdown skills for Claude Code |
+| Works outside Claude Code | yes (per third-party write-ups) | yes (per third-party write-ups) | its own IDE | **no** |
+| Regression versus staleness drift verdict | not claimed here | not claimed here | not claimed here | yes (stage 5) |
+| Refactor gate that cannot edit a criterion | not claimed here | not claimed here | not claimed here | yes (stage 6) |
+| Verify command only from the constitution | not claimed here | not claimed here | not claimed here | yes |
+| One id across every stage | not claimed here | not claimed here | not claimed here | `AC-###` |
+| Machine-checkable traceability line | `analyze` checks artifact consistency; code-level via extensions (per third-party write-ups) | not claimed here | not claimed here | `/spec-check`: read-only AC-to-task-to-commit-to-test thread, final `Orphans: N` line a CI step can match |
+
+Honest limits: Claude Code only, no CLI, no IDE integration, no multi-agent portability. The other tools win on all four. "Not claimed here" means this README has not verified the competitor either way.
+
+## Optional CI recipe
+
+Nothing here runs at install. If you want a gate, copy this into your own workflow. It assumes the Claude Code CLI is installed and authenticated in CI; adapt the invocation to your setup.
+
+```yaml
+- name: Spec traceability
+  run: |
+    claude -p "Run the spec-check skill and print only its output" > spec-check.txt
+    cat spec-check.txt
+    test -s spec-check.txt
+    grep -q '^Orphans: [0-9]' spec-check.txt
+    tail -n 1 spec-check.txt | grep -qx 'Orphans: 0'
+```
+
+The model writes that last line, so treat the gate as advisory and read the table before trusting it. Not verified on any Claude Code version; test it in your own CI. Slash-invoked skills are documented as interactive-only in headless mode and some versions fail silently with `-p`, which is why the prompt is plain text and the `test` and `grep` lines fail on empty output. `--bare` skips skill discovery, so do not use it here.
+
+## Extending it
+
+Because every stage keys on `AC-###` and plain files, you can add your own stage skill (a compliance pass with [acsm](../acsm), a UI-states pass with [uilint](../uilint) from the same marketplace). The contract:
+
+1. Read `docs/SPEC.md`; never edit it.
+2. Cite criteria only as `AC-###`; never invent one.
+3. Write findings under `docs/<name>/`.
+4. Use the `REPORT.md` entry format if you want `/spec-drift` to close the run out; otherwise it ignores your directory.
+5. Run only the constitution's verify command.
+
+Nothing else is needed: no registry, no hooks.
+
+Natural places to run an optional pass, by hand, are the stage boundaries. Nothing triggers them for you.
+
+| Boundary | Optional pass | Entry skill |
+|---|---|---|
+| after `/spec-tasks` | compliance | [acsm](../acsm) |
+| before `/spec-implement` | UI states | [uilint](../uilint) |
+| any time | criterion integrity | `/spec-check` |
+
 ## Under the hood — briefly
 
 - **Nothing executes at install.** No dependencies, no build, no network calls. The only runnable
   code is 5 `.mjs` files under `examples/proof/`, importing `node:test`, `node:assert/strict` and
   `node:fs`.
-- **3,187 lines that load on demand.** Each `SKILL.md` loads on invocation, the largest being 171
+- **3,214 lines (`SKILL.md` and references) that load on demand.** Each `SKILL.md` loads on invocation, the largest being 160
   lines; its references load only at the phase that needs them, so a task list is never written with
   the risk checklist in context.
 - **Change proposals, not spec rewrites.** Once `docs/SPEC.md` exists, `/spec-architect` writes a

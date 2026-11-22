@@ -1,24 +1,11 @@
 ---
 name: spec-drift
-description: Stage 5 of 6 in the spec chain. Check whether the code still matches the project's technical spec, and realign whichever side is wrong. Use when the user asks if the spec is still accurate, wants a spec audit or drift check, says the docs are stale or out of date, is returning to a project after a break, is about to onboard someone (or a fresh Claude session) onto a codebase with a spec, or has just finished a milestone. Also use before writing a new feature against an existing spec, to confirm the ground it assumes is still real. Reads docs/SPEC.md (or SPEC.md) and reports gaps as regressions or staleness — never silently rewrites either side. Also closes out finished work: merges shipped change proposals into the spec, and archives completed refactoring runs after verifying the smells they claimed to remove are actually gone.
+description: Stage 5 of 6 in the spec chain. Check whether the code still matches docs/SPEC.md and report each gap as regression or staleness, never silently rewriting either side. Use for a spec audit or drift check, when docs may be stale, after finishing a milestone, or before a new feature on an existing spec; also closes out shipped proposals and finished refactoring runs.
 ---
 
 # Spec Drift
 
-**Stage 5 of 6 — Drift.** Before doing anything else, print this banner so the user
-can see where they are in the chain, filled in for this run:
-
-```markdown
-> **The spec chain — stage 5 of 6 · Drift**
->
-> `1 constitution` · `2 spec` · `3 tasks` · `4 implement` · **▶ 5 drift** · `6 refactor`
->
-> **Behind you:** code built against the spec — by this pipeline or by hand.
-> **After this:** `/spec-refactor` if the code is right and the structure is what hurts — otherwise back to `/spec-architect` in delta mode for the next change. The chain loops; it does not end.
-```
-
-The chain starts at `/spec-constitution`. Then begin the workflow below, naming each phase as you enter it.
-A user who cannot tell which step they are on cannot tell whether to interrupt.
+> Stage 5 of 6 - Drift. Before: code built against the spec. After: /spec-refactor, or /spec-architect for the next change. Map: /spec-start. Name each phase as you enter it.
 
 A spec is only worth having if it's true. The moment the code and the document disagree, the document stops being a reference and becomes a liability — because people still trust it.
 
@@ -44,7 +31,7 @@ A gap against a section that merely *describes* — a field that got added, an e
 
 Look for `docs/SPEC.md`, then `SPEC.md`, then any `*.spec.md` in `docs/`. If there's more than one, ask which.
 
-Then list `docs/changes/` for proposals that are not archived. Each one is either **pending** (tasks unfinished — its criteria are not yet promises the code must keep) or **shipped** (every task ticked — it is ready to merge in Phase 6). Read `docs/CONSTITUTION.md` too, if present; §4 claims are checked against it rather than against the spec.
+Then list `docs/changes/` for proposals that are not archived. A directory with `TASKS.md` and no `PROPOSAL.md` is a base milestone: close it out by the rule at the top of `references/merge.md`. Each proposal is either **pending** (tasks unfinished — its criteria are not yet promises the code must keep) or **shipped** (every task ticked — it is ready to merge in Phase 6). Read `docs/CONSTITUTION.md` too, if present; §4 claims are checked against it rather than against the spec.
 
 List `docs/refactorings/` the same way, if it exists. A run whose `REPORT.md` entries are all ticked is ready to sweep in Phase 7; one with unchecked entries is in progress and is left alone. Read `docs/refactorings/SMELLS.md` now — the `preserves AC-###` lines in an unarchived run tell you which criteria to look at hardest in Phase 2.
 
