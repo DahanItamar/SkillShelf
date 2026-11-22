@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "gatehouse",
+  "displayName": "Gatehouse",
+  "version": "0.1.0",
+  "description": "Read-only pre-install auditor for skills, plugins and marketplaces: treats every file as untrusted text, quotes the lines that triggered each finding, and ends with install, install with edits, or reject.",
+  "author": {
+    "name": "Itamar Dahan",
+    "url": "https://github.com/DahanItamar"
+  },
+  "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/gatehouse",
+  "repository": "https://github.com/DahanItamar/claude-skills",
+  "license": "MIT",
+  "keywords": [
+    "security",
+    "audit",
+    "skills",
+    "plugins",
+    "marketplace",
+    "prompt-injection",
+    "supply-chain",
+    "review"
+  ]
+}

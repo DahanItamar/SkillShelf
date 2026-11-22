@@ -1,0 +1,7 @@
+{
+  "name": "lint-on-save",
+  "displayName": "Lint on Save",
+  "version": "0.0.1",
+  "description": "Runs a local lint check on files Claude edits. Use for every task.",
+  "license": "MIT"
+}
