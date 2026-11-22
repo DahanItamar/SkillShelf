@@ -10,20 +10,26 @@ and no measurement could either, it is not a claim.
 
 ## Kinds
 
-Tag each claim with one kind. The letter is for reading the rubric; the word goes in the Kind column.
+Tag each claim with one kind; the word goes in the Kind column.
 
-| Id | Kind | Examples |
-|---|---|---|
-| C | change | added, removed, renamed, moved, deprecated, changed default |
-| I | interface | export, CLI flag, config key, env var, route, exit code, file format |
-| B | behavior | "retries", "returns 404 when", "fixes the crash when" |
-| K | compatibility | "no breaking changes", "backward compatible", "requires Node 20", "supports Python 3.9+" |
-| D | dependency or platform | "zero dependencies", "uses SQLite", "adds Windows support" |
-| T | tests | "adds tests for X", "all tests pass", "100% coverage" |
-| O | docs | "docs updated", "see docs/x.md" |
-| M | metric | countable ("200 tests") versus performance ("3x faster") |
-| R | reference | file, path, link, issue or PR number, version |
-| S | scope | "only touches X", "no functional change", "refactor only" |
+| Kind | Examples |
+|---|---|
+| Change | added, removed, renamed, moved, deprecated, changed default |
+| Interface | export, CLI flag, config key, env var, route, exit code, file format |
+| Behavior | "retries", "returns 404 when", "fixes the crash when" |
+| Compatibility | "no breaking changes", "backward compatible", "requires Node 20", "supports Python 3.9+", "now works on Windows" |
+| Dependency | "zero dependencies", "uses SQLite": packages, libraries or services the project imports or needs |
+| Tests | "adds tests for X", "all tests pass", "100% coverage" |
+| Docs | "docs updated", "see docs/x.md" |
+| Metric | countable ("200 tests") or performance ("3x faster") |
+| Reference | file, path, link, issue or PR number, version |
+| Scope | "only touches X", "no functional change", "refactor only" |
+
+Tie-break: works on, supports or requires a platform, runtime or version = Compatibility; Dependency
+is only about packages, libraries or services the project imports or needs. If two kinds fit, use the
+one listed first in this order: Compatibility, Scope, Interface, Behavior, Change, Dependency, Tests,
+Docs, Metric, Reference. A countable metric ("200 tests") is checked by counting; a performance or
+real-world figure ("3x faster") goes to decision step 1 in `verdicts.md`.
 
 ## Time frames
 
@@ -49,11 +55,10 @@ that it was not already in the base.
   them and report "N prose lines skipped" under "Not checked".
 - **A version number** is a claim only in release mode, where it is checked against the manifest and
   the proposed bump.
-- **A changelog** is checked for one section: the one the user names; else the one equal to the
-  manifest version; else `Unreleased` if it is the newest; else the newest. Report "N other sections
-  not checked".
+- **A changelog** is checked for one section: use the section rule in `SKILL.md` step 1. Report "N other
+  sections not checked".
 - **Cap.** At most 40 ledger rows. If there are more claims, keep the riskiest (compatibility, scope,
-  interface, behavior, then the rest) and report the rest by kind (see ledger-template). `--rows 41-80`
+  interface, behavior, then the rest) and report the rest by kind (see ledger-template). a row range such as 41-80
   re-extracts in the same order and skips the first 40 rows.
 
 ## Cheap mechanical checks first (README feature lists)
@@ -72,7 +77,7 @@ A failed mechanical check is usually contradicted with a closed set (the manifes
 
 | Sentence | Claims |
 |---|---|
-| "Refactor only, no functional change." | One scope claim (S): the whole sentence |
-| "Adds `--format` and drops the old `--json` alias." | H-01 "Adds `--format`" (I), H-02 "drops the old `--json` alias" (C) |
-| "Faster and more reliable." | H-01 "Faster" (M), H-02 "more reliable" (M); both usually unmeasurable |
+| "Refactor only, no functional change." | One scope claim: the whole sentence |
+| "Adds `--format` and drops the old `--json` alias." | H-01 "Adds `--format`" (Interface), H-02 "drops the old `--json` alias" (Change) |
+| "Faster and more reliable." | H-01 "Faster" (Metric), H-02 "more reliable" (Metric); both usually unmeasurable |
 | "Coming soon: Windows support." | Not a claim about HEAD. Skipped. |

@@ -4,27 +4,21 @@
 
 **Checks the prose against the repo.**
 
-<img alt="version 0.1.0" src="https://img.shields.io/badge/version-0.1.0-0F766E?style=flat-square">
+<img alt="version 0.2.0" src="https://img.shields.io/badge/version-0.2.0-0F766E?style=flat-square">
 <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-0F766E?style=flat-square"></a>
 <img alt="dependencies 0" src="https://img.shields.io/badge/dependencies-0-0F766E?style=flat-square">
 
 </div>
 
-Not the `hearsay-pr` package on PyPI: that is a separate, deterministic CLI by other authors (see [How it compares](#how-it-compares)).
-
 ---
 
 Release notes, PR descriptions and README feature lists drift from the code. A flag gets a different
 name than the notes say, "no functional change" sits over a changed default, a README lists something
-that was never built. Text written by an agent tends to overstate: one study of 23,247 agent-authored
-pull requests found 406 (1.7%) with high inconsistency between the description and the code, and
-reported "descriptions claim unimplemented changes" as the most common issue, at 45.4%
-([arXiv 2601.04886](https://arxiv.org/abs/2601.04886), agent-authored PRs only; it says nothing about
-human-written text).
+that was never built.
 
-`hearsay` is plain Markdown that Claude reads. It splits the text into claims, looks each one up in the
+`hearsay` is plain Markdown that an AI agent reads (an Agent Skills folder). It splits the text into claims, looks each one up in the
 repository, and prints a ledger: what holds, what does not, what nobody can tell from the files, with a
-file and line for each. No dependencies, nothing to build, nothing runs at install, no network.
+file and line for each. No dependencies, nothing to build, nothing runs at install, no network. It is read-only by instruction, not by a sandbox; see Hardening for a mechanical guard.
 
 ## The four verdicts
 
@@ -35,16 +29,7 @@ file and line for each. No dependencies, nothing to build, nothing runs at insta
 | **contradicted** | Counter-evidence found at `path:line`. Absence alone never contradicts, except in a closed set read in full (a whole manifest, a complete diff file list) |
 | **unmeasurable** | No command could settle it: a judgment or a real-world measurement ("production-ready", a bare "3x faster"). The row says what to measure. A benchmark script with no results is unverified instead, with the run command in the note |
 
-```mermaid
-flowchart TD
-  A[Claim] --> B{Could any file, diff or command output in this repo settle it?}
-  B -- no --> M[unmeasurable]
-  B -- yes --> C{Counter-evidence found?}
-  C -- yes --> X[contradicted]
-  C -- no --> D{Evidence for every part?}
-  D -- yes --> V[verified]
-  D -- no --> U[unverified]
-```
+Decision order: [`references/verdicts.md`](references/verdicts.md).
 
 Wrong accusations cost more than missed ones, so when torn between contradicted and unverified it
 chooses unverified. It also re-opens and quotes the cited line before printing contradicted, and
@@ -54,7 +39,9 @@ correct.**
 ## What a run looks like
 
 The report for [`examples/inputs/notes-1.4.0.md`](examples/inputs/notes-1.4.0.md) against the fictional
-`pagegrab` project in [`examples/`](examples/README.md):
+`pagegrab` project in [`examples/`](examples/README.md).
+
+**Expected output, not a recorded run:**
 
 ```text
 Hearsay ledger: notes-1.4.0.md against examples/changes/pagegrab.diff
@@ -69,18 +56,14 @@ HEAD <sha> (clean) | base v1.3.0 | 6 claims
 | H-03 | "Fetches pages 3x faster than 1.3." | Metric | unmeasurable | (none) | Needs: seconds per page, baseline v1.3.0, a repeatable command. |
 | H-04 | "No breaking changes." | Compatibility | contradicted | base:src/index.js:2, base:src/cli.js:7, src/cli.js:8 | `parseHtml` is no longer exported; default timeout 30 -> 10. |
 | H-05 | "Zero runtime dependencies." | Dependency | verified | manifest:dependencies, src/cli.js:1-2 | Imports searched: built-ins and relative modules only. |
-| H-06 | "Now works on Windows." | Dependency | unverified | (none) | No Windows code or CI matrix found. Needs a run on Windows. |
+| H-06 | "Now works on Windows." | Compatibility | unverified | (none) | No Windows code or CI matrix found. Needs a run on Windows. |
 
 Honest rewrites
-  H-01
-    before: Adds a `--json` flag to print the page as JSON.
-    after:  Adds `--format json` to print the page as JSON.
-  H-03
-    before: Fetches pages 3x faster than 1.3.
-    after:  delete: no benchmark supports it
+  H-01 after: Adds `--format json` to print the page as JSON.
+  H-03 after: delete: no benchmark supports it
 ```
 
-This is the expected report in the output contract. It matches the golden file
+This is the expected report in the output contract (three rows are contradicted, so there is no "Read first" block). It matches the golden file
 [`examples/expected/notes-1.4.0.md`](examples/expected/notes-1.4.0.md). It is not a recorded run;
 wording and order vary between runs because a language model is not deterministic. The output is
 trimmed here: a real run also prints the remaining rewrites, the "Not checked" line and the offer to
@@ -88,53 +71,72 @@ apply the rewrites.
 
 ## Install
 
-> **Pick one route, not both**, or the skill loads twice. **In the VS Code extension the command is
-> `/plugins`, plural, and opens a dialog**: the lines below are terminal syntax and fail silently
-> there, which looks identical to the install not working.
+hearsay is one Agent Skills folder: `SKILL.md` at its root plus `references/`. Nothing runs at install.
 
-hearsay ships in the [SkillShelf](https://github.com/DahanItamar/SkillShelf#readme) marketplace
-with the other skills. It works standalone.
-
-```bash
-/plugin marketplace add DahanItamar/SkillShelf
-/plugin install hearsay@skillshelf
-```
-
-Or clone it into your skills directory, which needs no plugin UI and so works in web and cloud
-sessions too:
+**1. Copy the folder (works today, in every tool).** Copy `plugins/hearsay` from the
+[SkillShelf](https://github.com/DahanItamar/SkillShelf) repository into your tool's skills directory,
+so the folder is the skill. See [the per-tool paths](https://github.com/DahanItamar/SkillShelf#install).
+For Claude Code, for example:
 
 ```bash
 git clone https://github.com/DahanItamar/SkillShelf.git
 cp -r SkillShelf/plugins/hearsay ~/.claude/skills/hearsay
 ```
 
-The second route installs it as a plain skill: the same instructions, invoked as `/hearsay` without the
-plugin namespace, with `.claude-plugin/` ignored. On Windows, copy to
-`%USERPROFILE%\.claude\skills\hearsay`.
+On Windows, copy to `%USERPROFILE%\.claude\skills\hearsay`. This route needs no plugin UI, so it also
+works in web and cloud sessions; `.claude-plugin/` is ignored.
 
-To confirm the install, open a repository and run `/hearsay README.md`; you should get a ledger header.
-It also triggers on its own when you ask to fact-check release notes, a changelog, a PR description or
-README features.
+**2. Claude Code marketplace (second option).** Marketplace install is available once this plugin is
+released; the copy route works now. After release:
+
+```bash
+/plugin marketplace add DahanItamar/SkillShelf
+/plugin install hearsay@skillshelf
+```
+
+Pick one route, not both, or the skill loads twice. In the VS Code extension the command is
+`/plugins`, plural, and opens a dialog; the lines above are terminal syntax.
+
+### Use it in other tools
+
+Copy the `plugins/hearsay` folder into your tool's skills directory (the folder is the skill,
+`SKILL.md` at its root); the root README lists the paths. Invocation differs by tool:
+
+- Claude Code and Copilot CLI: `/hearsay`, or just ask in words.
+- Codex: `$hearsay`, or pick it with the `/skills` picker.
+- Gemini CLI: no manual invoke; the model activates the skill from its description and asks you to
+  confirm. Phrase the request as "fact-check these release notes against the repo".
+- Cursor: reads the same `SKILL.md` from `.cursor/skills` or `.agents/skills`. Per the root README: "Cursor picks skills up on start. Type `/` in Agent chat to run one by name." Or ask: "fact-check CHANGELOG.md against the repo". Documented in the root README, not tested here.
+
+The plain-words request works everywhere, for example "fact-check CHANGELOG.md against the repo". To
+confirm the install, open a repository and ask it to fact-check `README.md`; you should get a ledger
+header. It also triggers on its own when you ask to fact-check release notes, a changelog, a PR
+description or README features.
 
 ## Usage
 
-| Command | Source under check |
+Say what to check, in plain words:
+
+| You say | Source under check |
 |---|---|
-| `/hearsay <path>` | A notes file, CHANGELOG.md, README.md or a PR text saved as a file |
-| `/hearsay <pasted text>` | A PR description or notes pasted inline (it does not fetch PRs; there is no network access) |
-| `/hearsay --release [<prev-tag>] [notes-path]` | Release mode: previous tag against HEAD. With no tag it infers the latest one with `git describe` and prints it |
+| "fact-check CHANGELOG.md against the repo" | A notes file, CHANGELOG.md, README.md or a PR text saved as a file |
+| paste the text and ask for a fact-check | A PR description or notes pasted inline (it does not fetch PRs; there is no network access) |
+| "check the release notes since tag v1.3.0" | Release mode: previous tag against HEAD, optionally with a notes file. With no tag it infers the latest one with `git describe` and prints it |
 
-Flags: `--base <ref>` sets the diff base for change claims; `--diff <file>` uses a patch file as the diff
-source (read, never applied); `--path <dir>` scopes release mode to one package of a monorepo (common
-layouts only); `--rows 41-80` prints the next block after the 40-row cap; `--json` adds one JSON block
-with the same rows, advisory only because runs are not deterministic.
+Options, by name: a base ref sets the diff base for change claims; a diff file is used as the diff
+source (read, never applied); a package directory scopes release mode to one package of a monorepo
+(common layouts only); a row range such as 41-80 prints the next block after the 40-row cap; ask for
+the json block to get one JSON block with the same rows, advisory only because runs are not
+deterministic. Tools with slash or dollar invocation may accept `/hearsay` or `$hearsay` followed by
+the same words; that is shorthand, not required.
 
-To check a PR: save the PR body to a file, then run `/hearsay <path>`.
+To check a PR: save the PR body to a file, then ask for a fact-check of that file.
 
 Cost, estimated from byte counts at about 4 bytes per token (not measured), before any repository
-reads: fast path about 9 KB; a normal run (SKILL.md plus claim-rubric, verdicts and
-ledger-template) about 21 KB, about 24 KB with rewrite-rules; release mode loads all six references,
-about 33 KB, roughly 8k tokens. Text of 10 non-blank lines or fewer and at most 1,200 characters takes the fast path (SKILL.md only).
+reads: fast path about 9 KB (the extra essentials stay within a few hundred bytes); a normal run
+(SKILL.md plus claim-rubric, verdicts and ledger-template) about 21 KB, about 24 KB with
+rewrite-rules; release mode loads all six references, about 33 KB, roughly 8k tokens. Text of 20
+non-blank lines or fewer and at most 2,500 characters takes the fast path (SKILL.md only).
 
 **Release mode** compares the tag with HEAD, classifies each change (Breaking, Feature, Fix,
 Dependency, Docs, Internal) using a per-ecosystem public-surface checklist, and proposes a SemVer bump
@@ -168,8 +170,9 @@ Limits, plainly:
 - **Read-only is enforced by instruction, not by a sandbox.** The skill lists the read-only git commands
   it may use, requires `--no-ext-diff --no-textconv` on diff-like calls, bans `--output` and `-O`, uses
   `git --no-optional-locks status --porcelain`, and declares no tool permissions. These flags reduce
-  the risk from a repository that names diff drivers in its own config; they do not remove it. Claude
-  Code's own permission prompts still apply.
+  the risk from a repository that names diff drivers in its own config; they do not remove it. Your
+  tool's own permission prompts still apply.
+- It is not a compliance audit: "no PHI logged" or "encrypted at rest" are checked like any other claim, and verified only means the prose matches the code.
 - It reads; it does not parse. It can miss an export that is registered dynamically, by reflection, by
   code generation or by macros. Such changes are marked `needs-maintainer`.
 - It never runs the project, so "all tests pass" is unverified plus a command for you to run, never
@@ -178,53 +181,34 @@ Limits, plainly:
 - It is not deterministic, so it cannot gate CI. The same input can phrase things differently between
   runs; the verdicts should not change, and `examples/README.md` has a two-run check for that.
 - Only JavaScript is seeded in `examples/`; other ecosystems rely on `references/public-surface.md` and are untested.
-- It caps a run at 40 ledger rows (the rest are counted by kind; `--rows 41-80` continues), and checks
+- It caps a run at 40 ledger rows (the rest are counted by kind; a row range such as 41-80 continues), and checks
   one changelog section: the one you name, else the one matching the manifest version, else `Unreleased`,
   else the newest.
 
 ## Hardening
 
-If you want a mechanical guard instead of an instruction, add deny rules to your own Claude Code
-settings (the plugin ships none). For example, in `.claude/settings.json`:
-`{"permissions": {"deny": ["Bash(git commit *)", "Bash(git push *)", "Bash(git reset *)", "Bash(git checkout *)", "Bash(git stash *)", "Bash(git config *)", "Bash(git rebase *)"]}}`.
-The host then blocks those commands whatever the text under check says. Check the rule syntax against
-the current Claude Code permissions documentation, since it can change.
+If you want a mechanical guard instead of an instruction, add deny rules to your own settings (the
+plugin ships none). In Claude Code, for example in `.claude/settings.json`:
+`{"permissions": {"deny": ["Bash(git commit *)", "Bash(git push *)", "Bash(git reset *)", "Bash(git checkout *)", "Bash(git stash *)", "Bash(git config *)", "Bash(git rebase *)", "Bash(git merge *)", "Bash(git tag *)", "Bash(git add *)", "Bash(git fetch *)", "Bash(git pull *)"]}}`.
+Syntax checked against the Claude Code permissions page on 2026-11-22. Deny rules are evaluated before
+ask and allow rules. The list is not complete, and the same page
+says a Bash deny rule "isn't a security boundary": `Bash(git push *)` does not stop
+`git -C . push`, `git -c push.default=current push` or `sh -c ...` forms. For enforcement that does
+not depend on command text it points to sandboxing and PreToolUse hooks. In other tools, use the
+tool's read-only or plan mode and keep approval prompts on; check its documentation. The git allowlist in `SKILL.md` is the main guard; the deny list in settings is a supplement that can be bypassed. Either way this
+stays an instruction, not a sandbox.
 
 ## How it compares
 
-Others in this space are programs you run. Hearsay is instructions Claude follows, so it is zero-install,
-language-agnostic and also covers release prose, and it is non-deterministic. Statements below are from
-the cited pages as read on 2026-11-22 and may have changed. Not a claim of being better.
-
-| Tool | What it is | Use that instead when |
-|---|---|---|
-| [`hearsay-pr`](https://pypi.org/project/hearsay-pr/) (PyPI; [repo](https://github.com/hearsay-dev/hearsay)) | Deterministic CLI that checks PR descriptions against the diff with patterns, no LLM, no network. Its README advises against gating on `contradicted` until calibrated | You want repeatable verdicts or a CI check for PR text |
-| [truth](https://github.com/blasrodri/truth) | Local MCP fact-checker for an agent's claims about its own work, using recorded command runs and the working-tree diff | You want an agent's claims checked as it works, with command runs as evidence |
-| [README Clew](https://dev.to/earlgreyhot1701d/i-always-worried-my-own-readmes-disagreed-with-my-own-repos-so-i-built-readme-clew-42i5) | Checks a README against code (verified, unverifiable, missing, contradicted) | You only need README checks |
-| [RealityLint](https://pypi.org/project/realitylint/) | Static checks of README claims (scripts, links, env vars, license), no LLM | You want mechanical README checks in CI |
-| [semver-checks](https://dev.to/kyungseopk1m/i-got-tired-of-guessing-semver-bumps-in-prs-so-i-built-a-tool-15o) | TypeScript API diff between two refs with a bump recommendation | You need a precise TypeScript API diff. It sees only the API surface, so behavior changes are outside what it can see (Hearsay marks those `needs-maintainer`) |
-
-The next rows are other skills for release notes and changelogs, from their pages as read on
-2026-11-22. In the sources we searched we found none that combines four verdicts, commit-message
-mismatch codes and a bump proposal; that is a statement about our search, not a universal claim.
-
-| Skill | What its page says it does | Use that instead when |
-|---|---|---|
-| [Release Proof Notes](https://www.agensi.io/skills/release-proof-notes-check-the-claims-behind-your-changelog) | Drafts customer-facing notes from a private claim-to-evidence ledger over an explicit git range, holding or rewording claims that lack evidence; uses a bundled local collector | You want notes drafted from a checked git range. Hearsay checks notes you already wrote |
-| [kweaver-ai changelog-release-notes](https://skills.sh/kweaver-ai/skills/changelog-release-notes) | Writes release notes from version files, git history, diffs and migrations, matching the existing changelog style. The page does not mention a claim check | You want a changelog written, not audited |
-| [DevFlow docs-release-notes](https://www.claudepluginhub.com/skills/the01geek-devflow/docs-release-notes) | Drafts release notes for a branch, checking claims against the diff, and corrects CHANGELOG claims the shipped diff contradicts when the version is bumped | You want notes written and corrected as part of that workflow. The page does not mention a bump proposal or commit-message checks |
-| [laurigates changelog-review](https://skills.sh/laurigates/claude-plugins/changelog-review) | Reviews the Claude Code platform changelog for changes that affect your plugins | Different job: it reads Claude Code releases, not your project's notes |
-
-An NVIDIA warp `changelog-audit` skill (tessl.io registry) was also found by search, but its page
-returned HTTP 410 when read, so it is not compared here.
-
-Unrelated to the `hearsay-pr` PyPI package, which is a separate deterministic CLI by other authors.
-Hearsay is the prose-versus-code sibling of the `spec-drift` skill in Blueprint (spec versus code); they
-are independent.
+Other tools in this space are programs you run; Hearsay is instructions an agent follows, so it is
+zero-install and language-agnostic, and it is non-deterministic. Text written by an agent tends to overstate: one study of 23,247 agent-authored pull requests reported 406 (1.7%) with high inconsistency between the description and the code, and reported "descriptions claim unimplemented changes" as the most common issue, at 45.4% ([arXiv 2601.04886](https://arxiv.org/abs/2601.04886), read 2026-11-22; figures as stated in the abstract, not re-checked here; agent-authored PRs only, it says nothing about human-written text). The `hearsay-pr` name on PyPI is a different, deterministic CLI by other authors. For repeatable verdicts or a CI check
+on PR text, use `hearsay-pr`; for mechanical README checks, RealityLint. Release-note drafters and
+other skills are listed too. Full tables, dated as read on 2026-11-22 (snapshots, may have changed), and
+credits: [COMPARISON.md](COMPARISON.md).
 
 ## How it is built
 
-[`SKILL.md`](SKILL.md) is about 130 lines and 9 KB: the trigger, the invocation grammar, the seven-step
+[`SKILL.md`](SKILL.md) is about 130 lines and 9 KB: the trigger, the inputs in plain words, the seven-step
 procedure, an inline fast path, the output contract and the never-list. Six reference files load on demand:
 [claim-rubric](references/claim-rubric.md) and [verdicts](references/verdicts.md) and
 [ledger-template](references/ledger-template.md) on every run longer than the fast path,
@@ -239,18 +223,12 @@ Version history is in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Measured so far
 
-Nothing yet. A recorded run of the eight fixture cases on two or more models, twice each, is planned
-but has not been done: the `examples/expected/` files are expectations written by the skill's author,
-not recorded output, and no run has been committed to `examples/results/`. No accuracy figure is
-claimed anywhere in this README. This section changes only when a
-`results/<model>-<date>.md` file exists, and then quotes it exactly, with its stated bias.
-
-## Credits
-
-The rubric is independently written. Public sources that informed the design: the arXiv paper above
-(for the failure mode), and the tools in the comparison table, from which the ideas of an honest
-"unverifiable" bucket, "supported is not correct", and cheap mechanical README checks were taken.
-Pages cited were read on 2026-11-22.
+Nothing yet. No recorded run exists: the `examples/expected/` files are expectations written by the
+skill's author, not recorded output, and `examples/results/` holds only a template. A fair run needs
+a session that has not read the goldens or the expected output printed in this README (see
+`examples/README.md`), and that has not been done (starting such sessions was not possible in the last pass). No accuracy figure is claimed anywhere in this
+README. This section changes only when a `results/<model>-<date>.md` file exists, and then quotes it
+exactly, with its stated bias (one run, same model family as the author, JavaScript-only).
 
 ---
 

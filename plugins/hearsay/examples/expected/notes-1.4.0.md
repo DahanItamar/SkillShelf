@@ -2,6 +2,8 @@
 
 Command: `/hearsay <path>/examples/inputs/notes-1.4.0.md --diff <path>/examples/changes/pagegrab.diff`, run inside a fixture repo (see `../README.md`). Evidence paths are relative to that repo.
 
+In words: fact-check notes-1.4.0.md against the diff file pagegrab.diff
+
 Expected: 6 claims. 1 verified, 1 unverified, 3 contradicted, 1 unmeasurable.
 
 | # | Claim | Kind | Verdict | Evidence | Note |
@@ -11,9 +13,7 @@ Expected: 6 claims. 1 verified, 1 unverified, 3 contradicted, 1 unmeasurable.
 | H-03 | "Fetches pages 3x faster than 1.3." | Metric | unmeasurable | (none) | Needs: wall-clock time per page, baseline v1.3.0, same URLs, a repeatable command. No benchmark in the repo. |
 | H-04 | "No breaking changes." | Compatibility | contradicted | base:src/index.js:2, base:src/cli.js:7, src/cli.js:8 | `parseHtml` is no longer exported (`src/html.js` deleted), and the default `--timeout` changed from 30 to 10. |
 | H-05 | "Zero runtime dependencies." | Dependency | verified | manifest:dependencies, src/cli.js:1-2, src/index.js:1 | Negative claim. Searched imports in `src/`: only `node:util` and relative modules. No `dependencies` key. |
-| H-06 | "Now works on Windows." | Dependency | unverified | (none) | No Windows-specific code and no CI matrix found. Needs a run on Windows. |
-
-Read first: H-04 (readers will upgrade expecting no break), H-01, H-02.
+| H-06 | "Now works on Windows." | Compatibility | unverified | (none) | No Windows-specific code and no CI matrix found. Needs a run on Windows. |
 
 Rewrites expected:
 

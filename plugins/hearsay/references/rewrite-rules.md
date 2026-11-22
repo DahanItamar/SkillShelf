@@ -16,7 +16,7 @@ Read at step 6. A rewrite downgrades a claim to what the evidence supports. It n
 6. **Strength words** (all, every, always, never, fully, completely, seamlessly) come off unless an
    exhaustive search supports them.
 7. **Keep the author's voice,** markdown structure and order. Make the smallest edit that is true.
-   Print each rewrite as before and after. Print a full revised text only if the source is 60 lines or
+   Print each rewrite as `H-nn after: <text>`; the verbatim claim is already in the table. Print a full revised text only if the source is 60 lines or
    fewer, or the user asks.
 8. **Release-mode omissions** (breaking or feature changes nobody mentioned) get a suggested new line,
    written only from the diff evidence. Skip it when a contradicted row's rewrite already states the

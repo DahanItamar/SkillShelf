@@ -2,6 +2,8 @@
 
 Command, inside a fixture repo built by `scripts/make-fixture.sh`: `/hearsay --release v1.3.0 <path>/examples/inputs/notes-1.4.0.md`
 
+In words: check the release notes since tag v1.3.0 using notes-1.4.0.md
+
 Short shas differ per build, so commits are matched by subject.
 
 Expected summary:

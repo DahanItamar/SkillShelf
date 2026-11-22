@@ -2,6 +2,8 @@
 
 Command: `/hearsay <path>/examples/inputs/pr-text.md --diff <path>/examples/changes/pagegrab.diff`, run inside a fixture repo.
 
+In words: fact-check pr-text.md against the diff file pagegrab.diff
+
 Expected: 3 claims, all contradicted.
 
 | # | Claim | Kind | Verdict | Evidence | Note |

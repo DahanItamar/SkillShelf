@@ -8,6 +8,10 @@ field was not measured, write "not measured".
 - Plugin version and commit: 
 - Runs per case: (the protocol asks for 2, each in a fresh session)
 - Fixture built with: `sh scripts/make-fixture.sh <new-dir>`
+- Blind setup: (what the runner could and could not read; where the scratch skill folder, inputs and fixture lived)
+- Raw ledgers: (link to the saved per-run files; the only allowed edit is replacing the scratch root path with `<scratch>`, which must be stated)
+
+A run counts only if the runner got a scratch skill folder holding just SKILL.md and references/, a fixture built by scripts/make-fixture.sh, and inputs copied out of examples/; goldens are opened only at scoring. State this setup in the results file.
 
 ## Per-case counts
 
