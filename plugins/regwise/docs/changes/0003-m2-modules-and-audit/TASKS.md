@@ -1,3 +1,5 @@
+Historical record: paths use the pre-rename name acsm.
+
 # M2 All eight modules with audit blocks — Tasks
 
 > Source: docs/SPEC.md §10 M2 (spec v1.2) · Constitution: none — conventions inline in SPEC.md §4

@@ -19,15 +19,33 @@ Each row carries six fields: `ID`, `Obligation`, `Locate`, `Pass when`, `Citatio
 paraphrase of it.
 
 Print the report header first: `Jurisdictions covered: <expanded markets>. NOT covered: Canada,
-Brazil, India, Japan, China, SensitiveHealth.` If Module 3 was selected only by R04 or R06, run
-only the rows in its `neutral_rows` frontmatter and mark the others `n/a` "market not served".
+Brazil, India, Japan, China, SensitiveHealth.` Add `Law as of: module N <last_verified>, ...` for
+every loaded module, oldest first, and, when module 2 is loaded, `State table: 9 of 19 rows
+verified` (use the count in module 2 section 2.6). If Module 3 was selected only by R04 or R06,
+run only the rows in its `neutral_rows` frontmatter and mark the others `n/a` "market not served".
+
+If `references/citations.md` is missing, say so in the report header and cite the module
+frontmatter `url` instead; never invent a citation id.
+
+### Scope
+
+The default is the full set. The user may narrow it, and the header must say how:
+
+- `blockers only`: take only rows with severity `blocker` and print `high, medium rows not run`.
+- `modules N,M`: take only those modules from the routed set and print the subset. A module the
+  routing did not select stays out, even if named.
+- `diff`: follow section 4b.
+
+Audit cost is dominated by the repository files read, not by module size, so a narrower scope
+saves most when the `Locate` files are few.
 
 ## 2. Evaluate each one
 
 **Work one module at a time.** Finish a module's rows, append one line to a running ledger
 (`module N: rows done, fail, unverifiable`), then start the next. Do not hold all modules in
-mind at once. If the audit is interrupted, resume from the last ledger line rather than
-restarting. Where a row's `Locate` is prose, grep for the file names a stack uses (for example
+mind at once. Print each ledger line in your reply as you finish a module, so it survives
+compaction and can be pasted into a new session; with consent, also append it to
+`Regwise-REPORT.md`. To resume, take the pasted ledger and skip the finished modules. Where a row's `Locate` is prose, grep for the file names a stack uses (for example
 `middleware`, `layout`, `.env.example`, IaC folders) before reading widely.
 
 Read the files `Locate` names. **Read them** — do not infer from a filename, a dependency in
@@ -127,7 +145,7 @@ recommendation is the same as no report.
 ### Questions for counsel
 
 End every report with this block, built only from material already in the report. One question
-per item, each tied to a citation ID from `docs/CITATIONS.md` or an `AUDIT-` row:
+per item, each tied to a citation ID from `references/citations.md` or an `AUDIT-` row:
 
 - every `unverifiable` row (what counsel or an operator must confirm);
 - every assumption you made (market list, thresholds, neutral-mode Module 3);
@@ -152,6 +170,15 @@ Close with a table so counsel can quote one row:
 
 Text only. No new file, no extra reading. If nothing qualifies, print "None raised."
 
+### Findings list
+
+End every report with a plain list for week-over-week comparison: one line per non-pass row, in
+this fixed order, sorted by id. Text only; no file is written unless the user asks.
+
+```
+AUDIT-id | verdict | severity | path:line | citation id
+```
+
 ### Counsel packet
 
 Append after the questions, as one saveable block, still text only and built from the report:
@@ -159,8 +186,9 @@ resolved config (five fields and `lastConfirmed`), fired rule IDs, every non-pas
 `path:line`, each loaded module's `last_verified` date, the unverifiable items, then the
 questions above grouped by module with their citations. If a module's `last_verified` is over
 180 days old, say so at the top of the packet. When `AUDIT-2-10`, `AUDIT-2-11` or `AUDIT-2-12`
-produced a verdict, print one line: `State table unverified: module 2 section 2.6 not checked
-against primary text.` while `docs/CITATIONS.md` shows no access dates for it.
+produced a verdict, print one line `State table unverified: <state names>` listing the states
+whose row in `references/citations.md` (US state statutes) has no access date, and only while at
+least one such row remains.
 
 ## 4b. Diff re-route (only when the user asks for a PR or diff audit)
 
@@ -169,6 +197,17 @@ dependencies, locale directories, AI SDKs, auth or SSO, tracking SDKs) against t
 config. Print which modules the diff newly selects, or "no change to routing". Then run the
 audit rows of the selected modules against the touched files only, and say that untouched files
 were not audited. No hooks, nothing runs at install; this is the same reading, narrower.
+
+Print this fixed block:
+
+```
+Regwise diff audit - <N> files touched, modules newly selected: <list or none>
+<one line per finding, same format as the full report>
+Not audited: files outside this diff.
+```
+
+Use the saved config for routing and name which file you used. Print the findings list from
+section 4 at the end.
 
 ## 5. What the audit never does
 
@@ -189,5 +228,6 @@ Only when asked. Then: `Regwise-REPORT.md` at the target repository root, same c
 with the configuration and the module set at the top so the report can be read a month later
 by someone who was not there.
 
+Put the header from section 1 (including `Law as of` and the state-table count) at the top.
 Date it, and name the `last_verified` date of every module it drew on. A report is a snapshot
 of two moving things — the code and the law — and only one of them is in the repository.

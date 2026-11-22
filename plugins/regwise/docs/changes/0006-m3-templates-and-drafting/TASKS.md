@@ -1,3 +1,5 @@
+Historical record: paths use the pre-rename name acsm.
+
 # M3 Templates and the disclaimer control — Tasks
 
 > Source: docs/SPEC.md §10 M3 (spec v1.3) · Constitution: none — conventions inline in SPEC.md §4

@@ -93,8 +93,8 @@ Regwise is a Claude Code skill that puts the obligations *in the session*. It re
 | AC-052 | If a module file has no `## Audit` section, or an audit check within it omits any of the six fields defined in §5, then `scripts/verify.sh` shall fail. |
 | AC-053 | If the first content of a file under `skills/regwise/templates/` is not byte-identical to `skills/regwise/templates/_disclaimer.txt`, then `scripts/verify.sh` shall fail. |
 | AC-054 | If a file under `skills/regwise/templates/` contains a bracketed token that does not match `\[INSERT_[A-Z0-9_]+\]`, then `scripts/verify.sh` shall fail. |
-| AC-055 | `docs/CITATIONS.md` shall list every instrument named in any module's `instruments` frontmatter, with the instrument's official URL and the date its text was last accessed. |
-| AC-056 | If a module's frontmatter names an instrument absent from `docs/CITATIONS.md`, then `scripts/verify.sh` shall fail. |
+| AC-055 | `skills/regwise/references/citations.md` shall list every instrument named in any module's `instruments` frontmatter, with the instrument's official URL and the date its text was last accessed. |
+| AC-056 | If a module's frontmatter names an instrument absent from `skills/regwise/references/citations.md`, then `scripts/verify.sh` shall fail. |
 | AC-057 | When the router asks the user to confirm or supply a configuration field, it shall present that field's permitted values from §5 as explicit options rather than as free text. |
 
 Verification criteria are stated as *If `<violation>`, then `verify.sh` shall fail* and are
@@ -215,7 +215,7 @@ regwise/
 │   └── verify.yml            # Runs verify.sh. No other job.
 ├── docs/
 │   ├── SPEC.md               # This document.
-│   └── CITATIONS.md          # Every instrument cited, with its official URL and access date.
+│   └── (CITATIONS.md moved to skills/regwise/references/citations.md)
 ├── examples/
 │   └── *.config.yml          # Sample configurations used to demo routing. Never loaded by the skill.
 ├── README.md                 # Install both ways, one example, the not-legal-advice statement.
@@ -349,7 +349,7 @@ instruments:
 
 ### Citation index row
 
-One row per instrument in `docs/CITATIONS.md`. The `Instrument` cell must match the `name`
+One row per instrument in `skills/regwise/references/citations.md`. The `Instrument` cell must match the `name`
 field of the corresponding entry in a module's `instruments` frontmatter, byte for byte —
 that equality is what `AC-056` checks. A module cites an instrument inline because that is
 what a reader needs while applying an obligation; the index is what makes the citation
@@ -394,7 +394,7 @@ license: "CC0-1.0"
 One string, defined once, reproduced byte-for-byte in every template and every generated document (AC-025, AC-027). Stored as `skills/regwise/templates/_disclaimer.txt` and compared against by CI.
 
 ```markdown
-> ⚠️ **DISCLAIMER**: This document is an AI-generated template intended for MVP/early-stage testing. It does not constitute formal legal advice. Before scaling, accepting paying customers, or entering regulated markets, have this document reviewed by qualified legal counsel in your target jurisdiction.
+> **DISCLAIMER**: This document is an AI-generated draft template. It is not legal advice and no lawyer has reviewed it. Before you publish it or rely on it, have qualified legal counsel in each jurisdiction you serve review it.
 ```
 
 The leading character is `U+26A0 U+FE0F` (warning sign plus variation selector), UTF-8 `E2 9A A0 EF B8 8F`. It is written here explicitly because this exact string arrived in the source material as `â ï¸` — UTF-8 decoded as Latin-1 — and a byte-comparison check against a corrupted copy fails in a way that is hard to see by eye.
@@ -613,7 +613,7 @@ All three land on the same `SKILL.md` with the same relative `references/` and `
 - [ ] `references/6-accessibility.md` — WCAG 2.2 AA, ADA Title III, IL Equal Rights Regs — closes AC-012
 - [ ] `references/7-desktop-binary.md` — EV code signing, SQLCipher AES-256 via OS keychain, NIST SP 800-147B — closes AC-012
 - [ ] `references/8-auditability.md` — immutable audit logs, access logging, retention, observability — closes AC-012, AC-017
-- [ ] `docs/CITATIONS.md` with the official URL and access date for every instrument — closes AC-055
+- [ ] `skills/regwise/references/citations.md` with the official URL and access date for every instrument — closes AC-055
 - [ ] Staleness warning driven by `last_verified` — closes AC-014
 - [ ] Audit execution and reporting flow in `SKILL.md`, including the `unverifiable` verdict — closes AC-018, AC-020, AC-021, AC-024
 - [ ] Extend `verify.sh`: eight modules present, every module has an `## Audit` section, every check has all six fields, and every instrument appears in the citation index — closes AC-051, AC-052, AC-056

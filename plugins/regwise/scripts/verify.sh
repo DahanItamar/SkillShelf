@@ -233,8 +233,8 @@ done
 
 # --- citation index: every instrument a module names appears in it ---------
 
-if [ ! -f docs/CITATIONS.md ]; then
-	fail citations docs/CITATIONS.md 1 "citation index is missing"
+if [ ! -f skills/regwise/references/citations.md ]; then
+	fail citations skills/regwise/references/citations.md 1 "citation index is missing"
 else
 	for f in $MODULE_GLOB; do
 		[ -e "$f" ] || continue
@@ -245,8 +245,8 @@ else
 			nm=${hit#*name: }
 			nm=${nm#\"}
 			nm=${nm%\"}
-			if ! grep -Fq "$nm" docs/CITATIONS.md; then
-				fail citations "$f" "$ln" "instrument absent from docs/CITATIONS.md: $nm"
+			if ! grep -Fq "$nm" skills/regwise/references/citations.md; then
+				fail citations "$f" "$ln" "instrument absent from skills/regwise/references/citations.md: $nm"
 			fi
 		done < "$TMPF.in"
 	done

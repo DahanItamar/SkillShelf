@@ -1,3 +1,5 @@
+Historical record: paths use the pre-rename name acsm.
+
 # M1 Installable skeleton that routes — Tasks
 
 > Source: docs/SPEC.md §10 M1, as amended by docs/changes/0002-verify-criteria-split/PROPOSAL.md

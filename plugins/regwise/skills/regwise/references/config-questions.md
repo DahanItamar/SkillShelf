@@ -68,11 +68,13 @@ Single choice. The rank drives R04.
 
 | Value | Rank | Choose when |
 | --- | :-: | --- |
-| `Public` | 0 | nothing personal beyond what is already public |
+| `Public` | 0 | no accounts, forms, newsletter, analytics, cookies or visitor logs of any kind |
 | `StandardPII` | 1 | names, emails, accounts, usage |
 | `PaymentFinancial` | 2 | card or financial data anywhere in the flow |
 | `SensitiveHealth` | 3 | health, biometric, or special category data |
 | `EnterpriseB2B` | 1 | business customers with tenancy and SSO — sets the enterprise flag as well |
+
+A contact form, mailing list, analytics tag or any account makes it `StandardPII`.
 
 `EnterpriseB2B` is not a sensitivity level dressed up as one. It ranks 1 because a B2B product
 still holds personal data about the people who use it, and it sets a separate flag that pulls
@@ -119,8 +121,7 @@ are many more, and pretending otherwise is worse than admitting the gap.
 
 ### Save-config template
 
-This is the only file Regwise ever writes to a target repository; everything else it does there
-is read-only.
+Regwise writes `regwise.config.yml` with your consent, and `Regwise-REPORT.md` only if you ask for a report file. It changes nothing else. Everything else it does there is read-only.
 
 ```yaml
 # regwise.config.yml — safe to commit

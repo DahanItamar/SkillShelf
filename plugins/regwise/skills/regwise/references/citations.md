@@ -67,6 +67,9 @@ certified.
 | Privacy Act 1988 (Cth) | Privacy and Other Legislation Amendment Act 2024 — statutory tort, Children's Online Privacy Code | Module 3 §3.6 flags commencement dates as needing verification |
 | Payment Card Industry Data Security Standard v4.0.1 | Requirements 6.4.3 and 11.6.1 effective 31 March 2025; SAQ A applicability revised | Module 5 §5.1 routes SAQ A eligibility to the acquirer |
 | European Accessibility Act | Applicable from 28 June 2025 | Module 6 treats it as in force |
+| Connecticut P.A. 25-113 | Applicability threshold becomes 35k consumers, any sensitive-data processing, or any sale, from 2026-07-01 | Module 2 §2.6 Connecticut row; 2026 bills SB 4 and HB 5126 not confirmed |
+| Montana Ch. 567, L. 2025 | Thresholds lowered to 25k, or 15k and over 25% of revenue from sale; cure period removed from 30-14-2817 | Module 2 §2.6 Montana row; 30-14-2820(2) still refers to the removed period |
+| Delaware 85 Del. Laws c.463 | Rewrites 12D-102 to 12D-111 from 2027-01-01 | Module 2 §2.6 Delaware row must be re-read then |
 
 ## Known citation defect, kept deliberately
 
@@ -85,32 +88,33 @@ the row in the same commit.
 
 ## US state statutes (module 2, section 2.6)
 
-Official sources for the state-law table. **Not yet verified against primary text**: the Accessed
-column is empty on purpose, and the URLs are legislature or code-index entry points to confirm
-on the first primary-text pass. Counts differ across trackers (20 to 24 enacted), so cite the
+Official sources for the state-law table. **9 of 19 rows were read against primary text on
+2026-11-22** (Virginia, Texas, Iowa, Tennessee, Minnesota, Delaware, Connecticut, Montana,
+Florida). The other 10 say "not verified" and why; their URLs are entry points to confirm on the
+next primary-text pass. Counts differ across trackers (20 to 24 enacted), so cite the
 statute, never a count. Reviewed summaries: https://multistate.us/insider/2026/2/4/all-of-the-comprehensive-privacy-laws-that-take-effect-in-2026 and https://iapp.org/news/a/new-year-new-rules-us-state-privacy-requirements-coming-online-as-2026-begins
 
 | Statute | Official text | Accessed |
 | --- | --- | --- |
-| Virginia Consumer Data Protection Act, Va. Code 59.1-575 et seq. | https://law.lis.virginia.gov/vacodepopular/title59.1/chapter53/ | not verified |
-| Colorado Privacy Act, C.R.S. 6-1-1301 et seq. | https://leg.colorado.gov/bills/sb21-190 | not verified |
-| Connecticut Data Privacy Act, Conn. Gen. Stat. 42-515 et seq. | https://www.cga.ct.gov/current/pub/chap_743jj.htm | not verified |
-| Utah Consumer Privacy Act, Utah Code 13-61 | https://le.utah.gov/xcode/Title13/Chapter61/13-61.html | not verified |
-| Texas Data Privacy and Security Act, Tex. Bus. & Com. Code ch. 541 | https://statutes.capitol.texas.gov/Docs/BC/htm/BC.541.htm | not verified |
-| Oregon Consumer Privacy Act, ORS 646A.570 to 646A.589 | https://www.oregonlegislature.gov/bills_laws/ors/ors646A.html | not verified |
-| Montana Consumer Data Privacy Act, Mont. Code Ann. title 30 ch. 14 | https://mca.legmt.gov/bills/mca/title_0300/chapter_0140/part_0280/sections_index.html | not verified |
-| Florida Digital Bill of Rights, Fla. Stat. 501.701 et seq. | https://www.flsenate.gov/Laws/Statutes/2023/501.701 | not verified |
-| Delaware Personal Data Privacy Act, 6 Del. C. ch. 12D | https://delcode.delaware.gov/title6/c012d/index.html | not verified |
-| Iowa Consumer Data Protection Act, Iowa Code ch. 715D | https://www.legis.iowa.gov/docs/code/715D.pdf | not verified |
-| Nebraska Data Privacy Act, LB 1074 (2024) | https://nebraskalegislature.gov/laws/browse-chapters.php?chapter=87 | not verified |
-| New Hampshire Privacy Act, RSA 507-H | https://www.gencourt.state.nh.us/rsa/html/NHTOC/NHTOC-LII-507-H.htm | not verified |
-| New Jersey Data Privacy Act, P.L. 2023, c. 266 | https://pub.njleg.state.nj.us/Bills/2022/PL23/266_.PDF | not verified |
-| Tennessee Information Protection Act, Tenn. Code Ann. 47-18-3201 et seq. | https://publications.tnsosfiles.com/acts/113/pub/pc0408.pdf | not verified |
-| Minnesota Consumer Data Privacy Act, Minn. Stat. ch. 325M | https://www.revisor.mn.gov/statutes/cite/325M | not verified |
-| Maryland Online Data Privacy Act of 2024, Com. Law 14-4601 et seq. | https://mgaleg.maryland.gov/mgawebsite/Legislation/Details/sb0541?ys=2024RS | not verified |
-| Indiana Consumer Data Protection Act, Ind. Code 24-15 | https://iga.in.gov/laws/ | not verified |
-| Kentucky Consumer Data Protection Act, KRS 367.3611 et seq. | https://apps.legislature.ky.gov/law/statutes/ | not verified |
-| Rhode Island Data Transparency and Privacy Protection Act, R.I. Gen. Laws 6-48.1 | https://webserver.rilegislature.gov/Statutes/TITLE6/6-48.1/INDEX.htm | not verified |
+| Virginia Consumer Data Protection Act, Va. Code 59.1-575 et seq. | https://law.lis.virginia.gov/vacodefull/title59.1/chapter53/ | 2026-11-22 |
+| Colorado Privacy Act, C.R.S. 6-1-1301 et seq. | https://leg.colorado.gov/bills/sb21-190 | not verified (site returned an empty bot-challenge page; URL is a bill summary, not statute text) |
+| Connecticut Data Privacy Act, Conn. Gen. Stat. 42-515 et seq. | https://www.cga.ct.gov/current/pub/chap_743jj.htm and https://www.cga.ct.gov/2026/sup/chap_743jj.htm | 2026-11-22 |
+| Utah Consumer Privacy Act, Utah Code 13-61 | https://le.utah.gov/xcode/Title13/Chapter61/13-61.html | not verified (legislature site is a JS app with no text in the response) |
+| Texas Data Privacy and Security Act, Tex. Bus. & Com. Code ch. 541 (enrolled HB 4, 88R) | https://capitol.texas.gov/tlodocs/88R/billtext/html/HB00004F.htm | 2026-11-22 |
+| Oregon Consumer Privacy Act, ORS 646A.570 to 646A.589 | https://www.oregonlegislature.gov/bills_laws/ors/ors646A.html | not verified (host unreachable on 2026-11-22) |
+| Montana Consumer Data Privacy Act, Mont. Code Ann. title 30 ch. 14 (MCA 2025) | https://mca.legmt.gov/bills/mca/title_0300/chapter_0140/part_0280/sections_index.html | 2026-11-22 |
+| Florida Digital Bill of Rights, Fla. Stat. 501.701 et seq. | https://www.flsenate.gov/Laws/Statutes/2025/501.702 | 2026-11-22 |
+| Delaware Personal Data Privacy Act, 6 Del. C. ch. 12D | https://delcode.delaware.gov/title6/c012d/index.html | 2026-11-22 |
+| Iowa Consumer Data Protection Act, Iowa Code ch. 715D | https://www.legis.iowa.gov/docs/code/715D.pdf | 2026-11-22 |
+| Nebraska Data Privacy Act, LB 1074 (2024) | https://nebraskalegislature.gov/laws/browse-chapters.php?chapter=87 | not verified (host unreachable on 2026-11-22) |
+| New Hampshire Privacy Act, RSA 507-H | https://www.gencourt.state.nh.us/rsa/html/NHTOC/NHTOC-LII-507-H.htm | not verified (HTTP 403, no alternative route) |
+| New Jersey Data Privacy Act, P.L. 2023, c. 266 | https://pub.njleg.state.nj.us/Bills/2022/PL23/266_.PDF | not verified (host unreachable on 2026-11-22) |
+| Tennessee Information Protection Act, Tenn. Code Ann. 47-18-3201 et seq. | https://publications.tnsosfiles.com/acts/113/pub/pc0408.pdf | 2026-11-22 |
+| Minnesota Consumer Data Privacy Act, Minn. Stat. ch. 325M | https://www.revisor.mn.gov/statutes/cite/325M | 2026-11-22 (effective date 2025-07-31 not on the revisor page) |
+| Maryland Online Data Privacy Act of 2024, Com. Law 14-4601 et seq. | https://mgaleg.maryland.gov/mgawebsite/Legislation/Details/sb0541?ys=2024RS | not verified (enrolled Ch. 455 read, but the plain-text copy lost strikethrough marks, so the sensitive-data wording cannot be confirmed; the codified numbering appears to be 14-47xx, check it) |
+| Indiana Consumer Data Protection Act, Ind. Code 24-15 | https://iga.in.gov/laws/ | not verified (legislature site is a JS app with no text in the response) |
+| Kentucky Consumer Data Protection Act, KRS 367.3611 et seq. | https://apps.legislature.ky.gov/law/statutes/ | not verified (only the engrossed HB 15, marked unofficial, was read; it matched every cell; flip after the enrolled act or KRS 367.3611 is read) |
+| Rhode Island Data Transparency and Privacy Protection Act, R.I. Gen. Laws 6-48.1 | https://webserver.rilegislature.gov/Statutes/TITLE6/6-48.1/INDEX.htm | not verified (host unreachable on 2026-11-22) |
 
 The Montana, New Jersey and Tennessee URLs above point at specific statute or session-law pages
 rather than a legislature home page, but they are still **entry points, not verified**. A page
@@ -128,8 +132,8 @@ automated and no one should fill the Accessed column from memory or from a track
 4. Read the cure-period text and the sunset date, if any; compare with the cell.
 5. Correct any module 2 cell that differs, and keep the old value in the commit message.
 6. Write today's date (YYYY-MM-DD) in the Accessed column, replacing "not verified".
-7. When all 19 rows carry a date, change "Status: all 19 rows unverified" in module 2
-   section 2.6 and bump that module's `last_verified`. Until then the banner stays as is.
+7. Update the "Status: N of 19 rows verified" banner in module 2 section 2.6. Bump that module's
+   `last_verified` only after the rest of the module's cited text has been re-read as well.
 
 Row count: this table lists 19 statutes (Virginia through Rhode Island, including Indiana,
 Kentucky and Rhode Island), matching the 19 rows in module 2 section 2.6.
