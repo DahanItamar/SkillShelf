@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "blueprint",
   "displayName": "Blueprint",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Eight skills: a six-stage spec chain that carries one AC-### identifier from idea to shipped code, plus a front door and an opt-in checker.",
   "author": {
     "name": "Itamar Dahan",
@@ -25,6 +25,11 @@
     "refactoring",
     "code-smells",
     "dead-code",
-    "technical-debt"
+    "technical-debt",
+    "spec-driven",
+    "ears",
+    "traceability",
+    "constitution",
+    "change-proposal"
   ]
 }

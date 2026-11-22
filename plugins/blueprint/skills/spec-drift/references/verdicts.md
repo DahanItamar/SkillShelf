@@ -126,6 +126,10 @@ Same rule for an Edge Case: keep the trigger and the consequence, change only th
 
 If there are more than about ten staleness items, don't list them individually. Say *"14 fields across 3 entities are missing from §5"* and offer to add them in one pass. A long list buries the two findings that mattered, which defeats the purpose of running the check.
 
+## Verdict trailer
+
+End every report with one fixed line a bot can match: `DRIFT-VERDICT: <regression|stale|clean> count=N`. Use `regression` if any regression was reported (count is the number of regressions), else `stale` if any staleness or undecided item was reported (count of those), else `clean` with `count=0`.
+
 ## When there is nothing
 
 Say so plainly and stop:

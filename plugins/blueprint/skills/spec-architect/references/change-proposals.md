@@ -152,3 +152,15 @@ Two additions specific to this mode:
 
 - **Question budget is lower.** The spec already answered the architectural forks. Three questions is generous; often none are needed, because the constraint set is already written down.
 - **Check the change against §8 before proposing it.** A new feature that reintroduces a failure mode §8 already solved is the single most common regression, and it is cheapest to catch here — before a task list exists, before code is written, and before `spec-drift` has to explain what was lost.
+
+---
+
+## Teams and parallel branches
+
+Two branches that each write a proposal will both scan `docs/changes/` and both pick the same next ordinal, and both continue the sequence from the same last `AC-###`. Branches cannot see each other, so allocate the real numbers where the work meets: at merge time, on `main`.
+
+- **On a branch, use provisional ids.** Name the directory `0000-slug` and number new criteria `AC-NEW-1`, `AC-NEW-2`. `spec-tasks` may cite an `AC-NEW-n` that is defined in the unmerged `PROPOSAL.md` beside it.
+- **At merge, the person merging runs `/spec-drift` merge** on the up-to-date `main`. It scans `main` for the next real ordinal and the next free `AC-###`, renames the directory, replaces each `AC-NEW-n` in the proposal and its `TASKS.md`, and only then applies the edits (see `spec-drift/references/merge.md`).
+- **Check the result.** `spec-check` check 3 already reports duplicate ids and reused tombstones after the fact. Run `/spec-check` on the merge result; a duplicate means two branches skipped the provisional step. A leftover `0000-*` directory or `AC-NEW-n` on `main` means the merge step itself was skipped: `sh scripts/spec-check.sh --main` lists both. Use `--main` on `main` or in a merge queue only, never on a feature branch, where provisional ids are expected.
+- **No hashes, no per-branch ranges.** They would break the `AC-###` format that every other stage matches on and the rule that ids are never renumbered once merged.
+- **Solo work is unchanged.** One person on one branch at a time can keep allocating real ordinals and ids when writing the proposal.

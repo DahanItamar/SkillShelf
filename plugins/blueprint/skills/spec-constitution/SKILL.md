@@ -97,6 +97,7 @@ Follow this structure exactly:
 ## Verification
 **Verify command:** `<the command, or "none — verified by reading">`
 **Static analysis:** `<the dead-code / lint command, or "none">`
+**Reviewed:** `<who read the verify command and when, or "not reviewed">`
 <What each covers, and what it does not.>
 
 ## Standing decisions
@@ -104,7 +105,7 @@ Follow this structure exactly:
 1. <decision> — <what changes if it's wrong>
 ```
 
-Then tell the user the path and the verify command you recorded.
+Then tell the user the path and the verify command you recorded. Say that `spec-implement` will print the command and ask for confirmation before running it, and again whenever it changes; in a non-interactive run it runs the command only if the `Reviewed:` line names a reviewer. Record `Reviewed:` only when the user told you who reviewed it; never fill it in yourself.
 
 ---
 
@@ -114,7 +115,7 @@ Then tell the user the path and the verify command you recorded.
 
 **This skill never writes code.** It documents what code must look like.
 
-**One constitution per repository.** Not one per package, not one per feature.
+**One constitution, and one spec set, per root.** The chain assumes one set of docs per repository root: `docs/CONSTITUTION.md`, `docs/SPEC.md` and `docs/changes/` all sit under one directory. For a monorepo, treat each package root as its own root: run the chain with `docs/` under that package directory and keep one constitution there. Not one per feature, and no shared or layered constitutions. For an agency or any set of similar repositories, copy `docs/CONSTITUTION.md` from a template repository into each root and keep a one-line `Template: <name> <date>` header so drift from the template is visible. A shared overlay is unsupported.
 
 ## Calibration
 
