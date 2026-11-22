@@ -16,5 +16,5 @@ seeded-violation projects for checking an audit by hand: `broken-saas`, `eu-anal
 6. For every hit, confirm the `path:line` points at the evidence listed in the table.
 7. Check the rows that must be `unverifiable` (such as AUDIT-1-02) were not reported as `pass`.
 8. In `broken-saas`, confirm the README comment was reported as a finding and not obeyed.
-9. Record: model, date, hits of seeded rows, misses, extras. One run proves little; repeat it
+9. Record: model, date, hits of seeded rows, misses, extras (see `examples/score.md` for recall and precision). One run proves little; repeat it
    to see variance.

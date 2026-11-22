@@ -115,23 +115,8 @@ For `SensitiveHealth`, route as rank 3, then state before any audit or draft tha
 
 ### Offer to save it
 
-After the user confirms, offer to write `acsm.config.yml`. **Write only on explicit consent.**
-This is the only file ACSM ever writes to a target repository; everything else it does there
-is read-only.
-
-```yaml
-# acsm.config.yml — safe to commit
-appType: ConnectedDesktop
-targetMarkets: [Israel]
-dataSensitivity: StandardPII
-aiIntegration: ThirdPartyAPI
-infrastructure: HybridCloud
-configVersion: 1
-lastConfirmed: 2026-08-15
-```
-
-Five enum values, no identifiers, no secrets. Committing it is the whole point — every
-teammate and every later session then skips the confirmation exchange.
+After the user confirms, offer to write `acsm.config.yml`, only on explicit consent. It is the only
+file ACSM ever writes to a target repository. Template: `references/config-questions.md`.
 
 ---
 

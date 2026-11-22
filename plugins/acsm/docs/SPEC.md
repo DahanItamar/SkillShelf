@@ -468,7 +468,7 @@ All three land on the same `SKILL.md` with the same relative `references/` and `
       "name": "acsm",
       "source": "./",
       "description": "Adaptive Compliance & Security Matrix — routes a project to the compliance obligations that actually apply to it.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ]
 }

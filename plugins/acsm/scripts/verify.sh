@@ -359,15 +359,25 @@ for ef in examples/*/EXPECTED-FINDINGS.md; do
 	done < "$TMPF.ex"
 done
 
-# --- marketplace version drift: warn, never fail ---------------------------
-# Only meaningful inside the full marketplace checkout; absent when the plugin is alone.
+# --- version drift: fail ---------------------------------------------------
+# plugin.json, the marketplace entry and the root README table are one release.
+# Only meaningful inside the full marketplace checkout; skipped when the plugin is alone.
 
 mp=../../.claude-plugin/marketplace.json
-if [ -f "$mp" ] && [ -f .claude-plugin/plugin.json ]; then
+rd=../../README.md
+if [ -f .claude-plugin/plugin.json ]; then
 	pv=$(sed -n 's/^[[:space:]]*"version":[[:space:]]*"\([^"]*\)".*/\1/p' .claude-plugin/plugin.json | head -n 1)
-	mv=$(awk '/"name": "acsm"/ { f = 1 } f && /"version"/ { gsub(/[^0-9.]/, "", $2); print $2; exit }' "$mp")
-	if [ -n "$mv" ] && [ "$mv" != "$pv" ]; then
-		printf 'WARN version: marketplace.json lists acsm %s, plugin.json says %s\n' "$mv" "$pv"
+	if [ -f "$mp" ]; then
+		mv=$(awk '/"name": "acsm"/ { f = 1 } f && /"version"/ { gsub(/[^0-9.]/, "", $2); print $2; exit }' "$mp")
+		if [ -n "$mv" ] && [ "$mv" != "$pv" ]; then
+			fail version "$mp" 1 "marketplace.json lists acsm $mv, plugin.json says $pv"
+		fi
+	fi
+	if [ -f "$rd" ]; then
+		rv=$(sed -n 's/^| \[\*\*acsm\*\*\].*| *\([0-9][0-9.]*\) *|[[:space:]]*$/\1/p' "$rd" | head -n 1)
+		if [ -n "$rv" ] && [ "$rv" != "$pv" ]; then
+			fail version "$rd" 1 "root README lists acsm $rv, plugin.json says $pv"
+		fi
 	fi
 fi
 

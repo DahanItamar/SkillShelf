@@ -79,6 +79,13 @@ findings go with it.
 Quote `path:line`, not file bodies. A report should be shareable without carrying the
 repository inside it.
 
+### Confidence and evidence
+
+Every finding carries `path:line` evidence and one confidence label: `confirmed in code` (you
+read it), `inferred` (strong signal, not read end to end), or `cannot determine` (then the verdict
+is `unverifiable`). Print "Not legal advice; counsel to confirm." once, at the end of the
+report, never per finding.
+
 ## 4. Report
 
 Order by severity, then by module. `blocker` first — those are legal violations rather than
@@ -133,6 +140,14 @@ QUESTIONS FOR COUNSEL
    documented in a form an auditor accepts? (unverifiable from the repository)
 2. AUDIT-2-07 / Cal. Civ. Code 1798.135 — The do-not-sell link wording was judged against
    the statute text only; does a state regulator guidance change it?
+```
+
+Close with a table so counsel can quote one row:
+
+```
+| Finding | Decision needed | Rule fired | Evidence | Unverified? |
+| --- | --- | --- | --- | --- |
+| AUDIT-2-10 | Which state opt-out rules bind at our consumer counts | <rule id from SKILL.md> | src/middleware/headers.js:2 | yes, section 2.6 |
 ```
 
 Text only. No new file, no extra reading. If nothing qualifies, print "None raised."

@@ -48,3 +48,12 @@ QUESTIONS FOR COUNSEL
 `examples/eu-analytics-no-cmp` and `examples/health-adjacent-us` have seeded rows but no
 recorded run yet. Recall and run-to-run variance are untested; see `examples/README.md` for
 how to score one.
+
+## Scored runs
+
+One row per run, added by whoever ran it (procedure: `examples/score.md`). Fixtures are
+author-seeded. No row below is invented: an empty table means no scored run has been recorded
+yet, and the single transcript above is unscored.
+
+| Date | Model | Run by | Fixture | Found / missed / wrong-line | True-extra / false-positive | Recall | Precision |
+| --- | --- | --- | --- | --- | --- | --- | --- |

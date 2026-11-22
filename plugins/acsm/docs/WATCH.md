@@ -28,3 +28,11 @@ jobs:
 Limits: pages with dynamic content change their hash without a legal change, and the stored
 `.acsm-hashes` file must be committed or cached by you. Treat an issue as a prompt to read, not
 as a finding.
+
+## Roadmap (not built)
+
+- Per-state statute cards (URL, content hash, access date), only after the 19 rows of
+  `docs/CITATIONS.md` are verified by a human against primary text. Hashing unverified text
+  would only freeze the uncertainty.
+- Extend the workflow above so the issue lists which URL changed. It stays copy-paste, runs in
+  your repository, and nothing runs at install.

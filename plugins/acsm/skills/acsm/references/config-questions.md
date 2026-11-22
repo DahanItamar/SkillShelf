@@ -117,6 +117,25 @@ none — do not force it into the nearest option. Say what is missing, route on 
 and state which obligations are therefore unaddressed. ACSM covers five jurisdictions; there
 are many more, and pretending otherwise is worse than admitting the gap.
 
+### Save-config template
+
+This is the only file ACSM ever writes to a target repository; everything else it does there
+is read-only.
+
+```yaml
+# acsm.config.yml — safe to commit
+appType: ConnectedDesktop
+targetMarkets: [Israel]
+dataSensitivity: StandardPII
+aiIntegration: ThirdPartyAPI
+infrastructure: HybridCloud
+configVersion: 1
+lastConfirmed: 2026-08-15
+```
+
+Five enum values, no identifiers, no secrets. Committing it is the whole point — every
+teammate and every later session then skips the confirmation exchange.
+
 ## Trust expires
 
 If `lastConfirmed` is over 180 days old, or cheap repo signals (Stripe or billing deps, new
