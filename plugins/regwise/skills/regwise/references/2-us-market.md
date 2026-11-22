@@ -149,8 +149,8 @@ early 2026; counts differ between trackers (20 to 24 enacted) depending on wheth
 are counted, so this table cites statutes, not counts. **Verify against primary text before
 relying on any cell.** The values below come from legislature and regulator summaries and have
 not all been checked against statute text (see `references/citations.md`, US state statutes).
-**Status: 9 of 19 rows verified against primary text on 2026-11-22; 10 unverified (listed in citations.md).**
-Section 2.6 checked 2026-11-22 (9 of 19); the module's `last_verified` is unchanged because the rest of
+**Status: 10 of 19 rows verified against primary text on 2026-11-22; 9 unverified (listed in citations.md).**
+Section 2.6 checked 2026-11-22 (10 of 19; per-row dates in citations.md); the module's `last_verified` is unchanged because the rest of
 the module was not re-read. An audit that fires AUDIT-2-10 to 2-12 lists the unverified states.
 
 | Law | In effect | Applies when (summary) | Universal opt-out signal | Sensitive data | Cure period |
@@ -176,8 +176,8 @@ the module was not re-read. An audit that fires AUDIT-2-10 to 2-12 lists the unv
 | Rhode Island RIDTPPA | 2026-01-01 | 35k consumers, or 10k and 20% of revenue from sale | yes | opt-in | none |
 
 Verified against primary text on 2026-11-22: Virginia, Texas, Iowa, Tennessee, Minnesota, Delaware,
-Connecticut, Montana, Florida. Still unverified: Colorado, Utah, Oregon, Nebraska, New Hampshire, New
-Jersey, Maryland, Indiana, Kentucky, Rhode Island. Re-check flags: Connecticut 2026 bills SB 4 and
+Connecticut, Montana, Florida, Maryland. Still unverified: Colorado, Utah, Oregon, Nebraska, New Hampshire, New
+Jersey, Indiana, Kentucky, Rhode Island. Re-check flags: Connecticut 2026 bills SB 4 and
 HB 5126 amend the CTDPA and their status was not confirmed; Delaware 85 Del. Laws c.463 changes
 12D-102 to 12D-111 again from 2027-01-01, so re-read then; Maryland's cure notice is discretionary
 with at least 60 days for violations on or before 2027-04-01.
@@ -198,7 +198,7 @@ claiming coverage.
 - Cure periods are ending in most states. Do not plan around receiving a warning first.
 
 **Citation:** state statutes listed in `references/citations.md` under US state statutes; each cell
-above is an unverified summary until that section shows an access date (9 of 19 do, as of 2026-11-22).
+above is an unverified summary until that section shows an access date (10 of 19 do, as of 2026-11-22).
 
 ---
 

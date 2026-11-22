@@ -1,5 +1,7 @@
 # 0004 — Give the citation index a criterion
 
+Historical record: paths use the pre-rename name acsm.
+
 > Status: proposed · 2026-08-15 · Against spec version 1.1
 
 ## Motivation

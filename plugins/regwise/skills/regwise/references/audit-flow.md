@@ -20,8 +20,8 @@ paraphrase of it.
 
 Print the report header first: `Jurisdictions covered: <expanded markets>. NOT covered: Canada,
 Brazil, India, Japan, China, SensitiveHealth.` Add `Law as of: module N <last_verified>, ...` for
-every loaded module, oldest first, and, when module 2 is loaded, `State table: 9 of 19 rows
-verified` (use the count in module 2 section 2.6). If Module 3 was selected only by R04 or R06,
+every loaded module, oldest first, and, when module 2 is loaded, `State table: 10 of 19 rows
+verified` (use the count in module 2 section 2.6). End the header with: "To resume in a new session: paste this ledger and say: Regwise: resume this audit, skip the finished modules." If Module 3 was selected only by R04 or R06,
 run only the rows in its `neutral_rows` frontmatter and mark the others `n/a` "market not served".
 
 If `references/citations.md` is missing, say so in the report header and cite the module
@@ -45,7 +45,7 @@ saves most when the `Locate` files are few.
 (`module N: rows done, fail, unverifiable`), then start the next. Do not hold all modules in
 mind at once. Print each ledger line in your reply as you finish a module, so it survives
 compaction and can be pasted into a new session; with consent, also append it to
-`Regwise-REPORT.md`. To resume, take the pasted ledger and skip the finished modules. Where a row's `Locate` is prose, grep for the file names a stack uses (for example
+`Regwise-REPORT.md`. To resume in a new session, paste the ledger and say: "Regwise: resume this audit, skip the finished modules." Where a row's `Locate` is prose, grep for the file names a stack uses (for example
 `middleware`, `layout`, `.env.example`, IaC folders) before reading widely.
 
 Read the files `Locate` names. **Read them** — do not infer from a filename, a dependency in
@@ -196,7 +196,7 @@ Given a diff or file list, re-check only the routing triggers in `SKILL.md` (new
 dependencies, locale directories, AI SDKs, auth or SSO, tracking SDKs) against the saved
 config. Print which modules the diff newly selects, or "no change to routing". Then run the
 audit rows of the selected modules against the touched files only, and say that untouched files
-were not audited. No hooks, nothing runs at install; this is the same reading, narrower.
+were not audited. After a baseline full audit, use this diff audit for repeat runs; a full audit is for a quarter or a law change. No hooks, nothing runs at install; this is the same reading, narrower.
 
 Print this fixed block:
 

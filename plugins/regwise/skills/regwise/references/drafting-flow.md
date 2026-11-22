@@ -47,7 +47,16 @@ obligations are requirements nobody agreed to. For `privacy-policy.md` this mean
 - `### California` in section 6, unless `US` is a market;
 - `### Israel` in section 6, unless `Israel` is a market.
 
-Other templates: remove any section headed by a jurisdiction that is not a target market.
+Every template: remove any section, bold-led paragraph, sentence or list item tied to a non-target
+jurisdiction, and list each removal. Known cases:
+
+- `terms-of-service.md`: cut the EU, UK, Israel and Australia names from "Consumer rights are not
+  affected" to the target markets; drop the Hebrew bullet and the EU or Israel forum notes unless
+  that market is served.
+- `subscription-disclosure.md`: drop "Israel — add this" and the Israeli notes unless `Israel` is a
+  market; drop the California text unless `US` is.
+- `cookie-banner-copy.md`, `accessibility-statement.md`: drop the `## Israel` section unless served.
+- Every template: the "Hebrew is required" note applies only if `Israel` is a market.
 
 ## 2. The disclaimer goes first, unchanged
 

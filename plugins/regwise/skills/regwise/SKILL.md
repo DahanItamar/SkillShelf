@@ -115,11 +115,11 @@ silently. A quietly corrected config is a wrong answer nobody was shown.
 
 No module covers HIPAA, GDPR Art. 9 special-category data, or state health and biometric laws.
 For `SensitiveHealth`, route as rank 3, then state before any audit or draft that these are
-**not covered** and need counsel. Draft no privacy policy for it until the user acknowledges that.
+**not covered**. Pair it with counsel experienced in health-privacy law (HIPAA in the US, GDPR Art. 9 in the EU) and a qualified security assessor for the data flows; Regwise can still audit the non-health parts. Draft no privacy policy for it until the user acknowledges that.
 
 ### Offer to save it
 
-After the user confirms, offer to write `regwise.config.yml`, only on explicit consent. Regwise writes `regwise.config.yml` with your consent, and `Regwise-REPORT.md` only if you ask for a report file. It changes nothing else. Template: `references/config-questions.md`.
+After the user confirms, offer to write `regwise.config.yml`, only on explicit consent. Template: `references/config-questions.md`.
 
 ---
 
