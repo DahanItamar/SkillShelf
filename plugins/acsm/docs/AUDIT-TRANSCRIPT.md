@@ -42,3 +42,9 @@ QUESTIONS FOR COUNSEL
 2. AUDIT-2-10 / State statutes, section 2.6 - Which of the state universal opt-out rules apply at
    our actual consumer counts?
 ```
+
+## Other fixtures
+
+`examples/eu-analytics-no-cmp` and `examples/health-adjacent-us` have seeded rows but no
+recorded run yet. Recall and run-to-run variance are untested; see `examples/README.md` for
+how to score one.

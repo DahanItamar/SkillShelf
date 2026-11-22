@@ -101,9 +101,8 @@ confirmation entirely** — but only when both of these hold:
 A file failing either test is an inference nobody blessed. Fall through to infer-and-confirm,
 then offer to save the result over it.
 
-**Trust expires.** If `lastConfirmed` is over 180 days old, or cheap repo signals (Stripe or
-billing deps, new locale directories, AI SDK deps) disagree with the saved enums, show the saved
-values plus the disagreement and ask for one re-confirmation. Never route silently on a stale file.
+**Trust expires.** Over 180 days since `lastConfirmed`, or repo signals disagree with the saved
+enums: re-confirm once (details in `references/config-questions.md`). Never route silently.
 
 If the file is malformed or carries a value outside the enums above, ask — never repair it
 silently. A quietly corrected config is a wrong answer nobody was shown.
@@ -167,7 +166,7 @@ disclosure, AI media marking), mark the rest `n/a` "market not served", and appl
 Module 3 obligation when writing code. Say so in the report.
 
 R11: accessibility duties attach to any user interface, not only shops. `HeadlessAPI` is excluded.
-R13: a SaaS taking card payments is not E-commerce, but PCI DSS still applies to it.
+R13: see `references/config-questions.md`, Rule notes.
 
 ### Modules
 

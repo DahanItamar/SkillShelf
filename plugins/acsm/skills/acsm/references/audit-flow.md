@@ -137,6 +137,24 @@ QUESTIONS FOR COUNSEL
 
 Text only. No new file, no extra reading. If nothing qualifies, print "None raised."
 
+### Counsel packet
+
+Append after the questions, as one saveable block, still text only and built from the report:
+resolved config (five fields and `lastConfirmed`), fired rule IDs, every non-pass row with
+`path:line`, each loaded module's `last_verified` date, the unverifiable items, then the
+questions above grouped by module with their citations. If a module's `last_verified` is over
+180 days old, say so at the top of the packet. When `AUDIT-2-10`, `AUDIT-2-11` or `AUDIT-2-12`
+produced a verdict, print one line: `State table unverified: module 2 section 2.6 not checked
+against primary text.` while `docs/CITATIONS.md` shows no access dates for it.
+
+## 4b. Diff re-route (only when the user asks for a PR or diff audit)
+
+Given a diff or file list, re-check only the routing triggers in `SKILL.md` (new billing
+dependencies, locale directories, AI SDKs, auth or SSO, tracking SDKs) against the saved
+config. Print which modules the diff newly selects, or "no change to routing". Then run the
+audit rows of the selected modules against the touched files only, and say that untouched files
+were not audited. No hooks, nothing runs at install; this is the same reading, narrower.
+
 ## 5. What the audit never does
 
 - **Never writes to the target repository.** No fixes, no config, no report file unless the

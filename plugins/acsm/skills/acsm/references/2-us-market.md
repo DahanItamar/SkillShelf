@@ -149,6 +149,7 @@ early 2026; counts differ between trackers (20 to 24 enacted) depending on wheth
 are counted, so this table cites statutes, not counts. **Verify against primary text before
 relying on any cell.** The values below come from legislature and regulator summaries and have
 not yet been checked against statute text (see `docs/CITATIONS.md`, US state statutes).
+**Status: all 19 rows unverified.** An audit that fires AUDIT-2-10 to 2-12 says so.
 
 | Law | In effect | Applies when (summary) | Universal opt-out signal | Sensitive data | Cure period |
 | --- | --- | --- | --- | --- | --- |

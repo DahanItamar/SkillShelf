@@ -1,0 +1,9 @@
+# Seeded-violation fixture. Every violation here is deliberate.
+# Health-adjacent data in a US market. Health law itself is NOT covered by ACSM.
+appType: SaaS
+targetMarkets: [US]
+dataSensitivity: StandardPII
+aiIntegration: None
+infrastructure: CloudMultiTenant
+configVersion: 1
+lastConfirmed: 2026-08-15

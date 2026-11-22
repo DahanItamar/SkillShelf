@@ -116,3 +116,13 @@ If a user gives an answer outside these values — a market not listed, an app t
 none — do not force it into the nearest option. Say what is missing, route on what you do know,
 and state which obligations are therefore unaddressed. ACSM covers five jurisdictions; there
 are many more, and pretending otherwise is worse than admitting the gap.
+
+## Trust expires
+
+If `lastConfirmed` is over 180 days old, or cheap repo signals (Stripe or billing deps, new
+locale directories, AI SDK deps) disagree with the saved enums, show the saved values plus the
+disagreement and ask for one re-confirmation. Never route silently on a stale file.
+
+## Rule notes
+
+R13: a SaaS taking card payments is not E-commerce, but PCI DSS still applies to it.

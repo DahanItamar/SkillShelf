@@ -11,6 +11,11 @@
 
 set -u
 
+# Optional argument: a plugin directory to check (for third-party jurisdiction plugins).
+if [ $# -ge 1 ]; then
+	cd "$1" || { printf 'cannot run: cannot enter %s\n' "$1" >&2; exit 2; }
+fi
+
 FAILURES=0
 
 # fail <check> <path> <line> <message>
@@ -39,8 +44,9 @@ fi
 
 printf 'ACSM verify\n'
 
-TMPF=./.verify.tmp
-trap 'rm -f "$TMPF.rt" "$TMPF.ex" "$TMPF" "$TMPF.fm" "$TMPF.lk" "$TMPF.aw" "$TMPF.in" "$TMPF.ph"' EXIT INT TERM
+TMPD=$(mktemp -d 2>/dev/null) || { printf 'cannot run: mktemp -d failed\n' >&2; exit 2; }
+TMPF=$TMPD/t
+trap 'rm -rf "$TMPD"' EXIT INT TERM
 
 # Module files are `references/<n>-<slug>.md` with n in 1..8 (SPEC.md AC-051).
 # Other files may live in references/ — audit-flow.md is procedure, not a module,
@@ -342,14 +348,27 @@ done
 
 # --- seeded fixture: every expected row ID exists in a module --------------
 
-if [ -f examples/broken-saas/EXPECTED-FINDINGS.md ]; then
-	grep -o 'AUDIT-[0-9]-[0-9][0-9]' examples/broken-saas/EXPECTED-FINDINGS.md | sort -u > "$TMPF.ex"
+for ef in examples/*/EXPECTED-FINDINGS.md; do
+	[ -f "$ef" ] || continue
+	grep -o 'AUDIT-[0-9]-[0-9][0-9]' "$ef" | sort -u > "$TMPF.ex"
 	while IFS= read -r rid; do
 		[ -n "$rid" ] || continue
 		if ! grep -q "^| $rid " $MODULE_GLOB; then
-			fail fixture examples/broken-saas/EXPECTED-FINDINGS.md 1 "row does not exist in any module: $rid"
+			fail fixture "$ef" 1 "row does not exist in any module: $rid"
 		fi
 	done < "$TMPF.ex"
+done
+
+# --- marketplace version drift: warn, never fail ---------------------------
+# Only meaningful inside the full marketplace checkout; absent when the plugin is alone.
+
+mp=../../.claude-plugin/marketplace.json
+if [ -f "$mp" ] && [ -f .claude-plugin/plugin.json ]; then
+	pv=$(sed -n 's/^[[:space:]]*"version":[[:space:]]*"\([^"]*\)".*/\1/p' .claude-plugin/plugin.json | head -n 1)
+	mv=$(awk '/"name": "acsm"/ { f = 1 } f && /"version"/ { gsub(/[^0-9.]/, "", $2); print $2; exit }' "$mp")
+	if [ -n "$mv" ] && [ "$mv" != "$pv" ]; then
+		printf 'WARN version: marketplace.json lists acsm %s, plugin.json says %s\n' "$mv" "$pv"
+	fi
 fi
 
 # --- README claims about SKILL.md length -----------------------------------
