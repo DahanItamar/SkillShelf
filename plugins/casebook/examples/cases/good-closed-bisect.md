@@ -3,7 +3,7 @@
 
 Status: closed
 Repro status: observed failing
-Verify command: `npm test` (constitution)
+Verify command: `npm test` (user-approved)
 Verify one: `npm test -- -t {test}` (user-approved)
 
 ## Symptom
@@ -19,7 +19,7 @@ An order of two items at 10.00 each shows a total of 10.00. It showed 20.00 in r
 - Because: the total was right in v2.3.0, and no test covered quantities above one
 - Predicts: if true, git bisect names one commit that touched the total code; if false, it names an unrelated commit
 - Experiment: [bisect] script text below. The user saves it OUTSIDE the repo as ../bisect-total.sh, then runs git bisect start HEAD v2.3.0, git bisect run ../bisect-total.sh, git bisect reset
-- Script (text only, Claude does not write it to disk):
+- Script (text only, the agent does not write it to disk):
 
 ```sh
 #!/bin/sh
@@ -48,8 +48,8 @@ Changed src/total.js: the reduce starts from 0 again.
 test/total.test.js :: sums two items
 
 ## Before and after
-- Before: exit 1; observed by Claude; not ok 1 - sums two items (expected 20, got 10)
-- After: exit 0; observed by Claude; ok 1 - sums two items
+- Before: exit 1; observed by agent; not ok 1 - sums two items (expected 20, got 10)
+- After: exit 0; observed by agent; ok 1 - sums two items
 
 ## Lesson
 Cover a quantity above one in the total test, so a bisect has a test to run.

@@ -3,7 +3,7 @@
 
 Status: closed
 Repro status: observed failing
-Verify command: `npm test` (constitution)
+Verify command: `npm test` (user-approved)
 Verify one: `npm test -- -t {test}` (user-approved)
 Runs: 3
 
@@ -12,7 +12,7 @@ The test "drains the queue" passes on most runs and fails on some. Expected: it 
 
 ## Repro
 - Command or steps: `npm test` several times in a row
-- Observed: Claude via verify command: ran: npm test x3 -> 2 passed, 1 failed
+- Observed: agent via verify command: ran: npm test x3 -> 2 passed, 1 failed
 - Intermittent: yes
 
 ## Hypotheses
@@ -43,8 +43,8 @@ Attempts: 1
 test/queue.test.mjs :: drains the queue after both timers
 
 ## Before and after
-- Before: exit 1; observed by Claude; runs: 2/3; not ok 1 - drains the queue after both timers
-- After: exit 0; observed by Claude; runs: 3/3; ok 1 - drains the queue after both timers
+- Before: exit 1; observed by agent; runs: 2/3; not ok 1 - drains the queue after both timers
+- After: exit 0; observed by agent; runs: 3/3; ok 1 - drains the queue after both timers
 
 ## Lesson
 Await every asynchronous step a test depends on, not only the first one.

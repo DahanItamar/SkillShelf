@@ -3,7 +3,7 @@
 
 Status: closed
 Repro status: observed failing
-Verify command: `npm test` (constitution)
+Verify command: `npm test` (user-approved)
 
 ## Symptom
 An order line with a unit price of 1.005 shows an invoice total of 1.00. A calculator gives 1.01 for the same amount, and the customer expected 1.01.
@@ -52,7 +52,7 @@ Changed src/money.mjs: roundMoney now rounds on the decimal text of the number (
 test/money.test.mjs :: rounds half up
 
 ## Before and after
-- After: exit 0; observed by Claude; ok 1 - rounds half up
+- After: exit 0; observed by agent; ok 1 - rounds half up
 
 ## Lesson
 Round money with integer cents or decimal text, not Math.round on a float product.

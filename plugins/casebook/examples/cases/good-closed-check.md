@@ -3,7 +3,7 @@
 
 Status: closed
 Repro status: observed failing
-Verify command: `npm test` (constitution)
+Verify command: `npm test` (user-approved)
 Proof command: `sh scripts/check-css.sh` (user-approved)
 
 ## Symptom
@@ -41,8 +41,8 @@ Check: sh scripts/check-css.sh
 Why no test: the unit tests do not load a rendered page, so only the project's CSS check can see this.
 
 ## Before and after
-- Before: exit 1; observed by Claude; check-css: /static/app.css missing from /login
-- After: exit 0; observed by Claude; check-css: ok
+- Before: exit 1; observed by agent; check-css: /static/app.css missing from /login
+- After: exit 0; observed by agent; check-css: ok
 
 ## Lesson
 Check that a page links an asset that exists, with a command the project already has.

@@ -2,23 +2,23 @@
 
 Every experiment has a kind tag at the start of its `Experiment:` line. The kind decides who runs it.
 
-## The four kinds
+## The five kinds
 
-### `[read]` - Claude runs it
+### `[read]` - the agent runs it
 
 Reading files, grep, and read-only git inspection (`log`, `blame`, `show`, `diff`). Allowed before and after the gate. Nothing is changed.
 
 Evidence is a `path:line` pointer to what you read, for example `src/invoice.mjs:31 calls roundMoney once`.
 
-### `[verify]` - Claude runs it
+### `[verify]` - the agent runs it
 
 Either the full verify command exactly as written in the case header, or the approved `Verify one:` command with only `{test}` replaced by a test name. No other arguments, no filters, no environment tricks, no wrapper script. If even the scoped command is too slow to be a useful experiment, make it a `[user-run]` instead of editing the command.
 
 Evidence is `ran: <command> -> <what came out>`, with the failing test name when there is one.
 
-### `[user-run]` - the user runs it, Claude never does
+### `[user-run]` - the user runs it, the agent never does
 
-Anything else: a script, a curl, a REPL line, a debugger, an instrumented build, a command that was never approved. Claude writes the exact command or steps in the case file and asks the user to run it and paste the result. Claude does not execute it, even if it looks harmless.
+Anything else: a script, a curl, a REPL line, a debugger, an instrumented build, a command that was never approved. The agent writes the exact command or steps in the case file and asks the user to run it and paste the result. The agent does not execute it, even if it looks harmless.
 
 Wording for the ask:
 
@@ -29,11 +29,11 @@ If true, expect: <prediction>. If false, expect: <other prediction>.
 
 Record the pasted output as `user ran: <command> -> <excerpt>`. Redact secrets and customer data as `<redacted>`.
 
-### `[bisect]` - the user runs it, Claude never does
+### `[bisect]` - the user runs it, the agent never does
 
-For "it used to work", when a known-good ref exists. `git bisect` changes the working tree, so Claude never runs it, and Claude never writes the script to disk (the gate allows only the case file). The user may run any script here, so it is not limited to the approved commands.
+For "it used to work", when a known-good ref exists. `git bisect` changes the working tree, so the agent never runs it, and never writes the script to disk (the gate allows only the case file). The user may run any script here, so it is not limited to the approved commands.
 
-1. Claude writes the script text into the case file, inside the experiment block, together with the commands below. It is never written to disk.
+1. The agent writes the script text into the case file, inside the experiment block, together with the commands below. It is never written to disk.
 2. The user saves the script OUTSIDE the repository, so bisect, make and the script do not interfere (git's own manual recommends this).
 3. The user runs `git bisect run <path-to-script>`.
 4. If an existing test already fails at the bad ref, skip the script: use `git bisect run` with the Verify one command and its test name.
@@ -57,14 +57,26 @@ The exit code is the contract: 0 means good, 1 to 127 except 125 means bad, and 
 
 Evidence is the user's pasted `<sha> is the first bad commit` line, recorded as `user ran: git bisect run <path-to-script> -> <sha> is the first bad commit`. Make it the first cheap experiment when the symptom says regression and a known-good ref exists. After `git bisect reset` the working tree is back where it was.
 
+### `[probe]` - the one exception to the gate
+
+A probe is a temporary, logging-only insertion with no logic change. Every inserted line contains the literal marker `CASEBOOK-PROBE-<NNN>`, where NNN is the case number.
+
+1. The case file first lists each probe: file, line and exact text.
+2. The user says yes once to that list. Without a yes, make it a `[user-run]`.
+3. The agent inserts exactly those lines and nothing else.
+4. The user, or the approved verify command, triggers the repro. The output is evidence: `user ran: ...` or `ran: ...`.
+5. Before `Status: fixing`, the agent removes every probe line and searches the tree for the marker. The search must return nothing. The case then records `Probes removed: yes (grep empty)`.
+
+A probe may log no secrets and no personal data: log counts, types and branch names, not values.
+
 ## Forbidden before the gate
 
-- Adding log lines.
+- Adding log lines, except a `[probe]` approved as above.
 - Temporary patches.
 - "Try it and see" edits.
 - Changing a test, fixture or config to see what happens.
 
-A log-line experiment is a `[user-run]` the user performs on their own copy. Claude describes where to add the line and what to look for. Claude does not make the edit.
+Any other log-line experiment is a `[user-run]` the user performs on their own copy. The agent describes where to add the line and what to look for, and does not make the edit.
 
 ## Flaky bugs
 

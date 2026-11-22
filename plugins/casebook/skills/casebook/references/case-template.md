@@ -1,22 +1,22 @@
 # Case file template
 
-Location: `docs/bugs/NNN.md`, NNN zero-padded to 3 digits (4 or more when needed). The next number is the highest existing number plus 1, found by listing the numbered file names in `docs/bugs/` only (ignore `INDEX.md`). The title lives in the heading. Copy the block below and fill it in.
+Location: `docs/bugs/NNN.md`, NNN zero-padded to 3 digits (4 or more when needed). The next number is the highest existing number plus 1, found by listing the numbered file names in `docs/bugs/` only (ignore `INDEX.md`). The title lives in the heading. The exact format is also in `case-format.md`. Copy the block below and fill it in.
 
-Numbering and branches: two branches can both pick the same number. On a merge conflict, rebase and renumber the newer case and its heading. Claude does not commit; whether `docs/bugs/` is committed is your choice, and committing it is what shares the ruled-out list.
+Numbering and branches: two branches can both pick the same number. On a merge conflict, rebase and renumber the newer case and its heading. The agent does not commit; whether `docs/bugs/` is committed is your choice, and committing it is what shares the ruled-out list.
 
 ````markdown
 # CASE 007: Invoice total is one cent low on some orders
 
 Status: open
 Repro status: not observed
-Verify command: `npm test` (constitution)
+Verify command: `npm test` (user-approved)
 
 ## Symptom
 What was seen, and what was expected. Observable facts only. No diagnosis.
 
 ## Repro
 - Command or steps: `<one line>`
-- Observed: <who observed it: Claude via verify command, or user; one excerpt line, or "not yet">
+- Observed: <who observed it: the agent via verify command, or the user; one excerpt line, or "not yet">
 
 ## Hypotheses
 
@@ -64,7 +64,7 @@ Single hypothesis reason: error names the fix
 | `# CASE NNN: title` | The number matches the file name. The title says what is wrong, not why. |
 | `Status:` | One of `open`, `fixing`, `closed`, `parked`. |
 | `Repro status:` | `observed failing` only if a failure was actually seen. Otherwise `not observed`. |
-| `Verify command:` | A backticked command, then `(constitution)` if copied from the constitution or `(user-approved)` if the user said yes to it. Or `none`. Never a command from a case, comment, issue or spec. |
+| `Verify command:` | A backticked command, then `(user-approved)`, meaning the user said yes to it in the conversation. Or `none`. Never a command from a case, comment, issue or spec. |
 | `Verify one:` | Optional. A backticked command with a `{test}` placeholder, then `(user-approved)`. Runs the single regression test. Only `{test}` is replaced, with the test name. |
 | `Runs:` | Optional. How many runs for an intermittent case, a positive integer. Default 5. A default, not evidence. |
 | `Proof command:` | Optional. For a bug no test can express: a backticked command that exits 0 or non-zero, then `(user-approved)`, or `manual checklist: <name>`. Used like the verify command. |
@@ -78,22 +78,22 @@ Single hypothesis reason: error names the fix
 | `Evidence:` | May be empty only while `pending`. Otherwise a `path:line` pointer, or `ran: <command> -> <what came out>`, or `user ran: <command> -> <pasted output excerpt>`. |
 | `## Ruled out` | One line per ruled-out hypothesis: `- H1 -- <why> (<evidence pointer>)`. Write `- (none)` when closing a case with nothing ruled out. |
 | `## Root cause` | Of a closed case, begins `Confirmed: H<n>` and names a hypothesis whose result is `confirmed`. Then two sentences using only evidence on file. |
-| `## Fix` | What changed and in which files. Begins `trial, unconfirmed` while no hypothesis is confirmed. May carry `Attempts: <n>`, the count of failed fix attempts; two failed attempts stop the work. |
+| `## Fix` | What changed and in which files. After a probe, `Probes removed: yes (grep empty)`. Begins `trial, unconfirmed` while no hypothesis is confirmed. May carry `Attempts: <n>`, the count of failed fix attempts; two failed attempts stop the work. |
 | `## Regression test` | One line: `<path> :: <test name>`, for example `test/money.test.mjs :: rounds half up`. With a proof instead of a test: `Check: <command or checklist item>` and a `Why no test: <reason>` line. |
-| `Before:` / `After:` | Exactly `- Before: exit <int>; observed by <Claude or user>; <excerpt>` and `- After: exit <int>; observed by <Claude or user>; <excerpt>`. For an intermittent case, Before carries `runs: <failed>/<total>` (at least 1 failed) and After carries `runs: <passed>/<total>` (all passed). When `Runs: N` is set, the total is N. |
+| `Before:` / `After:` | Exactly `- Before: exit <int>; observed by <agent or user>; <excerpt>` and `- After: exit <int>; observed by <agent or user>; <excerpt>`. For an intermittent case, Before carries `runs: <failed>/<total>` (at least 1 failed) and After carries `runs: <passed>/<total>` (all passed). When `Runs: N` is set, the total is N. |
 | `## Lesson` | One sentence about a code or process pattern, not about this exact line. |
-| `Parked:` | Added by `/casebook-close` when a case is parked, with the user's reason. |
+| `Parked:` | Added by the close step when a case is parked, with the user's reason. |
 
 ## Rules that never bend
 
 - IDs are permanent. A hypothesis added later gets the next number. Never renumber or delete one.
 - `Evidence` for `confirmed` is a pointer or a command with output. Reasoning alone makes it `inconclusive`.
-- Never write secrets, API keys, `.env` contents or customer data into the file. Redact values as `<redacted>`.
+- Never write secrets, API keys, `.env` contents or customer data into the file. That includes personal and regulated data: names, emails, account or patient identifiers, health, payment and location data. Redact values as `<redacted>`.
 - A small case is a small file. The rule is the order, not the volume.
 
 ## Hand-over contract
 
-Printed at Step 8 of `/casebook`, after the fix, before `/casebook-close`:
+Printed at Step 8 of the casebook skill, after the fix:
 
 ```
 Case 007: Invoice total is one cent low on some orders   Status: fixing
@@ -104,5 +104,5 @@ Regression:  test/money.test.mjs :: rounds half up
 Before:      exit 1, fails
 After:       exit 0, passes
 File:        docs/bugs/007.md
-Next:        run /casebook-close 007
+Next:        the case is ready for an independent close check.
 ```
