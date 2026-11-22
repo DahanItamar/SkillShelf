@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "blueprint",
+  "displayName": "Blueprint",
+  "version": "3.3.0",
+  "description": "Eight skills: a six-stage spec chain that carries one AC-### identifier from idea to shipped code, plus a front door and an opt-in checker.",
+  "author": {
+    "name": "Itamar Dahan",
+    "url": "https://github.com/DahanItamar"
+  },
+  "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/blueprint",
+  "repository": "https://github.com/DahanItamar/claude-skills",
+  "license": "MIT",
+  "keywords": [
+    "spec",
+    "prd",
+    "architecture",
+    "system-design",
+    "planning",
+    "acceptance-criteria",
+    "tasks",
+    "implementation",
+    "drift",
+    "audit",
+    "refactoring",
+    "code-smells",
+    "dead-code",
+    "technical-debt"
+  ]
+}
