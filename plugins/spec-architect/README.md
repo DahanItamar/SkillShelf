@@ -66,7 +66,7 @@ flowchart LR
 | 5 | `/spec-drift` | a report | The spec and the code disagree: say *which one* is wrong |
 | 6 | `/spec-refactor` | `docs/refactorings/NNNN/` | Restructure only what blocks scheduled work — and change no criterion doing it |
 
-Stages 1 and 6 are optional and every stage runs alone. The opt-in `/spec-check` is read-only and not part of the chain: it lints `AC-###` integrity and prints a criterion to task to commit to test table, with orphans first. Test hits are labelled `candidate, not proof`. The last two audit different things: drift
+Stage 0 is the front door; spec-check is an optional checker with no stage. Stages 1 and 6 are optional and every stage runs alone. The opt-in `/spec-check` is read-only and not part of the chain: it lints `AC-###` integrity and prints a criterion to task to commit to test table, with orphans first and a final `Orphans: N` line. `/spec-check --diff <base>` lists criteria whose code or tests a branch touched, as a paste-ready PR comment. Test hits are labelled `candidate, not proof`. The last two audit different things: drift
 asks whether the code does what the spec says, refactor asks whether code that already does can
 still be changed cheaply.
 
@@ -168,6 +168,20 @@ calculation diverged where no criterion looks — stage 6 catches that.
 
 Honest limits: Claude Code only, no CLI, no IDE integration, no multi-agent portability. The other tools win on all four. "Not claimed here" means this README has not verified the competitor either way.
 
+## Optional CI recipe
+
+Nothing here runs at install. If you want a gate, copy this into your own workflow. It assumes the Claude Code CLI is installed and authenticated in CI; adapt the invocation to your setup.
+
+```yaml
+- name: Spec traceability
+  run: |
+    claude -p "/spec-check" > spec-check.txt
+    cat spec-check.txt
+    tail -n 1 spec-check.txt | grep -qx 'Orphans: 0'
+```
+
+The model writes that last line, so treat the gate as advisory and read the table before trusting it.
+
 ## Extending it
 
 Because every stage keys on `AC-###` and plain files, you can add your own stage skill (a compliance pass with [acsm](../acsm), a UI-states pass with [uilint](../uilint) from the same marketplace). The contract:
@@ -179,6 +193,8 @@ Because every stage keys on `AC-###` and plain files, you can add your own stage
 5. Run only the constitution's verify command.
 
 Nothing else is needed: no registry, no hooks.
+
+Natural places to run an optional pass, by hand, are the stage boundaries: after `/spec-tasks` and before `/spec-implement`, [acsm](../acsm) for compliance and [uilint](../uilint) for UI states. Prose only; nothing triggers them for you.
 
 ## Under the hood — briefly
 

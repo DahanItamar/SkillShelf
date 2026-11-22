@@ -5,7 +5,7 @@ description: Start here. The front door to the six-stage spec chain; shows the m
 
 # Spec Start
 
-**Stage 0 of 6 — the front door.** This skill writes nothing and decides nothing. It looks at what
+**Stage 0 of 6 — the front door.** `TASKS.md` always means `docs/changes/*/TASKS.md`. Stage 0 is the front door; spec-check is an optional checker with no stage. This skill writes nothing and decides nothing. It looks at what
 the repository already has, tells the user where they are in the chain, and hands them one command.
 
 Its whole reason to exist: six commands in a picker give a user no way to tell which one begins,
