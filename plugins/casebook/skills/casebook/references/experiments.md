@@ -2,7 +2,7 @@
 
 Every experiment has a kind tag at the start of its `Experiment:` line. The kind decides who runs it.
 
-## The three kinds
+## The four kinds
 
 ### `[read]` - Claude runs it
 
@@ -12,22 +12,36 @@ Evidence is a `path:line` pointer to what you read, for example `src/invoice.mjs
 
 ### `[verify]` - Claude runs it
 
-The constitution's verify command, exactly as written. No added arguments, no filters, no environment tricks, no wrapper script. If the full command is too slow to be a useful experiment, make it a `[user-run]` instead of editing the command.
+Either the full verify command exactly as written in the case header, or the approved `Verify one:` command with only `{test}` replaced by a test name. No other arguments, no filters, no environment tricks, no wrapper script. If even the scoped command is too slow to be a useful experiment, make it a `[user-run]` instead of editing the command.
 
 Evidence is `ran: <command> -> <what came out>`, with the failing test name when there is one.
 
 ### `[user-run]` - the user runs it, Claude never does
 
-Anything else: a script, a curl, a REPL line, a debugger, an instrumented build, a command not named in the constitution. Claude writes the exact command or steps in the case file and asks the user to run it and paste the result. Claude does not execute it, even if it looks harmless.
+Anything else: a script, a curl, a REPL line, a debugger, an instrumented build, a command that was never approved. Claude writes the exact command or steps in the case file and asks the user to run it and paste the result. Claude does not execute it, even if it looks harmless.
 
 Wording for the ask:
 
 ```
-I only run the verify command from the constitution. Please run this and paste the output: <command>
+I only execute the verify command; reading files and read-only git are free. Please run this and paste the output: <command>
 If true, expect: <prediction>. If false, expect: <other prediction>.
 ```
 
 Record the pasted output as `user ran: <command> -> <excerpt>`. Redact secrets and customer data as `<redacted>`.
+
+### `[bisect]` - the user runs it, Claude never does
+
+For "it used to work", when a known-good ref exists. `git bisect` changes the working tree, so Claude never runs it. Claude writes a ready command for the user:
+
+```
+git bisect start <bad> <good>
+git bisect run <approved Verify one command, with a test name>
+git bisect reset
+```
+
+The run command's exit code is the contract: 0 means good, 1 to 127 except 125 means bad, and 125 means the commit cannot be tested (skip). The test must exist at every commit that is tried, so a test that is new should live as an untracked file or a script outside the tracked files. Sources: https://git-scm.com/docs/git-bisect and a practical tutorial at https://train.rse.ox.ac.uk/material/HPCu/technology_and_tooling/version_control/11-bisect.
+
+Evidence is the user's pasted `<sha> is the first bad commit` line, recorded as `user ran: git bisect run ... -> <sha> is the first bad commit`. Make it the first cheap experiment when the symptom says regression and a known-good ref exists. After `git bisect reset` the working tree is back where it was.
 
 ## Forbidden before the gate
 
@@ -40,14 +54,17 @@ A log-line experiment is a `[user-run]` the user performs on their own copy. Cla
 
 ## Flaky bugs
 
-Run the verify command up to 3 times to observe the pattern. Record the counts you actually saw, for example `ran: npm test x3 -> 2 passed, 1 failed`. Set `Intermittent: yes` under Repro. Never record a count that was not run. A pass does not clear an intermittent bug; it only lowers the chance that it is still there.
+To observe the pattern, run the verify command up to 3 times. Record the counts you actually saw, for example `ran: npm test x3 -> 2 passed, 1 failed`. Set `Intermittent: yes` under Repro. Never record a count that was not run. A pass does not clear an intermittent bug; it only lowers the chance that it is still there.
+
+For the new regression test of an intermittent bug, run it up to 5 times against the unfixed code (the `Verify one:` command if approved). Before is valid if at least one run fails: record `runs: <failed>/<total>`. If every run passes against the unfixed code, the test does not capture the bug: stop. Five is a default, not evidence. The user may choose a smaller N, recorded as `Runs: N` in the case header; use N for Before and for the After runs too.
 
 ## Cheapest first
 
 1. Read the failing line and the code around it.
 2. Read recent changes to that area (`git log`, `git diff`, read-only).
-3. Compare a working case with a failing one: inputs, config, data.
-4. Run the verify command, to see the failure or to confirm a state.
-5. Ask for a user-run probe: a one-line script, a REPL check, a request, an instrumented copy.
+3. For a regression with a known-good ref, ask for a `[bisect]` run.
+4. Compare a working case with a failing one: inputs, config, data.
+5. Run the verify command, to see the failure or to confirm a state.
+6. Ask for a user-run probe: a one-line script, a REPL check, a request, an instrumented copy.
 
 Run one experiment at a time. Write the prediction first, run it, and record the result in the case file straight away. If you notice something else on the way, add it as a new hypothesis rather than chasing it now.

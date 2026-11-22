@@ -79,6 +79,14 @@ BEGIN {
 
 	if (sec == "Repro" && $0 ~ /^[-[:space:]]*Intermittent: yes/) intermittent = 1
 
+	if (sec == "") {
+		if ($0 ~ /^Verify command:/) { vc = trim(substr($0, 16)); vcln = NR }
+		else if ($0 ~ /^Verify one:/) { vo = trim(substr($0, 12)); voln = NR }
+		else if ($0 ~ /^Runs:/) { runs = trim(substr($0, 6)); runsln = NR }
+		else if ($0 ~ /^Proof command:/) { pc = trim(substr($0, 15)); pcln = NR }
+		else if ($0 ~ /^Single hypothesis reason:/) { shr = trim(substr($0, 26)); shrln = NR }
+	}
+
 	if (sec == "Hypotheses") {
 		if ($0 ~ /^### /) {
 			inev = 0
@@ -123,6 +131,8 @@ BEGIN {
 		if (!(sec in first)) { first[sec] = trim($0); firstln[sec] = NR }
 		txt[sec] = txt[sec] " " $0
 		if (sec == "Regression test" && $0 ~ /^[^[:space:]]+ :: [^[:space:]]/) regline = NR
+		if (sec == "Regression test" && $0 ~ /^Check: ./) checkline = NR
+		if (sec == "Regression test" && $0 ~ /^Why no test: ./) whyline = NR
 		if (sec == "Before and after") {
 			if ($0 ~ /^- Before:/) { before = $0; beforeln = NR }
 			if ($0 ~ /^- After:/) { after = $0; afterln = NR }
@@ -153,15 +163,21 @@ END {
 	if (rsln == 0) add(2, 1, "no Repro status: line")
 	else if (rstat != "observed failing" && rstat != "not observed") add(2, rsln, "Repro status must be \"observed failing\" or \"not observed\" (got \"" rstat "\")")
 
+	# L2 (header lines): approved-command marks, {test} placeholder, Runs
+	if (vcln && vc != "`none`" && vc !~ /^`[^`]+` \((constitution|user-approved)\)$/) add(2, vcln, "Verify command must be a backticked command followed by (constitution) or (user-approved), or `none`")
+	if (voln && vo !~ /^`[^`]*\{test\}[^`]*` \(user-approved\)$/) add(2, voln, "Verify one must be a backticked command containing {test}, followed by (user-approved)")
+	if (runsln && runs !~ /^[1-9][0-9]*$/) add(2, runsln, "Runs must be a positive integer (got \"" runs "\")")
+	if (pcln && pc !~ /^`[^`]+` \(user-approved\)$/ && pc !~ /^manual checklist: ./) add(2, pcln, "Proof command must be a backticked command followed by (user-approved), or \"manual checklist: <name>\"")
+
 	# L3: nine sections
 	for (i = 1; i <= 9; i++) if (!(need[i] in seen)) add(3, 1, "missing section \"## " need[i] "\"")
 
 	# L4: hypotheses and experiment kinds
-	if (nhyp < 2) add(4, (seen["Hypotheses"] ? seen["Hypotheses"] : 1), "at least 2 hypotheses are required (found " nhyp ")")
+	if (nhyp < 2 && !(nhyp == 1 && shr != "")) add(4, (seen["Hypotheses"] ? seen["Hypotheses"] : 1), "at least 2 hypotheses are required (found " nhyp "), or one plus a \"Single hypothesis reason:\" line")
 	for (i = 1; i <= nhyp; i++) {
 		h = hyps[i]
 		if (!(h in xp)) add(4, hypln[h], h " has no Experiment: line")
-		else if (xp[h] !~ /^\[(read|verify|user-run)\]/) add(4, xpln[h], h " Experiment must begin with [read], [verify] or [user-run]")
+		else if (xp[h] !~ /^\[(read|verify|user-run|bisect)\]/) add(4, xpln[h], h " Experiment must begin with [read], [verify], [user-run] or [bisect]")
 	}
 
 	# L5: the gate
@@ -202,12 +218,24 @@ END {
 		}
 		if (empty_or_notyet(txt["Fix"])) add(8, (seen["Fix"] ? seen["Fix"] : 1), "Fix section is empty")
 		else if (tolower(txt["Fix"]) ~ /trial, unconfirmed/) add(8, firstln["Fix"], "Fix is a trial, unconfirmed: a trial fix cannot close a case")
-		if (!regline) add(8, (seen["Regression test"] ? seen["Regression test"] : 1), "Regression test must be one line: <path> :: <test name>")
+		if (!regline && !checkline) add(8, (seen["Regression test"] ? seen["Regression test"] : 1), "Regression test must be one line: <path> :: <test name> (or Check: with a Why no test: line and a Proof command header)")
+		else if (!regline && checkline) {
+			if (!whyline) add(8, checkline, "Check: needs a \"Why no test:\" line saying why a test is impossible")
+			if (pcln == 0) add(8, checkline, "Check: needs a \"Proof command:\" header line")
+		}
 		if (before == "") add(8, (seen["Before and after"] ? seen["Before and after"] : 1), "no \"- Before:\" line")
 		else if (before !~ /^- Before: exit [0-9]+; observed by (Claude|user); ./) add(8, beforeln, "Before must read: exit <int>; observed by <Claude|user>; <excerpt>")
 		else {
 			bx = before; sub(/^- Before: exit /, "", bx); sub(/;.*$/, "", bx)
 			if (bx + 0 == 0) add(8, beforeln, "Before exit must be non-zero (the repro must fail before the fix)")
+			if (intermittent) {
+				if (match(before, /runs: [0-9]+\/[0-9]+/)) {
+					bn2 = substr(before, RSTART + 6, RLENGTH - 6)
+					split(bn2, bq, "/")
+					if (bq[1] + 0 < 1) add(8, beforeln, "intermittent case: at least one Before run must fail (runs: " bn2 ")")
+					if (runsln && bq[2] != runs) add(8, beforeln, "Before total " bq[2] " does not match Runs: " runs)
+				} else add(8, beforeln, "intermittent case: Before needs runs: <failed>/<total>")
+			}
 		}
 		if (after == "") add(8, (seen["Before and after"] ? seen["Before and after"] : 1), "no \"- After:\" line")
 		else if (after !~ /^- After: exit [0-9]+; observed by (Claude|user); ./) add(8, afterln, "After must read: exit <int>; observed by <Claude|user>; <excerpt>")
@@ -219,6 +247,7 @@ END {
 					rn = substr(after, RSTART + 6, RLENGTH - 6)
 					split(rn, pq, "/")
 					if (pq[1] != pq[2]) add(8, afterln, "intermittent case: every run must pass (runs: " rn ")")
+					if (runsln && pq[2] != runs) add(8, afterln, "After total " pq[2] " does not match Runs: " runs)
 				} else add(8, afterln, "intermittent case: After needs runs: <passed>/<total>")
 			}
 		}

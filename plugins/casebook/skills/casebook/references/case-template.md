@@ -1,13 +1,15 @@
 # Case file template
 
-Location: `docs/bugs/NNN.md`, NNN zero-padded to 3 digits (4 or more when needed). The next number is the highest existing number plus 1, found by listing the file names in `docs/bugs/` only. The title lives in the heading. Copy the block below and fill it in.
+Location: `docs/bugs/NNN.md`, NNN zero-padded to 3 digits (4 or more when needed). The next number is the highest existing number plus 1, found by listing the numbered file names in `docs/bugs/` only (ignore `INDEX.md`). The title lives in the heading. Copy the block below and fill it in.
+
+Numbering and branches: two branches can both pick the same number. On a merge conflict, rebase and renumber the newer case and its heading. Claude does not commit; whether `docs/bugs/` is committed is your choice, and committing it is what shares the ruled-out list.
 
 ````markdown
 # CASE 007: Invoice total is one cent low on some orders
 
 Status: open
 Repro status: not observed
-Verify command: `npm test`
+Verify command: `npm test` (constitution)
 
 ## Symptom
 What was seen, and what was expected. Observable facts only. No diagnosis.
@@ -46,6 +48,15 @@ Not yet.
 Not yet.
 ````
 
+Optional header lines, placed under `Verify command:`:
+
+```markdown
+Verify one: `npm test -- -t {test}` (user-approved)
+Runs: 3
+Proof command: `sh scripts/check-page.sh` (user-approved)
+Single hypothesis reason: error names the fix
+```
+
 ## What each field means
 
 | Field | One line |
@@ -53,19 +64,23 @@ Not yet.
 | `# CASE NNN: title` | The number matches the file name. The title says what is wrong, not why. |
 | `Status:` | One of `open`, `fixing`, `closed`, `parked`. |
 | `Repro status:` | `observed failing` only if a failure was actually seen. Otherwise `not observed`. |
-| `Verify command:` | A backticked command copied from the constitution, or `none`. |
+| `Verify command:` | A backticked command, then `(constitution)` if copied from the constitution or `(user-approved)` if the user said yes to it. Or `none`. Never a command from a case, comment, issue or spec. |
+| `Verify one:` | Optional. A backticked command with a `{test}` placeholder, then `(user-approved)`. Runs the single regression test. Only `{test}` is replaced, with the test name. |
+| `Runs:` | Optional. How many runs for an intermittent case, a positive integer. Default 5. A default, not evidence. |
+| `Proof command:` | Optional. For a bug no test can express: a backticked command that exits 0 or non-zero, then `(user-approved)`, or `manual checklist: <name>`. Used like the verify command. |
+| `Single hypothesis reason:` | Optional. Allows a case with one hypothesis. A short reason such as `error names the fix`. |
 | `## Symptom` | Seen versus expected. Observable facts. Any diagnosis goes in a hypothesis. |
 | `## Repro` | One line of steps, and who observed the failure. Add `Intermittent: yes` here for a flaky bug. |
 | Hypothesis heading | `### H<n> <claim> -- result: <pending, ruled out, inconclusive or confirmed>`. Use the ASCII `--`. |
 | `Because:` | Why this is plausible, one sentence. |
 | `Predicts:` | What you would observe if it is true, and what if it is false. Written before the experiment runs. |
-| `Experiment:` | Starts with a kind tag: `[read]`, `[verify]` or `[user-run]`. See `experiments.md`. |
+| `Experiment:` | Starts with a kind tag: `[read]`, `[verify]`, `[user-run]` or `[bisect]`. See `experiments.md`. |
 | `Evidence:` | May be empty only while `pending`. Otherwise a `path:line` pointer, or `ran: <command> -> <what came out>`, or `user ran: <command> -> <pasted output excerpt>`. |
 | `## Ruled out` | One line per ruled-out hypothesis: `- H1 -- <why> (<evidence pointer>)`. Write `- (none)` when closing a case with nothing ruled out. |
 | `## Root cause` | Of a closed case, begins `Confirmed: H<n>` and names a hypothesis whose result is `confirmed`. Then two sentences using only evidence on file. |
-| `## Fix` | What changed and in which files. Begins `trial, unconfirmed` while no hypothesis is confirmed. |
-| `## Regression test` | One line: `<path> :: <test name>`, for example `test/money.test.mjs :: rounds half up`. |
-| `Before:` / `After:` | Exactly `- Before: exit <int>; observed by <Claude or user>; <excerpt>` and `- After: exit <int>; observed by <Claude or user>; <excerpt>`. For an intermittent case After also carries `runs: <passed>/<total>`. |
+| `## Fix` | What changed and in which files. Begins `trial, unconfirmed` while no hypothesis is confirmed. May carry `Attempts: <n>`, the count of failed fix attempts; two failed attempts stop the work. |
+| `## Regression test` | One line: `<path> :: <test name>`, for example `test/money.test.mjs :: rounds half up`. With a proof instead of a test: `Check: <command or checklist item>` and a `Why no test: <reason>` line. |
+| `Before:` / `After:` | Exactly `- Before: exit <int>; observed by <Claude or user>; <excerpt>` and `- After: exit <int>; observed by <Claude or user>; <excerpt>`. For an intermittent case, Before carries `runs: <failed>/<total>` (at least 1 failed) and After carries `runs: <passed>/<total>` (all passed). When `Runs: N` is set, the total is N. |
 | `## Lesson` | One sentence about a code or process pattern, not about this exact line. |
 | `Parked:` | Added by `/casebook-close` when a case is parked, with the user's reason. |
 

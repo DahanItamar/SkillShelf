@@ -89,3 +89,30 @@ test("3. lint: a missing file exits 2", () => {
   });
   assert.equal(r.status, 2);
 });
+
+// Drift checks: counts stated in prose must match the files they describe.
+// The release-time check against the marketplace entry stays a manual step.
+const read = (...p) => readFileSync(join(root, ...p), "utf8");
+
+test("4. drift: lint RULE_COUNT equals the README rule count", () => {
+  const script = read("scripts", "check-case.sh").match(/^RULE_COUNT=(\d+)$/m);
+  const readme = read("README.md").match(/against (\d+) rules/);
+  assert.ok(script && readme, "RULE_COUNT and the README rule count must both be present");
+  assert.equal(script[1], readme[1]);
+});
+
+test("4. drift: close-checks has 9 checks and the README says 9", () => {
+  const rows = read("skills", "casebook-close", "references", "close-checks.md").match(/^\| C\d+ \|/gm) || [];
+  assert.equal(rows.length, 9);
+  assert.match(read("README.md"), /\(C1 to C9\)/);
+  assert.match(read("skills", "casebook-close", "references", "close-checks.md"), /^Nine checks/m);
+});
+
+test("4. drift: the README byte counts match the two SKILL.md files", () => {
+  const readme = read("README.md");
+  const a = readme.match(/skills\/casebook\/SKILL\.md` \((\d+) bytes\)/);
+  const b = readme.match(/skills\/casebook-close\/SKILL\.md` \((\d+) bytes\)/);
+  assert.ok(a && b, "README Cost section must state both byte counts");
+  assert.equal(Number(a[1]), Buffer.byteLength(read("skills", "casebook", "SKILL.md")));
+  assert.equal(Number(b[1]), Buffer.byteLength(read("skills", "casebook-close", "SKILL.md")));
+});

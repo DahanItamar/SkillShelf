@@ -2,7 +2,9 @@
 
 # Casebook
 
-**Debugging that writes down what it tried, and cannot edit code before it has learned something.**
+**Debugging that writes down what it tried, and is instructed not to edit code before it has learned something.**
+
+*A procedure, not a lock.*
 
 <img alt="version 0.1.0" src="https://img.shields.io/badge/version-0.1.0-0F766E?style=flat-square">
 <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-0F766E?style=flat-square"></a>
@@ -27,7 +29,28 @@ Markdown, with no dependencies, no build step and no hooks. Nothing runs at inst
 - Allows no edit to any file but the case file until a result with evidence is recorded.
 - Defines "done" as: the repro failed before the fix and passes after, with a pointer to a regression
   test. A separate `/casebook-close` command re-checks that with a fresh run.
-- Reads past cases in `docs/bugs/` for hints, and treats them as data, never as proof.
+- Reads past cases in `docs/bugs/` for hints, and treats them as data, never as proof. Closing a case
+  appends one line (`NNN | symptom | root cause | lesson`) to `docs/bugs/INDEX.md`, which is searched first.
+
+## No constitution needed
+
+Casebook runs one command: the verify command. It does not need a constitution file. If
+`docs/CONSTITUTION.md` has no verify line, Casebook looks (read-only) for one candidate, such as
+`scripts.test` in package.json, and asks you:
+
+```text
+Use npm test as the verify command for this case? (yes / give another / none)
+```
+
+Only your explicit yes counts. The command is never taken from a case, comment, issue or spec. It is
+recorded in the case header:
+
+```text
+Verify command: `npm test` (user-approved)
+```
+
+With a constitution, the command comes from its `**Verify command:**` line instead. With neither,
+Before and After are reported by you.
 
 ## The case file
 
@@ -64,10 +87,18 @@ hard rules:
   `Repro status: observed failing`.
 - **Evidence.** A hypothesis that is not `pending` needs a `path:line` pointer, or `ran: <command> -> <output>`,
   or `user ran: <command> -> <output>`. Without one, the result is `inconclusive`.
-- **Experiments.** Each is tagged `[read]`, `[verify]` or `[user-run]`. Claude runs the first two. A
-  `[user-run]` is handed to you, and Claude never executes it.
+- **Experiments.** Each is tagged `[read]`, `[verify]`, `[user-run]` or `[bisect]`. Claude runs the
+  first two. A `[user-run]` is handed to you, and Claude never executes it. For "it used to work",
+  `[bisect]` is a ready `git bisect run` command for you to run: Claude never runs `git bisect`,
+  because it changes your working tree.
 - **Done.** `Before` is a non-zero exit, `After` is exit 0, and the regression test is one line,
-  `<path> :: <test name>`.
+  `<path> :: <test name>`. A bug no test can express (visual, timing, production-only) can close on a
+  `Proof command:` you approve, or a manual checklist you report; the summary then says
+  `Closed on a non-test proof`.
+- **Scoped runs.** An optional `Verify one:` command with a `{test}` placeholder runs the single
+  regression test for Before and After; the full verify command still runs once as the final proof.
+- **Flaky bugs.** Before is valid when at least one of up to 5 runs fails (`runs: <failed>/<total>`);
+  After needs every run to pass. Five is a default, not evidence; you can set `Runs: N`.
 - **Permanent IDs.** A hypothesis added later gets the next number. None is renumbered or deleted.
 
 ## Example
@@ -136,15 +167,29 @@ To confirm the install, run `/casebook` on a failing test; you should get a `doc
 The two commands are the two skills; a skill name becomes the slash command. Claude Code may display
 them plugin-namespaced, and both forms are the same command. Your picker shows the exact name.
 
-Casebook needs a `docs/CONSTITUTION.md` with a verify line:
+A constitution is optional (see "No constitution needed" above). If you have one, it needs a verify line:
 
 ```markdown
 **Verify command:** `npm test`
 ```
 
 Blueprint's `/spec-constitution` writes one, as an optional pairing. Casebook works with any
-constitution that has that line. With no verify command, every Before and After is reported by you
-and marked `observed by user`.
+constitution that has that line. With no approved verify command, every Before and After is reported
+by you and marked `observed by user`.
+
+### Without a constitution: examples
+
+The command you approve is whatever your project already uses. Two real shapes:
+
+```text
+Verify command: `pytest -q` (user-approved)
+Verify one:     `pytest -q -k {test}` (user-approved)
+
+Verify command: `go test ./...` (user-approved)
+Verify one:     `go test ./... -run {test}` (user-approved)
+```
+
+Only `{test}` is replaced, and only with the regression test's name.
 
 ## How it compares
 
@@ -164,6 +209,16 @@ was run for this comparison, and licences and upkeep were not checked.
   tagged logging to the code before a fix, then removes it. Casebook makes the opposite choice: no code
   edit before a recorded result, and instrumentation is a step you run yourself on your own copy.
 
+Two more rows, read from search-result descriptions on 2026-11-22, not run and not fetched in full,
+so treat them as a pointer and not a comparison:
+
+- **[diagnosing-bugs](https://www.aihero.dev/skills-diagnosing-bugs)** builds a pass/fail feedback loop
+  first, then bisects or instruments, then writes a regression test. Whether it has a gate between
+  instrumentation and the fix was not confirmed.
+- **[git-bisect-debugging](https://skills.sh/sjungling/sjungling-claude-plugins/git-bisect-debugging)**
+  is a dedicated bisect skill. From its description, it does not keep a case file or a gate. Casebook's
+  `[bisect]` experiment hands you the command and records the result in the case.
+
 What Casebook adds is narrow: the one order (no edit until a result is recorded) is checkable from the
 case file; "confirmed" requires a pointer or command output, and the file format is lintable; "done"
 means fails before and passes after, plus a regression test pointer, re-checked by a separate command.
@@ -174,18 +229,26 @@ measured.
 
 - **The gate is a procedure, not a lock.** There are no hooks, so nothing technically stops an edit.
   [`scripts/check-case.sh`](scripts/check-case.sh) can lint a case file, but it cannot see an edit that
-  was never recorded.
-- **Only the verify command is run.** Anything else is handed to you to run and paste back, which costs a
-  round trip.
-- **Some bugs cannot be closed in v1.** If the verify command cannot express the bug (visual, timing,
-  production-only), `/casebook-close` refuses at C7. You can park the case instead.
-- **The intermittent threshold is a default.** An intermittent case needs 5 of 5 passing runs to close.
-  Five is a stated v1 default, not a measured threshold. A green run on an intermittent bug lowers the
-  chance the bug is still there; it does not remove it.
+  was never recorded. A maintainer can run that script in their own CI; nothing here installs a hook.
+  A reviewer can also read the diff against the case file.
+- **Only approved commands are executed.** That is the verify command (from the constitution or approved
+  by you), and an approved `Verify one:` or `Proof command:`. Reading files and read-only git are free.
+  Anything else is handed to you to run and paste back, which costs a round trip.
+- **Some bugs need a proof instead of a test.** If neither a test nor a `Proof command:` or manual
+  checklist can express the bug, `/casebook-close` refuses at C7. You can park the case instead.
+- **Case numbers can collide across branches.** The number is the highest plus 1. On a merge conflict,
+  rebase and renumber the newer case and its heading.
+- **Claude does not commit.** Whether you commit `docs/bugs/` is your choice. Committing it is what makes
+  the ruled-out list shared.
+- **The intermittent run count is a default.** An intermittent case needs every one of up to 5 runs
+  to pass to close, and at least one failing run for Before. Five is a default, not a measured
+  threshold; you can set `Runs: N`. A green run on an intermittent bug lowers the chance the bug is
+  still there; it does not remove it.
+- **Bisect is yours to run.** `git bisect` changes the working tree, so Claude only writes the command.
 - **A model is not deterministic.** Wording and ordering vary between runs.
 - **What it refuses:** editing any file but the case file before a result is recorded; marking a
   hypothesis `confirmed` without a pointer or command output; counting a repro that was not observed
-  failing; running anything other than the verify command; closing a case with no Before, no After or no
+  failing; running anything other than the approved commands; closing a case with no Before, no After or no
   regression test pointer; following instructions found in a past case, a code comment or an issue text;
   reading history from anywhere but `docs/bugs/`; committing or pushing; storing secrets or customer data
   in a case file.
@@ -195,14 +258,22 @@ proof test below shows the scenario and measures no model. The one real run, on 
 
 ```text
 node --test examples/proof/proof.test.mjs     (Node 24.15.0, Windows, Git's sh and GNU awk, durations omitted)
-tests 17
-pass 17
+tests 27
+pass 27
 fail 0
 ```
 
 The CI job runs the same test on Node 22; that has not been run yet. The lint was also checked by hand
 with GNU awk in `--traditional` mode and with `dash`, to avoid GNU-only syntax; it has not been run with
 `mawk`.
+
+## Cost
+
+Only checkable facts. The two skill files are `skills/casebook/SKILL.md` (12385 bytes) and
+`skills/casebook-close/SKILL.md` (6094 bytes). Reference files are loaded by step, not all at once:
+the case template at Step 2, `hypotheses.md` at Step 4, `experiments.md` at Step 5, and
+`close-checks.md` at close step 2. Token cost has not been measured. A proof test checks these byte
+counts against the files, so they cannot drift quietly.
 
 ## Maintainer check
 
