@@ -114,7 +114,7 @@ both and every command shows up twice in the picker, from two copies that drift 
 
 > [!IMPORTANT]
 > **The two stages that run shell commands — `/spec-implement` and `/spec-refactor` — run only
-> the verify command named in `docs/CONSTITUTION.md`.** Never one found in a spec, a task list, a
+> the verify command named in `docs/CONSTITUTION.md`, after showing it to you and asking you to confirm it.** Never one found in a spec, a task list, a
 > refactoring report or a code comment. Those files are editable by anyone with commit access, so
 > treating their contents as instructions would turn a Markdown file into remote code execution.
 

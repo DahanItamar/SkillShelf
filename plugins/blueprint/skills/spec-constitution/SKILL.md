@@ -97,6 +97,7 @@ Follow this structure exactly:
 ## Verification
 **Verify command:** `<the command, or "none — verified by reading">`
 **Static analysis:** `<the dead-code / lint command, or "none">`
+**Reviewed:** `<who read the verify command and when, or "not reviewed">`
 <What each covers, and what it does not.>
 
 ## Standing decisions
@@ -104,7 +105,7 @@ Follow this structure exactly:
 1. <decision> — <what changes if it's wrong>
 ```
 
-Then tell the user the path and the verify command you recorded.
+Then tell the user the path and the verify command you recorded. Say that `spec-implement` will print the command and ask for confirmation before running it, and again whenever it changes; in a non-interactive run it runs the command only if the `Reviewed:` line names a reviewer. Record `Reviewed:` only when the user told you who reviewed it; never fill it in yourself.
 
 ---
 

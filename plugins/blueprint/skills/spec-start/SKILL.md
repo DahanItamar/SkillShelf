@@ -37,22 +37,25 @@ that made the first version correct.
 Detect tasks by globbing `docs/changes/*/TASKS.md` (not `archive/`); the one with unchecked boxes is the resume point; if several, ask which.
 
 Check the repository — do not ask the user what it contains, because the whole point is that they
-may not know:
+may not know. **Go down this list in order and stop at the first row that matches.** That row names the one command.
 
-| Found | Say | Hand them |
-| --- | --- | --- |
-| Nothing — empty or no docs | This is a new project | `/spec-constitution`, or `/spec-architect` to skip straight to the spec |
-| A codebase, no `docs/SPEC.md` | The spec can be reverse-engineered from what exists | `/spec-architect` |
-| `docs/SPEC.md`, no `docs/changes/*/TASKS.md` | The spec is written and nothing is scheduled | `/spec-tasks` |
-| A `docs/changes/*/TASKS.md` with unchecked boxes | Work is scheduled and unfinished | `/spec-implement` |
-| Every `docs/changes/*/TASKS.md` ticked | The milestone is done | `/spec-drift`, then `/spec-architect` for the next change |
-| Spec exists, no `docs/CONSTITUTION.md` verify command | `/spec-implement` will be inspection-only | `/spec-constitution` (offer, not required) |
-| Any stage, after work | Check that every `AC-###` is cited, closed and tested | `/spec-check` (opt-in, read-only) |
-| Drift came back clean, and the next change lands on code people avoid | Behavior is right; structure is the cost | `/spec-refactor` |
-| The user says a feature is harder to add than it should be | That is a Change Preventer, not a spec problem | `/spec-refactor` |
-| Unmerged `docs/changes/*/PROPOSAL.md` | Pending amendments the spec does not carry yet | `/spec-drift` to merge them |
-| A `docs/refactorings/*/REPORT.md` with every entry ticked | Finished work nobody has closed out | `/spec-drift` to verify and archive it |
-| Spec exists, code has moved on | These may have diverged | `/spec-drift` |
+| # | Found | Say | Hand them |
+| --- | --- | --- | --- |
+| 1 | Unmerged `docs/changes/*/PROPOSAL.md` | Pending amendments the spec does not carry yet | `/spec-drift` to merge them |
+| 2 | A `docs/changes/*/TASKS.md` with unchecked boxes | Work is scheduled and unfinished | `/spec-implement` |
+| 3 | A `docs/refactorings/*/REPORT.md` with every entry ticked | Finished work nobody has closed out | `/spec-drift` to verify and archive it |
+| 4 | Every `docs/changes/*/TASKS.md` ticked | The milestone is done | `/spec-drift`, then `/spec-architect` for the next change |
+| 5 | `docs/SPEC.md`, no `docs/changes/*/TASKS.md` | The spec is written and nothing is scheduled | `/spec-tasks` |
+| 6 | A codebase, no `docs/SPEC.md` | The spec can be reverse-engineered from what exists | `/spec-architect` |
+| 7 | Nothing — empty or no docs | This is a new project | `/spec-constitution`, or `/spec-architect` to skip straight to the spec |
+
+Two rows are not in the list because they are offers, not competing answers. After the one command, you may add one line for each that applies:
+
+- The spec has no `docs/CONSTITUTION.md` verify command: `/spec-implement` will be inspection-only, and `/spec-constitution` fixes that (an offer, not required).
+- The user wants to know whether every `AC-###` is cited, closed and tested: `/spec-check` (opt-in, read-only).
+- Drift came back clean and the next change lands on code people avoid, or the user says a feature is harder to add than it should be: `/spec-refactor`. That is a Change Preventer, not a spec problem.
+
+**Stale list rule.** If row 2 matched but `git log` shows no commit in the last 30 days touching the files that `TASKS.md` names, say the list looks abandoned and name `/spec-drift` before `/spec-implement`: the code may have moved on without the checkboxes.
 
 **Name exactly one command.** A user who arrives not knowing where to start is not helped by three
 options and a discussion of trade-offs. Where two genuinely fit, name the one that is cheaper to

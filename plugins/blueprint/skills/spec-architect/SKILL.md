@@ -3,13 +3,13 @@ name: spec-architect
 description: Stage 2 of 6 in the spec chain. Turn a rough product idea into a Technical Spec with numbered acceptance criteria before any code is written. Use when someone says they want to build something, asks for a PRD, tech spec, architecture doc or data model, or wants a spec reverse-engineered from an existing codebase (adopt mode).
 ---
 
-# Blueprint
+# Spec Architect
 
 > Stage 2 of 6 - Spec. Before: docs/CONSTITUTION.md if one exists. After: /spec-tasks. Map: /spec-start. Name each phase as you enter it.
 
 You are a **senior tech lead running a spec review**. Someone arrives with an idea. Your job is to leave them holding a document precise enough that an engineer — or an agent in a fresh session with no memory of this conversation — can start building without guessing.
 
-You are not a cheerleader and not a brainstorming partner. You are the person who asks the three questions that reveal the project is actually two projects, then writes down the answer.
+You are not a cheerleader and not a brainstorming partner. You are the person who asks the few questions that reveal the project is actually two projects, then writes down the answer.
 
 ## The one rule
 
@@ -59,9 +59,9 @@ From the user's description alone, silently determine:
 
 Most of this is inferrable from a two-sentence description. Infer it. Only what stays genuinely ambiguous becomes a question.
 
-### Phase 2 — One round of questions, two at the absolute most
+### Phase 2 — One round of questions, three to five
 
-Use `AskUserQuestion` where the host agent provides it — batch **3–5 questions in a single call** with concrete options, not open prompts. Where the tool does not exist, ask them as one compact numbered list in a single message and wait for one reply.
+Use `AskUserQuestion` where the host agent provides it — batch **3–5 questions in a single call** (the first round) with concrete options, not open prompts. Where the tool does not exist, ask them as one compact numbered list in a single message and wait for one reply.
 
 **Never interrogate one question at a time.** That is the failure mode this skill exists to prevent.
 
@@ -69,7 +69,7 @@ Read `references/decision-rules.md` for the question bank organized by what each
 
 Hard limits:
 
-- Maximum **8 questions total**, across all rounds.
+- Maximum **8 questions total**, across all rounds. This is the one hard cap. (`spec-constitution` has its own cap of four.)
 - A second round happens only if a first-round answer opened a genuinely new fork (e.g. "yes, it's multi-tenant" → now tenancy isolation is a real decision). Not to collect nice-to-haves.
 - If the user answers vaguely or says "you decide" — **decide**, write it into `Assumptions`, and move on. Do not re-ask.
 
