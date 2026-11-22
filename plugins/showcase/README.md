@@ -102,11 +102,11 @@ replayed. This executes the ledger's commands, so use it only on a ledger you tr
   offers a throwaway copy or a container first, asks before network, paid, remote-database,
   migration, deploy or credential-bearing steps, keeps servers on 127.0.0.1, reads `.env.example`
   and never `.env`, and stops what it started. With no confirmation it executes nothing and writes
-  from the tests, marking runtime facts `unverified`. For a repository that handles health, personal or financial records (or whose
-  `.showcase.md` says `regulated: true`), "yes, run it" is not enough: it runs only in a container or
-  a network-disabled throwaway copy with synthetic data, otherwise it uses Static mode. This is not a
-  compliance claim. The gate is a prompt-level rule, not a sandbox. The checklist and a one-line "allowed first commands" card an organisation can approve
-  once are at the top of [`references/run-recipes.md`](references/run-recipes.md).
+  from the tests, marking runtime facts `unverified`. For a repository that handles health, personal or financial
+  records (or whose `.showcase.md` says `regulated: true`), "yes, run it" is not enough: it runs only
+  in a container or a network-disabled throwaway copy with synthetic data, otherwise it uses Static
+  mode. This is not a compliance claim. The gate is a prompt-level rule, not a sandbox. The checklist
+  and a one-line "allowed first commands" card an organisation can approve once are at the top of [`references/run-recipes.md`](references/run-recipes.md).
 - **Privacy.** It redacts secrets and also avoids personal data (record fields, emails, ids),
   internal hostnames, IPs and account ids, prefers seeded data, and greps its draft for
   email-, IP-, token- and long-digit-shaped strings before writing. This lowers the leak risk. It
