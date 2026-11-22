@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "casebook",
   "displayName": "Casebook",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Hypothesis-driven debugging with a case file in docs/bugs: no code edits until an experiment result is recorded, and a fix counts only when the repro fails before and passes after.",
   "author": {
     "name": "Itamar Dahan",

@@ -28,7 +28,7 @@ Use the strongest level available for each criterion, and **say which one you us
 | **Read** | You traced the code path and it provably does what the criterion says | `verified by reading: fetch.js:31 aborts at 5000ms and persists unresolved` |
 | **Unverifiable** | The criterion cannot be checked from here at all | Stop. This is a finding, not a pass |
 
-**Read is a legitimate level**, especially in repos whose constitution names no verify command. It is not a lesser form of honesty — it is a lesser form of evidence, and the handover must say so, because a criterion verified by reading is exactly the kind `spec-drift` should re-check later.
+**Read is a legitimate level**, especially in repos whose constitution names no verify command. It is not a lesser form of honesty — it is a lesser form of evidence, and the handover must say so, because a criterion verified by reading is exactly the kind a later drift check should re-check.
 
 ---
 
@@ -61,7 +61,7 @@ When a criterion is unmet, stop and report all five parts. Anything less makes t
 Point 5 matters most. Two very different situations produce identical symptoms:
 
 - **The code is wrong.** Ordinary. Fix it and continue.
-- **The criterion is wrong** — it contradicts §5, describes behavior that can't exist, or was written before a decision changed. Then stop for real. Do not edit the spec to match the code; that is the exact move `spec-drift` calls a regression, and doing it here hides it from that check. Report it and let `spec-architect` write a change proposal.
+- **The criterion is wrong** — it contradicts §5, describes behavior that can't exist, or was written before a decision changed. Then stop for real. Do not edit the spec to match the code; that is the exact move a drift check calls a regression, and doing it here hides it from that check. Report it and let the spec owner write a change proposal.
 
 ---
 

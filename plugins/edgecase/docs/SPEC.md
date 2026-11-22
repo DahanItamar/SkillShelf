@@ -29,18 +29,18 @@ present, and Claude names what is still missing rather than reporting "done".
 - Choose **error placement** (inline · toast · modal) from the severity of the failure
 - Reduce **form friction** — validation timing, required-field clarity, prefill, forgiving input
 - Enforce **graceful degradation** — one failing section must not blank the page
-- Apply a small set of **UX law rules** (Jacob's, Hick's, Progressive Disclosure, Tesler's, primary paths) to layout and flow decisions
+- Apply a small set of **UX law rules** (Jakob's, Hick's, Progressive Disclosure, Tesler's, primary paths) to layout and flow decisions
 - Act as a **blocking gate** during build: a component with a missing required state is not finished
 
 ### Explicitly out of scope
 
 - **Visual craft** — spacing scales, colour, typography, elevation, gradients, focus-ring styling.
-  The `craft` skill owns this and explicitly disclaims UX flow; duplicating it would mean two skills
-  firing on the same prompt and disagreeing. `edgecase` defers to it by name.
-- **Accessibility auditing** — WCAG contrast, ARIA, screen-reader semantics. The `accessibility`
-  skill owns it. Overlap is limited to focus/keyboard reachability, where `edgecase` defers.
+  Out of scope by design: this skill covers behaviour, not appearance. It adds one line,
+  "outside this skill's scope: <issue>", and moves on.
+- **Accessibility auditing** — WCAG contrast, ARIA, screen-reader semantics. Only R-FEEDBACK-10
+  (announcing state changes) is in scope.
 - **Heuristic evaluation as research output** — Nielsen-style scored audits belong to
-  `ux-heuristics-review`. `edgecase` produces code changes, not reports.
+  a separate heuristic-review tool. `edgecase` produces code changes, not reports.
 - **Automated static analysis** — no parser, no AST, no CI binary. v2 at the earliest; the rules are
   applied by a reading model, which is what lets them cover intent rather than syntax.
 - **Design-time artifacts** — wireframes, user flows, personas. Other skills cover these.
@@ -72,10 +72,10 @@ domain.
         ▼               ▼                   ▼                  ▼
  references/     references/          references/        references/
   states.md      feedback.md            forms.md           laws.md
- loading·empty   errors·placement    validation·input   Jacob·Hick·
+ loading·empty   errors·placement    validation·input   Jakob·Hick·
  ·partial        ·success feedback   ·prefill           disclosure·Tesler
 
-        defers to ──►  craft (visual)  ·  accessibility (WCAG)
+        out of scope: visual styling, WCAG audits
 ```
 
 ### Components
@@ -86,7 +86,7 @@ domain.
 | `references/states.md` | Loading, empty, partial/degraded states; loader selection and timing thresholds | Markdown rule blocks |
 | `references/feedback.md` | Error message quality, error placement, success confirmation | Markdown rule blocks |
 | `references/forms.md` | Validation timing, required-field clarity, prefill, input tolerance | Markdown rule blocks |
-| `references/laws.md` | Jacob's Law, Hick's Law, Progressive Disclosure, Tesler's Law — applied, not explained | Markdown rule blocks |
+| `references/laws.md` | Jakob's Law, Hick's Law, Progressive Disclosure, Tesler's Law — applied, not explained | Markdown rule blocks |
 | `docs/SPEC.md` | This document. Ships in-repo so a fresh session can extend the skill correctly | Markdown |
 
 ### Decisions
@@ -110,12 +110,10 @@ that silently harm users — missing error state, silent failure, non-actionable
 Instead of: advisory-only — easy to scroll past, which is exactly how happy-path UIs ship today.
 Revisit if: users report the gate firing on intentional omissions more than rarely.
 
-**Compose with `craft`, don't absorb it** — `edgecase` never comments on visual craft and says so.
-Because: `craft` already owns the pixel level and its own description disclaims UX flow. Two skills
-with clean edges both fire usefully; two skills with overlapping edges argue.
-Instead of: one merged mega-skill — simpler install, but makes `craft` redundant and couples two
-rule sets with different revision rates.
-Revisit if: `craft` is retired.
+**Behaviour only, no appearance** — `edgecase` never comments on visual styling and says so in one line.
+Because: a narrow scope keeps findings checkable and false positives rare.
+Instead of: absorbing visual and accessibility audits — broader, but couples unrelated rule sets.
+Revisit if: users keep asking for appearance findings.
 
 **Rules are independently written directives, never source transcript text.**
 Because: the rule set is informed by publicly available UX guidance. Ideas and facts are free to
@@ -268,9 +266,9 @@ didn't ask for, and it does not report the work complete.
 
 | Situation | Behaviour |
 | --- | --- |
-| Visual craft issue noticed (spacing, colour, gradient) | Do not report. Name `craft` once if it is clearly relevant |
-| Contrast / ARIA / screen-reader issue | Do not report. Name `accessibility` once |
-| User explicitly wants a full heuristic audit | Name `ux-heuristics-review` |
+| Visual craft issue noticed (spacing, colour, gradient) | Do not report beyond the one-line scope note |
+| Contrast / ARIA / screen-reader issue | Do not report beyond R-FEEDBACK-10; one-line scope note |
+| User explicitly wants a full heuristic audit | Say it is out of scope |
 
 ## 7. Core Flows
 
@@ -351,7 +349,7 @@ A vague error message gets flagged and rewritten.
 - [ ] `references/forms.md` — validation timing, required clarity, prefill, input tolerance
 
 **M4 — Laws**
-- [ ] `references/laws.md` — Jacob's, Hick's, Progressive Disclosure, Tesler's, each stated as an applied rule rather than an explanation
+- [ ] `references/laws.md` — Jakob's, Hick's, Progressive Disclosure, Tesler's, each stated as an applied rule rather than an explanation
 
 **M5 — Public**
 - [ ] README: install, usage, contribution bar, credits

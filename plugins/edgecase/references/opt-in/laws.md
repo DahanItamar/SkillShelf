@@ -1,13 +1,13 @@
 # Laws (opt-in)
 
-Not part of the 34-rule core. This file is read only on `/edgecase laws`, or when a user asks about Jacob's, Hick's or Tesler's Law by name. The default review never loads it, `strict` never applies to it, and nothing here blocks completion.
+Not part of the 34-rule core. This file is read only on `/edgecase laws`, or when a user asks about Jakob's, Hick's or Tesler's Law by name. The default review never loads it, `strict` never applies to it, and nothing here blocks completion.
 
 Eight rules drawn from established principles, stated as things to do rather than things to know. Each has a named
 origin, but the citation is not the point — the applied rule is.
 
 ---
 
-### R-LAW-01 · Put conventional things where they are expected — Jacob's Law
+### R-LAW-01 · Put conventional things where they are expected — Jakob's Law
 **DO:** Place recurring components in the position users have already learned from every other product.
 *Why:* People spend almost all their time in other applications, and arrive expecting yours to behave
 like those. Novelty in a navigation element is not innovation; it is a tax on every visit.

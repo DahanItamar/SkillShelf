@@ -83,3 +83,55 @@ jobs:
               print(f"ok   {p['name']} {p['version']}")
           sys.exit(1 if bad else 0)
           EOF
+
+  truthpath-check:
+    name: truthpath / maintainer check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Maintainer check
+        working-directory: plugins/truthpath
+        run: node --test scripts/check.test.mjs
+
+  portability:
+    name: portability / every SKILL.md is valid
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Frontmatter has name and description within limits, name matches folder
+        run: |
+          python3 - <<'EOF2'
+          import os, re, sys
+          bad = 0
+          for root, dirs, files in os.walk("plugins"):
+              if "SKILL.md" not in files or "/fixtures/" in root.replace("\\", "/"):
+                  continue
+              path = os.path.join(root, "SKILL.md")
+              text = open(path, encoding="utf-8").read()
+              m = re.match(r"---\r?\n(.*?)\r?\n---", text, re.S)
+              if not m:
+                  print(f"FAIL {path}: no frontmatter"); bad += 1; continue
+              fm = {}
+              cur = None
+              for line in m.group(1).splitlines():
+                  k = re.match(r"^([A-Za-z_-]+):\s*(.*)$", line)
+                  if k:
+                      cur = k.group(1); fm[cur] = k.group(2).strip().strip("\"'")
+                  elif cur and line.strip():
+                      fm[cur] += " " + line.strip()
+              name, desc = fm.get("name", ""), fm.get("description", "")
+              folder = os.path.basename(root)
+              plugin = root.split(os.sep)[1]
+              if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", name) or len(name) > 64:
+                  print(f"FAIL {path}: bad name {name!r}"); bad += 1
+              elif folder != name and not (root == os.path.join("plugins", plugin) and name == plugin):
+                  print(f"FAIL {path}: name {name!r} does not match folder {folder!r}"); bad += 1
+              if not desc or len(desc) > 1024:
+                  print(f"FAIL {path}: description length {len(desc)}"); bad += 1
+              else:
+                  print(f"ok   {path}")
+          sys.exit(1 if bad else 0)
+          EOF2

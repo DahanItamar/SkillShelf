@@ -2,6 +2,8 @@
 
 Command: `/hearsay <path>/examples/inputs/readme-features.md`, run inside a fixture repo. These are state claims against HEAD; no diff is needed.
 
+In words: fact-check readme-features.md against the repo
+
 Expected: 5 claims. 2 verified, 1 unverified, 2 contradicted, 0 unmeasurable.
 
 | # | Claim | Kind | Verdict | Evidence | Note |

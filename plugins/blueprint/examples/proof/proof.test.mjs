@@ -146,7 +146,7 @@ describe('drifted — the code three weeks after the spec was written', () => {
     assert.deepEqual(detectConflicts(overnight.spec.candidate, store), []);
   });
 
-  test('the spec still says the opposite — this is what spec-drift reports', () => {
+  test('the spec still says the opposite — this is what a drift check reports', () => {
     // §5:  endMinute: number;   // may exceed 1440 for overnight shifts
     // code: throws above 1439
     const specAllows = night.endMinute > 1440;
@@ -172,7 +172,7 @@ describe('smelly — passes every criterion and is still unshippable', () => {
   const derived = sourceOf('./spec-derived.mjs');
   const night = overnight.spec.existing[0]; // 22:00 → 06:00, endMinute 1800
 
-  test('behaves exactly like the spec-derived version — spec-drift finds nothing', () => {
+  test('behaves exactly like the spec-derived version — a drift check finds nothing', () => {
     for (const scenario of [plain.spec, overnight.spec]) {
       assert.deepEqual(
         smellyDetect(scenario.candidate, scenario.existing),
@@ -201,7 +201,7 @@ describe('smelly — passes every criterion and is still unshippable', () => {
     assert.equal(exportDuration(night), 480); // 22:00 → 06:00 is eight hours
     assert.equal(tooltipDuration(night), -960); // the grid says minus sixteen
 
-    // Nothing in §2.1 mentions the tooltip, so this is not drift and stage 5 is
+    // Nothing in §2.1 mentions the tooltip, so this is not drift and a drift check is
     // right to stay silent. It is a smell, and it is already a defect.
     assert.notEqual(exportDuration(night), tooltipDuration(night));
   });

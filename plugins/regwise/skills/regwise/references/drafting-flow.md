@@ -15,7 +15,9 @@ asymmetry.
 ## 1. Route first, then select
 
 Resolve the configuration and load the modules before opening a template. Which templates apply
-follows from `targetMarkets`, not from what the user asked for by name.
+follows from `targetMarkets`, not from what the user asked for by name. Three rows below turn on
+product facts, not config; ask for them as set out in `references/config-questions.md`, Facts for
+drafting.
 
 | Template | Applies when |
 | --- | --- |
@@ -30,6 +32,7 @@ follows from `targetMarkets`, not from what the user asked for by name.
 | `parental-consent-notice.md` | users under 13 are possible |
 | `accessibility-statement.md` | `appType` is not `HeadlessAPI` |
 | `il-db-registration-prep.md` | markets include `Israel` |
+| `ropa-skeleton.md` | markets include `EU` or `UK_APAC`, rank >= 1 (internal record, not published) |
 
 If the user asks for one that does not apply, produce it and say why it appeared unnecessary.
 They may know something the configuration does not.
@@ -67,6 +70,9 @@ Not paraphrased. Not shortened. Not moved below the title because it looks bette
 compares bytes, and the comparison exists because a disclaimer that drifts is a disclaimer
 that eventually says something weaker than it should.
 
+Regwise never removes or weakens the disclaimer. After counsel review, deleting it from their own
+copy is the user's edit (section 8).
+
 **If the user asks to remove it, refuse.** One sentence, no lecture: it is the control that
 makes drafting these documents defensible, and a document without it reads as advice. Then
 carry on with the rest of the request.
@@ -92,10 +98,8 @@ needs Hebrew for its consumer-facing text.
 Mark the sections. Do not translate them — Regwise does not produce legal text in a language it
 cannot check, and a mistranslated cancellation right is worse than an untranslated one.
 
-Say it plainly at the end:
-
-> Sections 1 to 6 and 11 need Hebrew for Israeli consumers. This template does not provide the
-> translation.
+Say it plainly at the end: repeat the Hebrew line from the template's own drafter notes, which
+names its sections, and add that the template does not provide the translation.
 
 ## 5. Close with the unfilled list
 
@@ -108,7 +112,7 @@ Before publishing, fill in:
   [INSERT_RETENTION_PERIOD]    appears 1 time  — must be a real period,
                                  "as long as necessary" is not sufficient
 
-Also: sections 1-6 and 11 need Hebrew.
+Also: <the template's Hebrew line, naming its sections>.
 Have this reviewed by counsel in each market before you rely on it.
 ```
 
@@ -130,9 +134,8 @@ generation.
 
 ## 7. What this flow never does
 
-- **Never publishes.** It produces a file or conversation output. Deploying it is the user's act.
+- **Never publishes.** Where a draft is written follows `SKILL.md` section 4. Deploying it is the user's act.
 - **Never fills a legal entity's details from inference.**
-- **Never removes or weakens the disclaimer.**
 - **Never drafts a contract.** DPAs, SCCs and BAAs are negotiated two-party instruments and are
   out of scope per the spec. Say so and stop.
 - **Never claims currency.** The templates carry a `last_verified` context through the modules

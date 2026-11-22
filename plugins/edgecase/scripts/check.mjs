@@ -66,7 +66,7 @@ test("every R-ID cited in examples/expected exists in references/", () => {
 
 test("every path referenced from SKILL.md, README and references exists", () => {
   const files = ["SKILL.md", "README.md", "examples/README.md", ...walk("references")];
-  const skip = new Set(["CLAUDE.md", "docs/STATES.md", "README.md"]);
+  const skip = new Set(["CLAUDE.md", "AGENTS.md", "GEMINI.md", "docs/STATES.md", "README.md"]);
   for (const f of files) {
     const text = read(f);
     const base = path.dirname(f);
@@ -95,4 +95,39 @@ test("no emoji and no private path or address strings in text files", () => {
     assert.ok(!emoji.test(t), `${f}: emoji`);
     assert.ok(!priv.test(t), `${f}: private-looking string ${t.match(priv)?.[0]}`);
   }
+});
+
+test("standalone: SKILL.md, README and references name no other skill", () => {
+  const files = ["SKILL.md", "README.md", ...walk("references")];
+  const banned = [/\bcraft\b/i, /\builint\b/i, /also installed/i, /`accessibility`/i, /accessibility skill/i];
+  for (const f of files) {
+    const t = read(f);
+    for (const re of banned) assert.ok(!re.test(t), `${f}: mentions another skill (${re})`);
+  }
+});
+
+test("every example source has an expected/ file", () => {
+  const skip = new Set(["README.md"]);
+  const sources = fs.readdirSync(path.join(root, "examples"), { withFileTypes: true })
+    .filter((e) => e.isFile() && !skip.has(e.name)).map((e) => e.name);
+  for (const s of sources) {
+    const base = s.replace(/\.(html\.erb|[a-z]+)$/, "");
+    assert.ok(fs.existsSync(path.join(root, "examples/expected", `${base}.md`)), `no expected/${base}.md for ${s}`);
+  }
+});
+
+test("a results file exists for the current version, or the README says it is unmeasured", () => {
+  const v = JSON.parse(read(".claude-plugin/plugin.json")).version;
+  const results = walk("examples/results");
+  const has = results.some((f) => new RegExp(`Skill version: ${v.replace(/\./g, "\.")}\b`).test(read(f)));
+  if (!has) assert.match(read("README.md"), new RegExp(`Version ${v.replace(/\./g, "\.")} has not been measured`), "no results file for " + v + " and README does not say so");
+});
+
+test("README 'Measured so far' claims no run on a version newer than the newest results file", () => {
+  const ver = (s) => s.split(".").map(Number);
+  const newer = (a, b) => { const x = ver(a), y = ver(b); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i]; return false; };
+  const recorded = walk("examples/results").flatMap((f) => [...read(f).matchAll(/Skill version: (\d+\.\d+\.\d+)/g)].map((m) => m[1]));
+  const para = (read("README.md").match(/\*\*Measured so far:\*\*[^\n]*/) || [""])[0];
+  const claimed = [...para.matchAll(/\b(?:on|for) version (\d+\.\d+\.\d+)/g)].map((m) => m[1]);
+  for (const c of claimed) assert.ok(recorded.some((r) => !newer(c, r)), `README claims a run on ${c}, newer than any results file`);
 });

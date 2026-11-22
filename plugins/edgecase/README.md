@@ -1,4 +1,4 @@
-> Version 1.5.0 rules have not yet been measured against a model; see Measured so far.
+> Version 1.6.0 has not been measured against a model. The only recorded run is on 1.4.0 (see Measured so far).
 
 <div align="center">
 
@@ -6,12 +6,18 @@
 
 **A review for the interface states everyone forgets.**
 
-<img alt="version 1.5.0" src="https://img.shields.io/badge/version-1.5.0-0F766E?style=flat-square">
+<img alt="version 1.6.0" src="https://img.shields.io/badge/version-1.6.0-0F766E?style=flat-square">
 <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-0F766E?style=flat-square"></a>
 
 </div>
 
 ---
+
+**Quick start**
+
+1. Install: `/plugin marketplace add DahanItamar/SkillShelf`, then `/plugin install edgecase@skillshelf` Other tools: copy this folder to your agent skills directory, see Use it in other tools.
+2. Open a component that fetches or submits, and say: `review this with edgecase`.
+3. Expected result: a one-line verdict, any findings, and a last line `edgecase-ids: ...` (or `edgecase: no findings.` and `edgecase-ids: none`).
 
 Interfaces get built along the path where everything works. Whoever writes one clicks the buttons in
 the order that succeeds, so the states nobody asked for never get written: the spinner that never
@@ -44,10 +50,11 @@ detail on screen, a failed request shown as a success. A review that blocks on e
 ## A review
 
 What a review of [`examples/list.jsx`](examples/list.jsx) looks like: seven lines that swallow a fetch
-failure. This is an illustrative report in the output contract from `SKILL.md`. It lists the same rule IDs as the golden
+failure. This report was written by hand to show the output contract from `SKILL.md`; it is not a recorded
+model run, and no 1.5.0 or later run has been recorded. It lists the same rule IDs as the golden
 file [`examples/expected/list.md`](examples/expected/list.md), which is an ID-and-line answer key rather than a copy of this format.
-Run `/edgecase` on that file to get your own; wording and order vary between runs because a language
-model is not deterministic.
+Ask your agent to review that file to get your own; wording and order vary between runs because a language
+model is not deterministic. The last line is plain text, so two reviews can be compared with an ordinary diff.
 
 ```text
 5 required rules violated.
@@ -89,9 +96,9 @@ with what the user experiences rather than which rule fired. A clean component s
 > there, which looks identical to the install not working.
 
 edgecase ships in the [SkillShelf](https://github.com/DahanItamar/SkillShelf#readme) marketplace
-with the other skills. It works standalone; `craft` and `accessibility` are optional and not needed.
+with the other skills.
 
-Plugin route, invoked as `/edgecase:edgecase` or by describing the problem:
+Claude Code route (plugin), invoked as `/edgecase:edgecase` or by describing the problem:
 
 ```bash
 /plugin marketplace add DahanItamar/SkillShelf
@@ -108,44 +115,48 @@ cp -r SkillShelf/plugins/edgecase ~/.claude/skills/edgecase
 
 On Windows, copy to `%USERPROFILE%\.claude\skills\edgecase`.
 
-To confirm the install, open any component and run `/edgecase`; you should get a verdict line. It
-also triggers on its own while you are building UI (to turn that off in one repo, disable the plugin
-there or add a line to that repo's CLAUDE.md telling Claude not to use edgecase), or when you describe a symptom rather than a
-category: *"nothing happens when I click"*, *"it just spins forever"*.
+To confirm the install, open any component and say "review this with edgecase"; you should get a verdict
+line. It also triggers on its own while you are building UI (to turn that off in one repo, disable the
+plugin there or tell your agent in that repo's instructions file not to use edgecase), or when you
+describe a symptom rather than a category: *"nothing happens when I click"*, *"it just spins forever"*.
 
-Teams can tune it without a config file: an `edgecase:` block in the repo's `CLAUDE.md` can `ignore`
-paths, `demote` rules or mark paths `strict`. `strict` applies only to the state, feedback and form rules, never to the opt-in laws. See
+### Use it in other tools
+
+edgecase is a plain skill folder (the open Agent Skills format), so it is not tied to Claude Code. Copy this folder into the tool's skills directory:
+
+- Codex: `~/.codex/skills` or `.agents/skills`; Cursor: `.cursor/skills` or `.agents/skills`
+- GitHub Copilot: `.github/skills`; Gemini CLI: `.gemini/skills`
+- The root [README install section](../../README.md#install) documents all five tools.
+- The `/plugin` lines above are the Claude Code route only; nothing in the skill needs them.
+
+Teams can tune it without a config file: an `edgecase:` block in the first of `AGENTS.md`, `CLAUDE.md`,
+`GEMINI.md` or `.github/copilot-instructions.md` that has one can `ignore` paths, `demote` rules or mark
+paths `strict`. `strict` applies only to the state, feedback and form rules, never to the opt-in rules. See
 [`references/modes.md`](references/modes.md).
 
-`/edgecase init` reads your routes and prints a suggested `edgecase:` block for you to paste; it writes
-nothing. When you dispute a finding, `/edgecase probe` turns its `Check:` line into a runnable recipe
-(MSW or Playwright, with 500, never-resolving and empty-array bodies) that you run yourself.
-`/edgecase laws` loads the opt-in design laws (Jakob's, Hick's, Tesler's), which never block.
+Ask for a "policy block" (or type `/edgecase init` where the tool supports skill commands) and it reads
+your routes and prints a suggested `edgecase:` block for you to paste; it writes nothing. When you dispute
+a finding, ask for a "probe recipe" (`/edgecase probe`) and it turns the rule's `Check:` line into a
+recipe (MSW or Playwright, with 500, never-resolving and empty-array bodies) that you run yourself; the
+agent never runs it. A "screen audit" (`/edgecase screen`) prints a regions-by-states table. Asking for
+the "design laws" (`/edgecase laws`) loads 8 opt-in design rules (Jakob's, Hick's and Tesler's laws plus
+progressive disclosure, per-platform conventions, RTL mirroring, one primary action, do not bury a primary
+path), not eight named laws; they never block.
 
-## If you also have uilint
-
-A `uilint` skill can be installed beside this one and its description opens with similar wording, so both
-may match the same request. What edgecase itself provides, each checkable in this folder:
-
-- stable rule IDs that are never reused (`R-STATE-17`), cited in every finding;
-- an `Applies:` predicate and a `Check:` line in every rule;
-- a `required` / `recommended` split, with conditions on the `Severity:` line;
-- the subcommands `/edgecase screen`, `init`, `laws` and `probe`;
-- a last `edgecase-ids:` line in the output, so two runs can be compared mechanically.
-
-I have not compared these against uilint's files, so no claim is made about what it lacks. If both
-trigger, `SKILL.md` tells the model to use edgecase for the review output and not run both. Install one if you
-want no ambiguity.
+**Advises, does not enforce.** There is no hook, blocking CI step or compliance mode, and there will not
+be one: nothing runs at install and the skill cannot stop a commit. A `required` gap is fixed or named as
+open in the completion message; if you say ship it, the open IDs are listed in one line and work proceeds.
+A prototype opt-out covers the named component for that task only.
 
 ## Maintainer scripts (optional, nothing runs at install)
 
 | Script | What it does |
 |---|---|
-| `node --test scripts/check.mjs` | Asserts rule count (34 core, 8 opt-in), required count (18), version agreement across `plugin.json`, `CHANGELOG.md`, the badge and the marketplace entry, that every ID in `examples/expected/` exists, that referenced paths exist, and that no emoji or private-looking strings are present. |
+| `node --test scripts/check.mjs` | Asserts rule count (34 core, 8 opt-in), required count (18), version agreement across `plugin.json`, `CHANGELOG.md`, the badge and the marketplace entry, that every ID in `examples/expected/` exists, that every example source has an `expected/` file, that referenced paths exist, that no other skill is named in `SKILL.md`, the README or `references/`, that the README states honestly whether a results file exists for the current version, and that no emoji or private-looking strings are present. |
 | `node scripts/score.mjs <reply> <golden>` | Reads the `edgecase-ids:` line of a saved reply and prints matched, missed and extra against a golden file. |
 | `sh scripts/candidates.sh [path]` | Greps for candidate lines (empty catch, a fetch with no `ok` check or timeout, an effect fetch with no abort) and prints `file:line  pattern  (R-ID)`. **Advisory only:** these are candidates, not findings. The model review is not deterministic, and the script does not replace it. |
 
-**Measured so far:** one self-test run, `claude-sonnet-5-5`, 2026-11-22, on version 1.4.0 only, 1 run, not blind for four of ten files: 28 of 32 expected IDs matched, 4 missed, 1 extra, 0 findings on the clean control (see [`examples/results/`](examples/results/claude-sonnet-5-5-2026-11-22.md)). Nothing has been run on version 1.5.0 (no runs of the new rules, the build-mode case or the new examples), and no no-skill baseline exists. The goldens are expectations written by the skill author. Server-rendered templates have one seeded case (ERB); other template
+**Measured so far:** one self-test run, `claude-sonnet-5-5`, 2026-11-22, on version 1.4.0 only, 1 run, not blind for four of ten files: 28 of 32 expected IDs matched, 4 missed, 1 extra, 0 findings on the clean control (see [`examples/results/`](examples/results/claude-sonnet-5-5-2026-11-22.md)). No run exists for 1.5.0 or 1.6.0 (the new rules, the build-mode case and the newer examples have never been run against a model), the second run the examples README asks for was not done, and no no-skill baseline exists, so nothing here shows that the skill beats a plain prompt. The goldens are expectations written by the skill author. Server-rendered templates have one seeded case (ERB); other template
 engines have none.
 
 **Roadmap, not built:** domain packs as separate plugins (payments, streaming AI chat with a stalled
@@ -157,23 +168,20 @@ finding, offered only on request.
 A 20-line "check my UI states" prompt finds the obvious gaps. What this adds is stable rule IDs you
 can cite in review, an `Applies` line per rule that suppresses false positives, a short blocking
 list so the review does not get switched off, and a build mode that checks the states while the
-code is written. It overlaps in places with the `craft` and `accessibility` skills, which are
-separate and not bundled here; edgecase reports out-of-scope findings in one line rather than
-skipping them.
+code is written. Appearance problems are out of scope and get a one-line note rather than a finding.
 
-**What it will not catch:** retry and backoff behaviour, offline and stale-data states (a cached
-screen that is out of date), permission-denied states, optimistic-update rollback, internationalisation
-beyond layout mirroring. Out-of-order responses are covered only for input-driven or param-driven
+**What it will not catch:** retry and backoff behaviour, stale data (a cached screen that is out of
+date), optimistic-update rollback, internationalisation beyond layout mirroring. A 403 response and a
+network failure are covered only as branches of R-STATE-17. Out-of-order responses are covered only for input-driven or param-driven
 fetches (R-STATE-18). The five states are the scope, not the whole of UI correctness.
 
 ## How it is built
 
-[`SKILL.md`](SKILL.md) holds the trigger, the Build-mode table with a one-line summary of the rules to check first, and the output contract: 7,719 bytes, 120 lines, loaded when it triggers. The 34 core rules sit in
+[`SKILL.md`](SKILL.md) holds the trigger, the Build-mode table with a one-line summary of the rules to check first, and the output contract. SKILL.md is about 8 KB; the rule files load only when a task needs them. The 34 core rules sit in
 three reference files, [states](references/states.md) 16, [feedback](references/feedback.md) 10 and
 [forms](references/forms.md) 8, each read only when a row of the Build-mode table matches.
-[`references/modes.md`](references/modes.md) holds the screen audit, policy block and `init`, and is read
-only on those subcommands. The 8 opt-in laws are in [`references/opt-in/laws.md`](references/opt-in/laws.md) and are read only on `/edgecase laws`. File sizes in bytes:
-states.md 12,730 and feedback.md 5,875 are the largest; no per-run token figure is published because none has been measured. Estimate from file sizes, not measured: SKILL.md (7,719 bytes) is always loaded; a fetch change adds states.md (12,730 bytes), about 20 KB total, roughly 5,000 tokens at 4 bytes per token. Every rule has the same
+[`references/modes.md`](references/modes.md) holds the screen audit, policy block, suggested-policy and probe modes (it has no rules of its own), and is read
+only when one of those is asked for. The 8 opt-in design rules are in [`references/opt-in/laws.md`](references/opt-in/laws.md) and are read only when the design laws are asked for. No per-run token figure is published because none has been measured; any token estimate would come from file sizes, not from a run. Every rule has the same
 shape:
 
 ```markdown
@@ -192,12 +200,8 @@ IDs are permanent, so a review that cites one still reads correctly years later.
 The core set is capped at 40 rules, and the cap is hard: new material merges into the rules already there
 rather than accumulating, because every rule is context cost on every unrelated prompt. It stands at 34;
 in 1.5.0 the design laws moved to the opt-in file to pay for two new rules. Spacing,
-colour and typography are out of scope by design and belong to the `craft` skill. The design rationale is
+colour and typography are out of scope by design. The design rationale is
 in [`docs/SPEC.md`](docs/SPEC.md) (20,721 bytes, written for maintainers, never referenced by `SKILL.md`, so it is not loaded when the skill runs); version history is in [`CHANGELOG.md`](CHANGELOG.md).
-
-## Other skills read
-
-Counts below come from summaries of the two pages taken on 2026-11-22 and were not re-checked line by line, so verify before quoting them. This says what their pages do not define, not which is better, and edgecase has not been benchmarked against them. `ux-feedback` (sickn33/antigravity-awesome-skills) lists 4 states and 17 unnumbered rules; its page defines no stable IDs, no per-rule severity, no `response.ok` or status handling and no stale-response rule. `review-loading-error-empty-states` (Ritual, clawhub.ai) lists 5 checks; its page defines no IDs, severity, output format, status or stale-response handling, and mentions an optional paid cloud service. `react-ui-patterns` was not read and is not described here.
 
 ## Credits
 

@@ -15,11 +15,14 @@
 #   1  at least one rule failed; each printed as  FAIL L<n>: <file>:<line> <message>
 #   2  the script could not run (no file, not readable, no awk)
 #
-# What this cannot see: an edit Claude made to code without recording it. The
-# gate is a procedure Claude follows, not a lock; this script only checks that
+# L10 is a heuristic: it finds obvious shapes only (an email address, an IPv4
+# address, a run of 9 or more digits) and never proves a case is clean.
+#
+# What this cannot see: an edit the agent made to code without recording it. The
+# gate is a procedure the agent follows, not a lock; this script only checks that
 # the case file itself obeys the rules.
 
-RULE_COUNT=9
+RULE_COUNT=10
 
 AS=""
 if [ "${1:-}" = "--as" ]; then
@@ -164,7 +167,7 @@ END {
 	else if (rstat != "observed failing" && rstat != "not observed") add(2, rsln, "Repro status must be \"observed failing\" or \"not observed\" (got \"" rstat "\")")
 
 	# L2 (header lines): approved-command marks, {test} placeholder, Runs
-	if (vcln && vc != "`none`" && vc !~ /^`[^`]+` \((constitution|user-approved)\)$/) add(2, vcln, "Verify command must be a backticked command followed by (constitution) or (user-approved), or `none`")
+	if (vcln && vc != "`none`" && vc !~ /^`[^`]+` \(user-approved\)$/) add(2, vcln, "Verify command must be a backticked command followed by (user-approved), or `none`")
 	if (voln && vo !~ /^`[^`]*\{test\}[^`]*` \(user-approved\)$/) add(2, voln, "Verify one must be a backticked command containing {test}, followed by (user-approved)")
 	if (runsln && runs !~ /^[1-9][0-9]*$/) add(2, runsln, "Runs must be a positive integer (got \"" runs "\")")
 	if (pcln && pc !~ /^`[^`]+` \(user-approved\)$/ && pc !~ /^manual checklist: ./) add(2, pcln, "Proof command must be a backticked command followed by (user-approved), or \"manual checklist: <name>\"")
@@ -177,7 +180,7 @@ END {
 	for (i = 1; i <= nhyp; i++) {
 		h = hyps[i]
 		if (!(h in xp)) add(4, hypln[h], h " has no Experiment: line")
-		else if (xp[h] !~ /^\[(read|verify|user-run|bisect)\]/) add(4, xpln[h], h " Experiment must begin with [read], [verify], [user-run] or [bisect]")
+		else if (xp[h] !~ /^\[(read|verify|user-run|bisect|probe)\]/) add(4, xpln[h], h " Experiment must begin with [read], [verify], [user-run], [bisect] or [probe]")
 	}
 
 	# L5: the gate
@@ -224,7 +227,7 @@ END {
 			if (pcln == 0) add(8, checkline, "Check: needs a \"Proof command:\" header line")
 		}
 		if (before == "") add(8, (seen["Before and after"] ? seen["Before and after"] : 1), "no \"- Before:\" line")
-		else if (before !~ /^- Before: exit [0-9]+; observed by (Claude|user); ./) add(8, beforeln, "Before must read: exit <int>; observed by <Claude|user>; <excerpt>")
+		else if (before !~ /^- Before: exit [0-9]+; observed by (agent|user|Claude); ./) add(8, beforeln, "Before must read: exit <int>; observed by <agent|user>; <excerpt>")
 		else {
 			bx = before; sub(/^- Before: exit /, "", bx); sub(/;.*$/, "", bx)
 			if (bx + 0 == 0) add(8, beforeln, "Before exit must be non-zero (the repro must fail before the fix)")
@@ -238,7 +241,7 @@ END {
 			}
 		}
 		if (after == "") add(8, (seen["Before and after"] ? seen["Before and after"] : 1), "no \"- After:\" line")
-		else if (after !~ /^- After: exit [0-9]+; observed by (Claude|user); ./) add(8, afterln, "After must read: exit <int>; observed by <Claude|user>; <excerpt>")
+		else if (after !~ /^- After: exit [0-9]+; observed by (agent|user|Claude); ./) add(8, afterln, "After must read: exit <int>; observed by <agent|user>; <excerpt>")
 		else {
 			ax = after; sub(/^- After: exit /, "", ax); sub(/;.*$/, "", ax)
 			if (ax + 0 != 0) add(8, afterln, "After exit must be 0")
@@ -264,7 +267,21 @@ END {
 		}
 	}
 
-	for (r = 1; r <= 9; r++) printf "%s", buf[r]
+	# L10: heuristic personal-data shapes (obvious ones only; never proof a case is clean)
+	d9 = "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]"
+	for (n = 1; n <= NR; n++) {
+		s = line[n]
+		if (s ~ /^<!--/) continue
+		gsub(/<redacted>/, "", s)
+		if (tolower(s) ~ /[^ @]+@[^ @]+[.][a-z][a-z]+/) add(10, n, "looks like an email address; redact as <redacted> (heuristic)")
+		else if (s ~ /(^|[^0-9.])[0-9][0-9]?[0-9]?[.][0-9][0-9]?[0-9]?[.][0-9][0-9]?[0-9]?[.][0-9][0-9]?[0-9]?([^0-9.]|$)/) add(10, n, "looks like an IPv4 address; redact as <redacted> (heuristic)")
+		else {
+			t = s; gsub(/[0-9]*[.][0-9]+/, "", t)
+			if (t ~ d9) add(10, n, "contains a run of 9 or more digits (id, phone, card?); redact as <redacted> (heuristic)")
+		}
+	}
+
+	for (r = 1; r <= 10; r++) printf "%s", buf[r]
 	if (nfail > 0) exit 1
 	exit 0
 }

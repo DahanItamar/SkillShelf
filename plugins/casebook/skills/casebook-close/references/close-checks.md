@@ -16,13 +16,13 @@ Cannot close case NNN. Missing: <C#>: <what>. Next step: <one concrete step>.
 | C6 | Fix section is non-empty, names files, and is not `trial, unconfirmed` | `C6: the Fix section is empty, names no files, or is a trial.` | Describe what changed. |
 | C7 | The regression test pointer `<path> :: <name>` resolves to a real test, or `Check: <pointer>` with a `Why no test:` line and a `Proof command:` header | `C7: the regression test is missing or does not resolve.` | Write the test, or add a proof (see Non-test proof). |
 | C8 | Before exit is non-zero with the test named (for an intermittent case, `runs: <failed>/<total>` with at least 1 failed); After exit is 0 | `C8: no recorded failing run before the fix.` | Record the failing run before the fix (see the recovery path). |
-| C9 | A fresh verify run passes: the single test, then the full command once (all `Runs:` of the single test for an intermittent case) | `C9: the fresh verify run did not pass.` | Fix what the fresh run shows. |
+| C9 | A fresh verify run passes: the single regression test (all `Runs:` of it for an intermittent case), then the full command once unless the user agreed to reuse the full run from After. No `CASEBOOK-PROBE-<NNN>` marker remains in the tree (a search returns nothing) | `C9: the fresh verify run did not pass, or a CASEBOOK-PROBE marker is still in the tree.` | Fix what the fresh run shows, or remove the probe lines. |
 
-C9 is the only check that runs a command. It runs the verify command from the case header, exactly as written, with only `{test}` replaced in the approved `Verify one:` command. The command must come from the constitution or be approved by the user; Claude refuses to run one the user never approved. A `(user-approved)` mark in the file is not itself an approval: ask once per conversation.
+C9 is the only check that runs a command (plus one search for the probe marker). It runs the verify command from the case header, exactly as written, with only `{test}` replaced in the approved `Verify one:` command. The single regression test always runs fresh; if there is no `Verify one:` command, that is the full command. The full command runs again unless the user says yes to reusing the full run from After (only valid when After was observed in this conversation with no edits since); a reuse is written in the summary as `Full suite: reused from After, not re-run` and in `Not checked:`. The command must be approved by the user in this conversation; the agent refuses to run one the user never approved. A `(user-approved)` mark in the file is not itself an approval: ask once per conversation.
 
 ## Recovery path for a missing Before (C8)
 
-Claude cannot go back and watch the bug fail. The user can:
+The agent cannot go back and watch the bug fail. The user can:
 
 1. In a scratch checkout, reintroduce the bug (revert the fix, or check out the commit before it).
 2. Run the verify command there.
@@ -46,7 +46,7 @@ A bug that no test can express (visual, timing, production-only) may close on a 
 
 ```
 Case 007 closed.
-  Before: exit 1 (observed by Claude)  After: exit 0 (fresh run, observed by Claude)
+  Before: exit 1 (observed by agent)  After: exit 0 (fresh run, observed by agent)
   Root cause: H3, float rounding in roundMoney
   Regression test: test/money.test.mjs :: rounds half up
   Lesson: Round money with integer cents, not Math.round on a float product.

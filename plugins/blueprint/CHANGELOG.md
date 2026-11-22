@@ -2,7 +2,37 @@
 
 All notable changes to this plugin. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [Semantic Versioning](https://semver.org/).
 
+
 ## [Unreleased]
+
+## [4.0.0] - 2026-11-22
+
+### Changed
+- Each skill now works on its own. None of them names or requires another, and each takes its input from a file you name or from your message when the shared `docs/` files are missing.
+- The verify command must be pinned in plain text: a non-interactive run executes it only if it equals the command written on the constitution's `Reviewed:` line. With no constitution command, one candidate is read from project config and confirmed with you.
+- Questions are asked as one numbered list in one message; a structured-question tool is optional.
+- `spec-check` defines its handoff (you paste the script output; it never runs the script) and which checks decide pass or fail.
+- `spec-refactor` now closes out its own finished runs.
+- Parallel branches: the README and change-proposal notes describe who renumbers at merge, with a worked example.
+- The README leads with how to use it, in tool-neutral words, and points to the repository README for other tools.
+
+### Changed (later in 4.0.0)
+- `spec-check` no longer points at a file it does not ship.
+- `spec-implement` makes a test that names the criterion and fails before the code the default; its refactoring-list section is a short optional note.
+- `spec-architect` and `spec-refactor` lose text that repeated their references; two stray sequence words reworded; `spec-refactor` description shortened.
+- The README leads with the tool-neutral install and drops an unverified per-tool invocation claim.
+
+### Removed
+- `spec-start`, the stage banners and the slash-command hand-offs between skills.
+- The refactoring sweep from `spec-drift`.
+- The "Extending it" section and the comparison table from the README.
+
+### Moved
+- `spec-check.sh` now lives in `skills/spec-check/scripts/`, so it travels with the skill.
+
+### Added
+- `scripts/verify.sh`: a maintainer-run structural check (names, description length, line limit, no sibling-skill names, every referenced file exists inside its own skill, the security wording stays in sync).
+- `examples/eval/trigger-queries.json`: 56 should-trigger and near-miss queries, data only, no results.
 
 ## [3.4.0] - 2026-11-22
 

@@ -2,6 +2,21 @@
 
 Release checklist: version in `plugin.json` == the edgecase entry (version and description) in the root `.claude-plugin/marketplace.json` == the head of this file; the core rule count == `grep -c '^### R-' references/states.md references/feedback.md references/forms.md` summed (16+10+8 = 34 today; the 8 opt-in laws are not core); a fresh `examples/results/<model>-<date>.md` is committed per model release. `node --test scripts/check.mjs` checks all of this; nothing runs at install.
 
+## 1.6.0 - 2026-11-22
+- No model run exists for 1.5.0 or 1.6.0; the only recorded run is still the 1.4.0 one, and no no-skill baseline has been run. The README says so.
+- Standalone: removed every mention of other skills from `SKILL.md`, `references/` and the README (the "If you also have uilint" and "Other skills read" sections are gone). Out-of-scope appearance problems get one line, "outside this skill's scope: <issue>". A new test fails if another skill is named.
+- Portable: the description and `references/modes.md` trigger on plain requests (screen audit, policy block, probe recipe, design laws); `/edgecase ...` is an optional shortcut. The `edgecase:` policy block is read from the first of `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md` that has one. The README gains "Use it in other tools" and a three-line quick start.
+- R-STATE-02 is now one predicate: required only when a request has no loading indicator and no prior or cached content on screen; whether a short wait needs an indicator is the author's call, and a wrong loader is R-STATE-06 at most.
+- Completion rule: a required gap is fixed or named as open; "ship it" lists the open required IDs in one line. A prototype opt-out covers the named component for that task only and replies `edgecase: skipped (prototype)`.
+- R-STATE-17 also branches on 403 and separates a network failure from a server error. R-FEEDBACK-01 says error copy must not echo personal data. R-FEEDBACK-10 notes the live-region container should exist before its content changes. No rule was added (34 core).
+- Fixed "Jacob" to "Jakob". The README says plainly that the laws file holds 8 opt-in design rules, not eight named laws. The Probe section says never run a probe recipe; the read-only `scripts/candidates.sh` may be run.
+- `scripts/check.mjs` gains tests for the standalone wording, an `expected/` file per example source, and a results file (or an honest README statement) for the current version.
+- `node --test scripts/check.mjs` on a fresh clone of main (65cf7d6): 7 of 7 pass, so the reported failure did not reproduce; no fix was needed.
+- README: the `list.jsx` sample is labelled as hand-written, not a recorded run. Not done: the blind recorded run, the baseline and the build-mode run.
+- Fixed unterminated lines in `references/states.md` (R-STATE-02, R-STATE-16, R-STATE-18) and `references/feedback.md` (R-FEEDBACK-01, R-FEEDBACK-10); the R-STATE-02 sentence now ends "at most, never R-STATE-02". The laws row in `SKILL.md` uses the same wording as the README and `modes.md`. No rule was added.
+- Docs: a "Track state debt with a plain diff" section in `references/modes.md` (compare the `edgecase-ids:` lines of two branches); a one-line other-tools pointer in the README quick start; the README no longer quotes exact byte, line or token figures. `scripts/check.mjs` gains one test that the README's "Measured so far" claims no run newer than the newest results file.
+- Still not done, and the README still says so: a blind recorded run of this version, a no-skill baseline and the hand-judged build-mode case. They need fresh isolated sessions on neutral file names; the session that edited the goldens must not run them.
+
 ## 1.5.0 - 2026-11-22
 - New rule R-STATE-17 (a non-2xx response is a failure): `fetch` resolves on 4xx and 5xx, so check `response.ok` or the status before treating a call as a success. New rule R-STATE-18 (the latest request wins) for input-driven and param-driven fetches. Both are in the Build-mode table and the grep list.
 - Fixed a golden that taught the miss: `examples/files.jsx` now checks the status, and `expected/files.md` no longer blesses an unchecked one. The unchecked case is the new `examples/status.jsx`. `list.jsx`, `form.jsx`, `panel.vue` and `feed.svelte` gain an expected R-STATE-17.

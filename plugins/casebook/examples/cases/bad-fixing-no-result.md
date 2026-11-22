@@ -3,7 +3,7 @@
 
 Status: fixing
 Repro status: observed failing
-Verify command: `npm test` (constitution)
+Verify command: `npm test` (user-approved)
 
 ## Symptom
 An order line with a unit price of 1.005 shows an invoice total of 1.00. The customer expected 1.01.

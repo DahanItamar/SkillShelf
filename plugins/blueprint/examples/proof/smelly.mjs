@@ -2,7 +2,7 @@
 //
 // Nothing here is wrong. Every criterion in the spec still holds, the overnight
 // case still works, identity is still an id, time is still integer minutes —
-// `spec-drift` runs over this file and reports a clean bill.
+// A drift check runs over this file and reports a clean bill.
 //
 // It is still the worst file in the project, for two reasons that no behavioural
 // check can see:
@@ -17,7 +17,7 @@
 //      does not — and it sits in the tooltip, the one path §2.1 makes no claim
 //      about, so nothing anywhere turns red.
 //
-// This is what stage 6 is for. Stage 5 cannot see any of it.
+// This is what a refactoring pass is for. A drift check cannot see any of it.
 
 const MINUTES_PER_DAY = 1440;
 

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "truthpath",
+  "displayName": "Truthpath",
+  "version": "0.1.0",
+  "description": "Finds code that looks finished but quietly fakes success: swallowed errors, success-shaped fallbacks, placeholder endpoints, sample data, constant stubs, hidden TODO branches, retries that hide the last failure and fakes standing in for the real dependency. Each finding gives file, line, the runtime consequence, how a user is misled, a certainty grade and the smallest visible-failure fix. Read-only.",
+  "author": {
+    "name": "Itamar Dahan",
+    "url": "https://github.com/DahanItamar"
+  },
+  "homepage": "https://github.com/DahanItamar/SkillShelf/tree/main/plugins/truthpath",
+  "repository": "https://github.com/DahanItamar/SkillShelf",
+  "license": "MIT",
+  "keywords": [
+    "review",
+    "error-handling",
+    "silent-failure",
+    "stubs",
+    "placeholder",
+    "ai-generated-code",
+    "code-review",
+    "diff"
+  ]
+}

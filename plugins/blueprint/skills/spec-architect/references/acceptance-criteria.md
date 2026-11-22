@@ -8,13 +8,13 @@ How to write §2.1 — the section that turns a spec from prose an agent judges 
 
 Every other section describes. This one **asserts**. The difference matters downstream:
 
-| Stage | What it does with a criterion |
+| Consumer | What it does with a criterion |
 | --- | --- |
-| `spec-tasks` | Every task cites the IDs it closes. A task closing nothing is unnecessary. |
-| `spec-implement` | Verifies the cited criteria before starting the next task; stops if unmet. |
-| `spec-drift` | Checks each criterion against the code and reports by ID. |
+| A task list | Every task cites the IDs it closes. A task closing nothing is unnecessary. |
+| Implementation | Verifies the cited criteria before starting the next task; stops if unmet. |
+| A drift check | Checks each criterion against the code and reports by ID. |
 
-A spec with no criteria still works — every stage degrades to judging prose — but it gives up the only mechanically checkable surface the document has.
+A spec with no criteria still works — every consumer degrades to judging prose — but it gives up the only mechanically checkable surface the document has.
 
 ---
 
@@ -102,13 +102,13 @@ Before delivering the spec, check both directions:
 1. **Every §10 task closes ≥ 1 criterion.** A task closing nothing is either unnecessary work or evidence of a criterion you failed to write.
 2. **Every criterion is closed by ≥ 1 task.** An unclosed criterion is scope nobody has planned to build — either schedule it or move it to §2 Out of Scope.
 
-Both directions matter. The first catches invented work; the second catches silently dropped requirements. `spec-tasks` re-runs this test, but finding a gap here is cheaper than finding it after the task list is written.
+Both directions matter. The first catches invented work; the second catches silently dropped requirements. A task list written later re-runs this test, but finding a gap here is cheaper than finding it after the task list is written.
 
 ---
 
 ## Migrating a v1 spec
 
-A spec written before §2.1 existed is still valid — nothing downstream requires criteria, and every stage degrades gracefully. To backfill:
+A spec written before §2.1 existed is still valid — nothing downstream requires criteria, and every consumer degrades gracefully. To backfill:
 
 1. Read §2 In Scope, §7 Core Flows, §8 Edge Cases, and §9 Security — these already contain the assertions, in prose.
 2. Rewrite each as one EARS sentence. Do not invent behavior the spec never claimed; a criterion the code was never meant to satisfy will be reported as a regression forever.

@@ -3,7 +3,7 @@
 
 Status: open
 Repro status: observed failing
-Verify command: `npm test` (constitution)
+Verify command: `npm test` (user-approved)
 Single hypothesis reason: error names the fix
 
 ## Symptom

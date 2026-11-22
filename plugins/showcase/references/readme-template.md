@@ -136,12 +136,15 @@ licence: MIT
 tone: plain
 sections: Run it, Under the hood
 badge_colour: 0F766E
+regulated: true
 ```
 
 For an agency or team: commit a shared `.showcase.md` per client repo, or keep one preset in a team
 template and copy it in. Set `footer: omit`, or `owner:` to the client or agency name, per repo.
 The file may hold no secrets, contact emails, or client names the client has not agreed to publish.
-`.showcase.md` cannot relax the run-safety gate.
+`.showcase.md` cannot relax the run-safety gate. `regulated: true` can only tighten it (see the
+regulated-repository row in `references/run-recipes.md`); omitting it never relaxes the gate for a
+repository that shows the signs.
 
 ## Filling it in
 

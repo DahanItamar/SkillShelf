@@ -88,9 +88,9 @@ the row in the same commit.
 
 ## US state statutes (module 2, section 2.6)
 
-Official sources for the state-law table. **10 of 19 rows were read against primary text on
+Official sources for the state-law table. **12 of 19 rows were read against primary text on
 2026-11-22** (Virginia, Texas, Iowa, Tennessee, Minnesota, Delaware, Connecticut, Montana,
-Florida, Maryland). The other 9 say "not verified" and why; their URLs are entry points to confirm on the
+Florida, Maryland, Utah, Kentucky). The other 7 (Colorado, Oregon, Nebraska, New Hampshire, New Jersey, Indiana, Rhode Island) say "not verified" and why; their URLs are entry points to confirm on the
 next primary-text pass. Counts differ across trackers (20 to 24 enacted), so cite the
 statute, never a count. Reviewed summaries: https://multistate.us/insider/2026/2/4/all-of-the-comprehensive-privacy-laws-that-take-effect-in-2026 and https://iapp.org/news/a/new-year-new-rules-us-state-privacy-requirements-coming-online-as-2026-begins
 
@@ -99,7 +99,7 @@ statute, never a count. Reviewed summaries: https://multistate.us/insider/2026/2
 | Virginia Consumer Data Protection Act, Va. Code 59.1-575 et seq. | https://law.lis.virginia.gov/vacodefull/title59.1/chapter53/ | 2026-11-22 |
 | Colorado Privacy Act, C.R.S. 6-1-1301 et seq. | https://leg.colorado.gov/bills/sb21-190 | not verified (2026-11-22: content.leg.colorado.gov PDF returns HTTP 202 with an empty body, a bot challenge; the URL here is a bill summary, not statute text). Pending: open the PDF in a normal browser, save it, run pdftotext, check the table cells |
 | Connecticut Data Privacy Act, Conn. Gen. Stat. 42-515 et seq. | https://www.cga.ct.gov/current/pub/chap_743jj.htm and https://www.cga.ct.gov/2026/sup/chap_743jj.htm | 2026-11-22 |
-| Utah Consumer Privacy Act, Utah Code 13-61 | https://le.utah.gov/xcode/Title13/Chapter61/13-61.html | not verified (2026-11-22: legislature site is a JS app with no text; the old PDF path le.utah.gov/xcode/Title13/Chapter61/C13-61_2022050420220504.pdf and the enrolled-bill guess both return 404). Pending: browser download of the enrolled text, pdftotext, check cells |
+| Utah Consumer Privacy Act, Utah Code 13-61 | https://le.utah.gov/xcode/Title13/Chapter61/C13-61-S102_2024050120240501.pdf (also -S201, -S302, -S402 PDFs at the same path) | 2026-11-22 (read with pdftotext: 13-61-102 current and 2027-01-01 versions, 13-61-201 effective 2026-07-01, 13-61-302, 13-61-402; no universal opt-out signal text found in 201 or 302) |
 | Texas Data Privacy and Security Act, Tex. Bus. & Com. Code ch. 541 (enrolled HB 4, 88R) | https://capitol.texas.gov/tlodocs/88R/billtext/html/HB00004F.htm | 2026-11-22 |
 | Oregon Consumer Privacy Act, ORS 646A.570 to 646A.589 | https://www.oregonlegislature.gov/bills_laws/ors/ors646A.html | not verified (2026-11-22: connection refused from this machine). Pending: browser download of the primary text, pdftotext, check cells |
 | Montana Consumer Data Privacy Act, Mont. Code Ann. title 30 ch. 14 (MCA 2025) | https://mca.legmt.gov/bills/mca/title_0300/chapter_0140/part_0280/sections_index.html | 2026-11-22 |
@@ -112,9 +112,9 @@ statute, never a count. Reviewed summaries: https://multistate.us/insider/2026/2
 | Tennessee Information Protection Act, Tenn. Code Ann. 47-18-3201 et seq. | https://publications.tnsosfiles.com/acts/113/pub/pc0408.pdf | 2026-11-22 |
 | Minnesota Consumer Data Privacy Act, Minn. Stat. ch. 325M | https://www.revisor.mn.gov/statutes/cite/325M | 2026-11-22 (effective date 2025-07-31 not on the revisor page) |
 | Maryland Online Data Privacy Act of 2024, Com. Law 14-4601 to 14-4614 (Subtitle 46) | https://mgaleg.maryland.gov/2024RS/Chapters_noln/CH_455_sb0541e.pdf | 2026-11-22 (enrolled Ch. 455, SB 541, read with pdftotext; effective 2025-10-01. Caveat: the PDF shows struck and inserted wording side by side, and the later reading is taken as enacted by the renumbering pattern) |
-| Indiana Consumer Data Protection Act, Ind. Code 24-15 | https://iga.in.gov/laws/ | not verified (2026-11-22: iga.in.gov is a JS app; the enrolled PDF URL returns a 691-byte shell). Pending: browser download of SB 5 (2023) enrolled text, pdftotext, check cells |
-| Kentucky Consumer Data Protection Act, KRS 367.3611 et seq. | https://apps.legislature.ky.gov/law/statutes/ | not verified (2026-11-22: only the engrossed HB 15, marked unofficial, was read; a guessed apps.legislature.ky.gov statute id was a different chapter, KRS 334.200, so the KRS 367.3611 id is still unknown). Pending: find it from the chapter 367 index in a browser, then check cells |
-| Rhode Island Data Transparency and Privacy Protection Act, R.I. Gen. Laws 6-48.1 | https://webserver.rilegislature.gov/Statutes/TITLE6/6-48.1/INDEX.htm | not verified (2026-11-22: connection refused from this machine). Pending: browser download of the primary text, pdftotext, check cells |
+| Indiana Consumer Data Protection Act, Ind. Code 24-15 | https://iga.in.gov/laws/ | not verified (2026-11-22: lead only, the 100,000 threshold in IC 24-15-1-1 was seen in secondary copies; iga.in.gov is a JS app; the enrolled PDF URL returns a 691-byte shell). Pending: browser download of SB 5 (2023) enrolled text, pdftotext, check cells |
+| Kentucky Consumer Data Protection Act, KRS 367.3611 et seq. | https://apps.legislature.ky.gov/law/statutes/statute.aspx?id=56648 (KRS 367.3613; 367.3615 is id=55838, 367.3617 id=55839, 367.3627 id=55844) | 2026-11-22 (read with pdftotext; no universal opt-out signal text found in 367.3615 or 367.3617) |
+| Rhode Island Data Transparency and Privacy Protection Act, R.I. Gen. Laws 6-48.1 | https://webserver.rilegislature.gov/Statutes/TITLE6/6-48.1/INDEX.htm | not verified (2026-11-22: connection refused from this machine). Lead only, not verified: the 35,000-customer threshold is reported in 6-48.1-5, not 6-48.1-3. Pending: browser download of the primary text, pdftotext, check cells |
 
 The Montana, New Jersey and Tennessee URLs above point at specific statute or session-law pages
 rather than a legislature home page, but they are still **entry points, not verified**. A page

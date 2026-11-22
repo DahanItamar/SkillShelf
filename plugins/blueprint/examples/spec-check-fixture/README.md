@@ -6,4 +6,4 @@ Hand-built, not a recorded run. Expected orphans, by design:
 - AC-003 is closed by no task
 - T-03 cites AC-009, which does not exist
 
-So `/spec-check` should end with `Orphans: 3` (the exact wording of each line may vary).
+So the skill should end with `Orphans: 3` (the exact wording of each line may vary).

@@ -52,8 +52,8 @@ Changed src/money.mjs: roundMoney now rounds on the decimal text of the number (
 test/money.test.mjs :: rounds half up
 
 ## Before and after
-- Before: exit 1; observed by Claude; not ok 1 - rounds half up (expected 1.01, got 1)
-- After: exit 0; observed by Claude; ok 1 - rounds half up
+- Before: exit 1; observed by agent; not ok 1 - rounds half up (expected 1.01, got 1)
+- After: exit 0; observed by agent; ok 1 - rounds half up
 
 ## Lesson
 Round money with integer cents or decimal text, not Math.round on a float product.
