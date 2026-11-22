@@ -116,3 +116,21 @@ test("4. drift: the README byte counts match the two SKILL.md files", () => {
   assert.equal(Number(a[1]), Buffer.byteLength(read("skills", "casebook", "SKILL.md")));
   assert.equal(Number(b[1]), Buffer.byteLength(read("skills", "casebook-close", "SKILL.md")));
 });
+
+test("4. drift: the README reference-file byte totals match the files", () => {
+  const readme = read("README.md");
+  const size = (...p) => Buffer.byteLength(read(...p));
+  const refs = [
+    size("skills", "casebook", "references", "case-template.md"),
+    size("skills", "casebook", "references", "hypotheses.md"),
+    size("skills", "casebook", "references", "experiments.md"),
+    size("skills", "casebook-close", "references", "close-checks.md"),
+  ];
+  const [ct, hy, ex, cc] = refs;
+  const total = refs.reduce((x, y) => x + y, 0);
+  const open = size("skills", "casebook", "SKILL.md") + ct + hy + ex;
+  const close = size("skills", "casebook-close", "SKILL.md") + cc;
+  assert.match(readme, new RegExp(`four reference files total ${total} bytes`));
+  assert.match(readme, new RegExp(`hypotheses and experiments: ${open} bytes`));
+  assert.match(readme, new RegExp(`close-checks: ${close} bytes`));
+});

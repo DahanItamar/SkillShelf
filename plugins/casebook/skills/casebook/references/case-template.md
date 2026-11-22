@@ -90,3 +90,19 @@ Single hypothesis reason: error names the fix
 - `Evidence` for `confirmed` is a pointer or a command with output. Reasoning alone makes it `inconclusive`.
 - Never write secrets, API keys, `.env` contents or customer data into the file. Redact values as `<redacted>`.
 - A small case is a small file. The rule is the order, not the volume.
+
+## Hand-over contract
+
+Printed at Step 8 of `/casebook`, after the fix, before `/casebook-close`:
+
+```
+Case 007: Invoice total is one cent low on some orders   Status: fixing
+Repro:       observed failing (user: invoice for unit price 1.005 showed 1.00)
+Confirmed:   H3 float rounding in roundMoney (user ran node -e ... -> 100)
+Ruled out:   H1 tax table (src/tax.mjs:14), H2 rounding per line (src/invoice.mjs:31)
+Regression:  test/money.test.mjs :: rounds half up
+Before:      exit 1, fails
+After:       exit 0, passes
+File:        docs/bugs/007.md
+Next:        run /casebook-close 007
+```

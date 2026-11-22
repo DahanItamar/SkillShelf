@@ -31,17 +31,31 @@ Record the pasted output as `user ran: <command> -> <excerpt>`. Redact secrets a
 
 ### `[bisect]` - the user runs it, Claude never does
 
-For "it used to work", when a known-good ref exists. `git bisect` changes the working tree, so Claude never runs it. Claude writes a ready command for the user:
+For "it used to work", when a known-good ref exists. `git bisect` changes the working tree, so Claude never runs it, and Claude never writes the script to disk (the gate allows only the case file). The user may run any script here, so it is not limited to the approved commands.
+
+1. Claude writes the script text into the case file, inside the experiment block, and the ready commands below.
+2. The user saves the script OUTSIDE the repository, so bisect, make and the script do not interfere (git's own manual recommends this).
+3. The user runs `git bisect run <path-to-script>`.
+4. If an existing test already fails at the bad ref, skip the script: use `git bisect run` with the Verify one command and its test name.
 
 ```
 git bisect start <bad> <good>
-git bisect run <approved Verify one command, with a test name>
+git bisect run <path-to-script>
 git bisect reset
 ```
 
-The run command's exit code is the contract: 0 means good, 1 to 127 except 125 means bad, and 125 means the commit cannot be tested (skip). The test must exist at every commit that is tried, so a test that is new should live as an untracked file or a script outside the tracked files. Sources: https://git-scm.com/docs/git-bisect and a practical tutorial at https://train.rse.ox.ac.uk/material/HPCu/technology_and_tooling/version_control/11-bisect.
+Script skeleton (a POSIX sh file, saved outside the repo):
 
-Evidence is the user's pasted `<sha> is the first bad commit` line, recorded as `user ran: git bisect run ... -> <sha> is the first bad commit`. Make it the first cheap experiment when the symptom says regression and a known-good ref exists. After `git bisect reset` the working tree is back where it was.
+```
+#!/bin/sh
+make || exit 125     # replace make with your build step; 125 = cannot test this commit, skip
+<the check>          # for example: node check-total.mjs
+# exit 0 = good, exit 1 = bad
+```
+
+The exit code is the contract: 0 means good, 1 to 127 except 125 means bad, and 125 means skip. Caution: exit 127 (command not found) counts as BAD, so every command in the script must exist at every commit that is tried. Source: https://git-scm.com/docs/git-bisect.
+
+Evidence is the user's pasted `<sha> is the first bad commit` line, recorded as `user ran: git bisect run <path-to-script> -> <sha> is the first bad commit`. Make it the first cheap experiment when the symptom says regression and a known-good ref exists. After `git bisect reset` the working tree is back where it was.
 
 ## Forbidden before the gate
 

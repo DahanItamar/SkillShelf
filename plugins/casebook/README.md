@@ -89,7 +89,7 @@ hard rules:
   or `user ran: <command> -> <output>`. Without one, the result is `inconclusive`.
 - **Experiments.** Each is tagged `[read]`, `[verify]`, `[user-run]` or `[bisect]`. Claude runs the
   first two. A `[user-run]` is handed to you, and Claude never executes it. For "it used to work",
-  `[bisect]` is a ready `git bisect run` command for you to run: Claude never runs `git bisect`,
+  `[bisect]` is a check script written as text in the case file, which you save outside the repo and run with `git bisect run <path-to-script>`. Claude never runs `git bisect`,
   because it changes your working tree.
 - **Done.** `Before` is a non-zero exit, `After` is exit 0, and the regression test is one line,
   `<path> :: <test name>`. A bug no test can express (visual, timing, production-only) can close on a
@@ -189,7 +189,7 @@ Verify command: `go test ./...` (user-approved)
 Verify one:     `go test ./... -run {test}` (user-approved)
 ```
 
-Only `{test}` is replaced, and only with the regression test's name.
+Only `{test}` is replaced, and only with the regression test's name.  A `cargo test {test}` shape works the same way.
 
 ## How it compares
 
@@ -244,7 +244,7 @@ measured.
   to pass to close, and at least one failing run for Before. Five is a default, not a measured
   threshold; you can set `Runs: N`. A green run on an intermittent bug lowers the chance the bug is
   still there; it does not remove it.
-- **Bisect is yours to run.** `git bisect` changes the working tree, so Claude only writes the command.
+- **Bisect is yours to run.** `git bisect` changes the working tree, so Claude only writes the script text and commands; you save and run them.
 - **A model is not deterministic.** Wording and ordering vary between runs.
 - **What it refuses:** editing any file but the case file before a result is recorded; marking a
   hypothesis `confirmed` without a pointer or command output; counting a repro that was not observed
@@ -253,13 +253,13 @@ measured.
   reading history from anywhere but `docs/bugs/`; committing or pushing; storing secrets or customer data
   in a case file.
 
-**Measured so far:** nothing about model behaviour. No runs, no users, no results are claimed. The
+**Measured so far:** nothing about model behaviour. No runs, no users, no results are claimed. One recorded session will be added here with date and model when a real run is made. The
 proof test below shows the scenario and measures no model. The one real run, on the author's machine:
 
 ```text
 node --test examples/proof/proof.test.mjs     (Node 24.15.0, Windows, Git's sh and GNU awk, durations omitted)
-tests 27
-pass 27
+tests 29
+pass 29
 fail 0
 ```
 
@@ -269,11 +269,8 @@ with GNU awk in `--traditional` mode and with `dash`, to avoid GNU-only syntax; 
 
 ## Cost
 
-Only checkable facts. The two skill files are `skills/casebook/SKILL.md` (12385 bytes) and
-`skills/casebook-close/SKILL.md` (6094 bytes). Reference files are loaded by step, not all at once:
-the case template at Step 2, `hypotheses.md` at Step 4, `experiments.md` at Step 5, and
-`close-checks.md` at close step 2. Token cost has not been measured. A proof test checks these byte
-counts against the files, so they cannot drift quietly.
+Only checkable facts. The two skill files are `skills/casebook/SKILL.md` (12750 bytes) and
+`skills/casebook-close/SKILL.md` (6094 bytes). Reference files are loaded by step, not all at once: the case template at Step 2, `hypotheses.md` at Step 4, `experiments.md` at Step 5, and `close-checks.md` at close step 2. The four reference files total 19635 bytes (case-template 5927, experiments 5065, hypotheses 3489, close-checks 5154). A typical open pass loads SKILL.md plus case-template, hypotheses and experiments: 27231 bytes. A close adds the close skill and close-checks: 11248 bytes. Token cost has not been measured. A proof test checks these byte counts against the files, so they cannot drift quietly.
 
 ## Maintainer check
 
@@ -282,7 +279,7 @@ against 9 rules (L1 to L9: file name and heading, status values, the nine sectio
 the gate, evidence, the ruled-out list, closed-case completeness, no leftover placeholders). It only reads
 the file, writes nothing and runs nothing from it. It exits 0 on pass, 1 on findings and 2 if it cannot
 run. `node --test examples/proof/proof.test.mjs` runs the before/after proof and the lint over the example
-case files. Neither needs a package.
+case files. Neither needs a package. The example files are not named `NNN.md`, so lint them with `--as`: `sh scripts/check-case.sh --as 001.md examples/cases/good-closed.md`.
 
 ## Credits
 
