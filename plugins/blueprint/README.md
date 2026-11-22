@@ -10,10 +10,10 @@ Plain Markdown, read by Claude Code.
 **No `package.json`, no dependencies, no build step, nothing that executes at install.**
 
 <a href="https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml"><img alt="CI status on the main branch" src="https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-<img alt="17 illustration tests passing across 4 suites" src="https://img.shields.io/badge/illustration%20tests-17%20passing-1f6f3f?style=flat-square">
-<img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-1f6f3f?style=flat-square">
-<img alt="version 3.3.0" src="https://img.shields.io/badge/version-3.3.0-B55400?style=flat-square">
-<a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2b2e3a?style=flat-square"></a>
+<img alt="17 illustration tests passing across 4 suites" src="https://img.shields.io/badge/illustration%20tests-17%20passing-0F766E?style=flat-square">
+<img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-0F766E?style=flat-square">
+<img alt="version 3.3.0" src="https://img.shields.io/badge/version-3.3.0-0F766E?style=flat-square">
+<a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-0F766E?style=flat-square"></a>
 
 <a href="examples/the-loop.md">The walkthrough</a> ·
 <a href="examples/proof/README.md">The illustration</a>

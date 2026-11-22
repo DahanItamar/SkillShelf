@@ -7,11 +7,11 @@
 Markdown and POSIX shell. **Zero dependencies, no build step, no runtime** — the audit is Claude reading your repository, not a scanner you have to maintain.
 
 [![verify](https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml)
-[![modules](https://img.shields.io/badge/modules-8-1f6feb)](skills/regwise/references/)
-[![audit checks](https://img.shields.io/badge/audit%20checks-86-1f6feb)](skills/regwise/references/)
-[![instruments cited](https://img.shields.io/badge/instruments%20cited-31-1f6feb)](docs/CITATIONS.md)
-[![dependencies](https://img.shields.io/badge/dependencies-0-2da44e)](scripts/verify.sh)
-[![licence](https://img.shields.io/badge/licence-MIT%20%C2%B7%20templates%20CC0-8957e5)](LICENSE)
+[![modules](https://img.shields.io/badge/modules-8-0F766E?style=flat-square)](skills/regwise/references/)
+[![audit checks](https://img.shields.io/badge/audit%20checks-86-0F766E?style=flat-square)](skills/regwise/references/)
+[![instruments cited](https://img.shields.io/badge/instruments%20cited-31-0F766E?style=flat-square)](docs/CITATIONS.md)
+[![dependencies](https://img.shields.io/badge/dependencies-0-0F766E?style=flat-square)](scripts/verify.sh)
+[![licence](https://img.shields.io/badge/licence-MIT%20%C2%B7%20templates%20CC0-0F766E?style=flat-square)](LICENSE)
 
 [Spec](docs/SPEC.md) · [Citation index](docs/CITATIONS.md) · [The router](skills/regwise/SKILL.md) · [Modules](skills/regwise/references/) · [Example configs](examples/)
 

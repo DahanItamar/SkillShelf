@@ -1,17 +1,11 @@
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/edgecase-dark.png">
-  <img src="docs/brand/edgecase-light.png" width="120"
-       alt="Edgecase icon: five stacked interface rows inside lint brackets, one flagged with an error mark and the last one only half filled">
-</picture>
-
 # Edgecase
 
 **A linter for the interface states everyone forgets.**
 
-<img alt="version 1.4.0" src="https://img.shields.io/badge/version-1.4.0-2b2e3a?style=flat-square">
-<a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2b2e3a?style=flat-square"></a>
+<img alt="version 1.4.0" src="https://img.shields.io/badge/version-1.4.0-0F766E?style=flat-square">
+<a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-0F766E?style=flat-square"></a>
 
 </div>
 
