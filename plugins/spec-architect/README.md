@@ -214,7 +214,7 @@ Natural places to run an optional pass, by hand, are the stage boundaries. Nothi
 - **Nothing executes at install.** No dependencies, no build, no network calls. The only runnable
   code is 5 `.mjs` files under `examples/proof/`, importing `node:test`, `node:assert/strict` and
   `node:fs`.
-- **3,197 lines (`SKILL.md` and references) that load on demand.** Each `SKILL.md` loads on invocation, the largest being 160
+- **3,214 lines (`SKILL.md` and references) that load on demand.** Each `SKILL.md` loads on invocation, the largest being 160
   lines; its references load only at the phase that needs them, so a task list is never written with
   the risk checklist in context.
 - **Change proposals, not spec rewrites.** Once `docs/SPEC.md` exists, `/spec-architect` writes a
