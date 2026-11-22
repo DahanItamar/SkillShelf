@@ -33,7 +33,7 @@ Record the pasted output as `user ran: <command> -> <excerpt>`. Redact secrets a
 
 For "it used to work", when a known-good ref exists. `git bisect` changes the working tree, so Claude never runs it, and Claude never writes the script to disk (the gate allows only the case file). The user may run any script here, so it is not limited to the approved commands.
 
-1. Claude writes the script text into the case file, inside the experiment block, and the ready commands below.
+1. Claude writes the script text into the case file, inside the experiment block, together with the commands below. It is never written to disk.
 2. The user saves the script OUTSIDE the repository, so bisect, make and the script do not interfere (git's own manual recommends this).
 3. The user runs `git bisect run <path-to-script>`.
 4. If an existing test already fails at the bad ref, skip the script: use `git bisect run` with the Verify one command and its test name.

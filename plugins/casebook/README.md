@@ -270,7 +270,7 @@ with GNU awk in `--traditional` mode and with `dash`, to avoid GNU-only syntax; 
 ## Cost
 
 Only checkable facts. The two skill files are `skills/casebook/SKILL.md` (12750 bytes) and
-`skills/casebook-close/SKILL.md` (6094 bytes). Reference files are loaded by step, not all at once: the case template at Step 2, `hypotheses.md` at Step 4, `experiments.md` at Step 5, and `close-checks.md` at close step 2. The four reference files total 19635 bytes (case-template 5927, experiments 5065, hypotheses 3489, close-checks 5154). A typical open pass loads SKILL.md plus case-template, hypotheses and experiments: 27231 bytes. A close adds the close skill and close-checks: 11248 bytes. Token cost has not been measured. A proof test checks these byte counts against the files, so they cannot drift quietly.
+`skills/casebook-close/SKILL.md` (6094 bytes). Reference files are loaded by step, not all at once: the case template at Step 2, `hypotheses.md` at Step 4, `experiments.md` at Step 5, and `close-checks.md` at close step 2. The four reference files total 19668 bytes (case-template 5927, experiments 5098, hypotheses 3489, close-checks 5154). A typical open pass loads SKILL.md plus case-template, hypotheses and experiments: 27264 bytes. A close adds the close skill and close-checks: 11248 bytes. Token cost has not been measured. A proof test checks these byte counts against the files, so they cannot drift quietly.
 
 ## Maintainer check
 
