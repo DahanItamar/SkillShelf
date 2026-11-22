@@ -116,9 +116,10 @@ per-user salt", "`HttpOnly` session cookie". Never "secure by design".>
 
 <div align="center">
 
-Built by <a href="https://github.com/<username>"><Author Name></a> · <a href="LICENSE">MIT</a> · © <year>
+Built by <a href="https://github.com/<owner>"><Owner></a> · <a href="LICENSE"><detected licence></a> · © <year>
 
 </div>
+<!-- Omit this whole footer if the licence or owner was not detected. -->
 ````
 
 ---

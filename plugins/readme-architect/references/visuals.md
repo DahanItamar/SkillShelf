@@ -114,6 +114,11 @@ instruction; the skill follows it.
 Where the project has no visible interface at all — a library, a parser, a build tool — the
 question is not asked. A library's evidence is its output, not its appearance.
 
+### Capture fallbacks
+
+Use any available browser or screenshot tool, else an OS screenshot command, else write
+`docs/SCREENSHOTS.md`. In non-interactive runs the question defaults to `docs/SCREENSHOTS.md`.
+
 ### Staging, and what must not be in the shot
 
 A screenshot is composed, not grabbed. Before capture, the app is put into the state that makes the

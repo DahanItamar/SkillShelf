@@ -7,21 +7,45 @@ folder names. Every number in what it produces is one it observed, and anything 
 observe it tells you it could not observe.**
 
 Six reference files and one workflow, in plain Markdown.
-**No dependencies, no build step, no runtime — nothing here executes.**
+**No dependencies, no build step, no runtime. Nothing executes at install; the skill runs your
+project's tests or dev server only after its run-safety gate.**
 
-<img alt="version 2.0.0" src="https://img.shields.io/badge/version-2.0.0-B55400?style=flat-square">
+<img alt="version 2.1.0" src="https://img.shields.io/badge/version-2.1.0-B55400?style=flat-square">
 <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2b2e3a?style=flat-square"></a>
 <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-1f6f3f?style=flat-square">
-<img alt="1,341 lines of doctrine across 7 files" src="https://img.shields.io/badge/doctrine-1%2C341%20lines-2b2e3a?style=flat-square">
-<img alt="44 acceptance criteria" src="https://img.shields.io/badge/criteria-44-2b2e3a?style=flat-square">
 
-<a href="docs/SPEC.md">Spec</a> ·
-<a href="docs/CONSTITUTION.md">Constitution</a> ·
+<a href="#see-the-result">Result</a> ·
+<a href="#cost-and-safety">Cost and safety</a> ·
 <a href="SKILL.md">Skill</a>
 
 </div>
 
 ---
+
+## See the result
+
+[Winnow](https://github.com/DahanItamar/Winnow) is the README this skill's style is derived from,
+and the worked example to read. It is the style source named in
+[`docs/SPEC.md`](docs/SPEC.md); this repository holds no generated before/after pair, and none is
+shown here because none was verified.
+
+Ask in your own words, for example:
+
+- *"write a README for this"*
+- *"my README is out of date, audit it"*
+- *"make this presentable before I make it public"*
+
+Not for: a `CHANGELOG`, a `CONTRIBUTING` guide, or API reference docs.
+
+## Cost and safety
+
+- **Cost.** `SKILL.md` is 14,581 bytes (about 3.6k tokens at 4 bytes per token) and loads on every
+  run. The six reference files total 46,907 bytes and load only at the phase that needs them;
+  `identity-block.md` and `visuals.md` are skipped for a small utility.
+- **Safety.** Phase 1 runs the project, which executes its code. The gate default-allows only the
+  test suite and a localhost dev server, asks before network, paid, remote-database, migration,
+  deploy or credential-bearing steps, reads `.env.example` and never `.env`, and stops what it
+  started. Anything it did not run is marked `unverified` in the handover.
 
 ## Why most generated READMEs are adjectives
 
@@ -117,43 +141,44 @@ that this was the one thing it could not do. **It never references an image it d
 
 ## Run it
 
-There is nothing to run. It is Markdown that Claude Code reads.
+There is nothing to run at install. It is Markdown that Claude Code reads.
 
 ```bash
 # as a plugin
 /plugin marketplace add DahanItamar/claude-skills
 /plugin install readme-architect@claude-skills
 
-# or drop it in directly
+/reload-plugins
+
+# or copy only the skill (SKILL.md and references/) into place
 git clone https://github.com/DahanItamar/claude-skills.git
-cp -r claude-skills/plugins/readme-architect ~/.claude/skills/readme-architect
+mkdir -p ~/.claude/skills/readme-architect
+cp claude-skills/plugins/readme-architect/SKILL.md ~/.claude/skills/readme-architect/
+cp -r claude-skills/plugins/readme-architect/references ~/.claude/skills/readme-architect/
 ```
 
-Then ask for a README in whatever words you would have used anyway — *"write a README for this"*,
-*"my README is out of date"*, *"make this presentable before I make it public"*. Both install
-routes work because `SKILL.md` sits at the plugin root and every path it names is relative to
-itself.
+The marketplace route is preferred. Both work because `SKILL.md` sits at the plugin root and every
+path it names is relative to itself.
 
 ## Under the hood — briefly
 
-- **Progressive disclosure.** `SKILL.md` is 245 lines and loads every invocation; the six
-  reference files are 1,096 lines and load only at the phase that needs them. A reference file is
+- **Progressive disclosure.** `SKILL.md` is 278 lines and loads every invocation; the six
+  reference files are 1,040 lines and load only at the phase that needs them. A reference file is
   read cold and alone, so each is complete by itself and none links to another.
-- **Built by its own pipeline.** `docs/SPEC.md` carries 44 acceptance criteria in EARS notation,
-  and every one is closed by a task in `docs/changes/`. The constitution, spec, task lists and
-  change proposals are all committed — the reasoning is the asset, not just the result.
+- **Audit first.** If a README exists, the skill shows a keep / change / cut table before writing,
+  and offers an audit-only mode that writes nothing.
 - **Badges are tested, not banned.** v1 forbade badge rows outright. That ban was a proxy for
   *badges usually carry nothing*, and the proxy failed on `runtime deps 1`, which carries the most
   interesting fact about a project. So the rule now tests the badge, not the row.
 - **Mermaid ahead of any image format.** It renders on GitHub, it is plain text in the diff, it
   needs no file to rot, and where it does not render it degrades to readable source rather than to
   a broken image.
-- **Nothing executes.** No dependencies, no build, no scripts. Installation is a file copy, and a
-  repository that only contains Markdown is one you can actually audit before running it.
+- **Nothing executes at install.** No dependencies, no build, no scripts. Installation is a file
+  copy, and a repository that only contains Markdown is one you can audit before running it.
 
-> Also here: [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md), the rules this repository holds itself
-> to, and [`docs/SPEC.md`](docs/SPEC.md), which records why each decision beat its alternative.
-> Read those before changing anything — they separate what was decided from what was merely typed.
+> Provenance: this skill was built by its own spec chain. [`docs/CONSTITUTION.md`](docs/CONSTITUTION.md)
+> holds the rules, [`docs/SPEC.md`](docs/SPEC.md) records why each decision beat its alternative, and
+> [`docs/changes/`](docs/changes) holds the task lists. Read them before changing anything.
 
 ---
 
