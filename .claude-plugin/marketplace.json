@@ -1,22 +1,23 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "claude-skills",
-  "description": "Claude Code skills by Itamar Dahan: compliance, UI states, spec-driven development and evidence-based READMEs.",
+  "description": "Four Claude Code skills: Regwise (compliance), Edgecase (UI states), Blueprint (spec-driven development) and Showcase (evidence-based READMEs).",
   "owner": {
     "name": "Itamar Dahan",
     "url": "https://github.com/DahanItamar"
   },
   "plugins": [
     {
-      "name": "acsm",
-      "source": "./plugins/acsm",
-      "description": "Adaptive Compliance & Security Matrix. Routes a project to the compliance obligations that actually apply to it, audits a repository against them, and drafts the user-facing legal documents they require.",
-      "version": "0.1.0",
+      "name": "regwise",
+      "displayName": "Regwise",
+      "source": "./plugins/regwise",
+      "description": "Routes a project to the compliance obligations that actually apply to it, audits a repository against them, and drafts the user-facing legal documents they require.",
+      "version": "0.2.0",
       "author": {
         "name": "Itamar Dahan",
         "url": "https://github.com/DahanItamar"
       },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/acsm",
+      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/regwise",
       "license": "MIT",
       "category": "security",
       "keywords": [
@@ -30,16 +31,16 @@
       ]
     },
     {
-      "name": "uilint",
-      "displayName": "uilint",
-      "source": "./plugins/uilint",
-      "description": "A linter for the UI states everyone forgets — loading, empty, error, success and partial. 43 rules applied while the interface is written; blocks completion only on the ones that cause silent user harm.",
-      "version": "1.2.0",
+      "name": "edgecase",
+      "displayName": "Edgecase",
+      "source": "./plugins/edgecase",
+      "description": "A linter for the UI states everyone forgets — loading, empty, error, success and partial. 40 rules applied while the interface is written; blocks completion only on the ones that cause silent user harm.",
+      "version": "1.4.0",
       "author": {
         "name": "Itamar Dahan",
         "url": "https://github.com/DahanItamar"
       },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/uilint",
+      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/edgecase",
       "license": "MIT",
       "category": "review",
       "keywords": [
@@ -54,16 +55,16 @@
       ]
     },
     {
-      "name": "spec-architect",
-      "displayName": "Spec Architect",
-      "source": "./plugins/spec-architect",
-      "description": "The six-stage spec pipeline for Claude Code. spec-constitution sets the repository's rules, spec-architect writes the spec and its acceptance criteria, spec-tasks turns it into an ordered list, spec-implement executes one task at a time verifying each against the criteria it cites, spec-drift audits whether the code still does what the spec says, and spec-refactor audits whether it can still be changed — proposing structural work that preserves every criterion rather than closing a new one. Refactoring runs are numbered directories under docs/refactorings/ with a permanent smell registry, mirroring how change proposals are versioned under docs/changes/, and spec-drift closes both out — verifying, recording and archiving finished work of either kind. The AC-### identifiers are what join them: assigned once, cited by every later stage.",
-      "version": "3.2.0",
+      "name": "blueprint",
+      "displayName": "Blueprint",
+      "source": "./plugins/blueprint",
+      "description": "Eight skills: a six-stage spec chain that carries one AC-### identifier from idea to shipped code, plus a front door and an opt-in checker.",
+      "version": "3.3.0",
       "author": {
         "name": "Itamar Dahan",
         "url": "https://github.com/DahanItamar"
       },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/spec-architect",
+      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/blueprint",
       "license": "MIT",
       "category": "planning",
       "keywords": [
@@ -84,16 +85,16 @@
       ]
     },
     {
-      "name": "readme-architect",
-      "displayName": "README Architect",
-      "source": "./plugins/readme-architect",
-      "description": "Writes a repository README from evidence rather than adjectives — runs the project first, then fills a Winnow-shaped skeleton with real output, observed numbers, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact.",
-      "version": "2.0.0",
+      "name": "showcase",
+      "displayName": "Showcase",
+      "source": "./plugins/showcase",
+      "description": "Writes a repository README from evidence rather than adjectives — runs the project first, then fills a fixed skeleton with real output, observed numbers, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact. Nothing executes at install; it runs your project's tests or dev server only after a safety gate.",
+      "version": "2.1.0",
       "author": {
         "name": "Itamar Dahan",
         "url": "https://github.com/DahanItamar"
       },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/readme-architect",
+      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/showcase",
       "license": "MIT",
       "category": "documentation",
       "keywords": [

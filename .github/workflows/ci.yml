@@ -7,17 +7,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  acsm-verify:
-    name: acsm / structural verification
+  regwise-verify:
+    name: regwise / structural verification
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - name: Structural verification
-        working-directory: plugins/acsm
+        working-directory: plugins/regwise
         run: sh scripts/verify.sh
 
-  spec-architect-proof:
-    name: spec-architect / before-and-after proof
+  blueprint-proof:
+    name: blueprint / before-and-after proof
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: '22'
       - name: Run the before/after proof
-        working-directory: plugins/spec-architect
+        working-directory: plugins/blueprint
         run: node --test examples/proof/proof.test.mjs
 
   marketplace:

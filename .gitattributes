@@ -1,5 +1,5 @@
 # LF everywhere, on every platform.
-# Not cosmetic: the disclaimer block in skills/acsm/templates/ is verified by
+# Not cosmetic: the disclaimer block in plugins/regwise/skills/regwise/templates/ is verified by
 # byte comparison (SPEC.md AC-027, AC-040). A CRLF checkout fails that check on
 # a clean tree, which is the hardest kind of CI failure to read.
 * text=auto eol=lf
