@@ -10,4 +10,10 @@ Release checklist: version in `plugin.json` == the truthpath entry (version and 
 - Read-only: only read-only git commands, no edits unless one named fix is requested, one fix at a time. Test files are out of scope.
 - Optional maintainer checks, `scripts/hints.sh` (POSIX sh and awk) and `node --test scripts/check.test.mjs` (no packages). Neither runs at install.
 - Worked examples under `examples/`: a planted sample with expected findings written by hand, the recorded hint output, and a diff example.
+- Scope includes untracked new files (`git ls-files --others --exclude-standard`), branch base discovery, and a two-pass read (search, then read hits and changed files in full) with a note for large files left unread.
+- New "Blast radius" field (money, data-loss, auth, user-text, ops-only) and ordering by certainty, blast radius, path and line. Optional "Check it yourself" line.
+- Diff mode also reports a new caller of an existing fake-success function and deleted error handling.
+- Optional by request: `.truthpath-accepted.md` baseline (matched by file, pattern and snippet) and a `json` or `sarif` block in chat. No report file is written; the only write is the one accepted line.
+- Fixed contradictions: caller search may use the whole repository, one summary rule with an optional pre-existing clause, "read-only until you name one fix", "fix all" refused only when no list is named.
+- Language table in the catalogue (shell, Rust, Java, Kotlin, C#, Swift, Python suppress, JS allSettled). Shorter description. README: marketplace-safe install check, cost per run, comparison moved below Limits and dated.
 - Known v1 limits: a reading, not a proof; two-hop caller tracing by default; language coverage is shape-based; output is not deterministic; no model run is claimed.

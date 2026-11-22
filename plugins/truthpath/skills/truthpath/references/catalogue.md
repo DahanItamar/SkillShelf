@@ -24,6 +24,20 @@ A match here is a candidate, never a finding. Every pattern file has a "Not a fi
 - Sample data returned by the catch branch is TP-05, not TP-03: the data is invented, not empty.
 - A placeholder value inside sample data (an example e-mail in a sample user) belongs to the TP-05 finding, not to a separate TP-04.
 
+## Language shapes
+
+Extra shapes for TP-01, TP-02, TP-03 and TP-10. Same rule: a match is a candidate, apply "Not a finding when".
+
+| Language | Shape | Pattern |
+| --- | --- | --- |
+| Python | `with contextlib.suppress(Exception):` around the real work | TP-01 |
+| JavaScript, TypeScript | `Promise.allSettled(...)` whose results are never checked for `rejected` | TP-10 |
+| Shell | `cmd || true`, or `set +e` with no later `$?` check | TP-01, TP-10 |
+| Rust | `let _ = call();` on a `Result`; `.unwrap_or_default()` or `.ok()` that drops the error | TP-01, TP-03 |
+| Java, Kotlin | `catch (Exception e) {}`; `e.printStackTrace()` as the only handling; `runCatching { ... }.getOrDefault(x)` | TP-01, TP-03 |
+| C# | `catch { }`; a catch that returns `default` or an empty collection | TP-01, TP-03 |
+| Swift | `try?` on a call whose failure matters | TP-01, TP-03 |
+
 ## Not covered
 
 Security vulnerabilities, performance, UI loading and empty states, test quality and style are out of scope.

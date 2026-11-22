@@ -66,6 +66,7 @@ test("SKILL.md frontmatter: name equals its folder, description is 1024 characte
   assert.ok(raw, "description is missing");
   const description = raw.replace(/^"([\s\S]*)"$/, "$1");
   assert.ok(description.length <= 1024, `description is ${description.length} characters`);
+  assert.ok(description.length <= 900, `description is ${description.length} characters; keep a margin under 1024`);
   assert.ok(description.includes("Does NOT trigger"), "description needs the Does NOT trigger clause");
 });
 

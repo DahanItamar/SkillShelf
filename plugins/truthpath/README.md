@@ -4,7 +4,7 @@
 
 **Finds code that looks finished but quietly fakes success.**
 
-*A reading, not a proof that the code works.*
+*Read-only until you name one fix. A reading, not a proof that the code works.*
 
 <img alt="version 0.1.0" src="https://img.shields.io/badge/version-0.1.0-0F766E?style=flat-square">
 <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-0F766E?style=flat-square"></a>
@@ -32,41 +32,50 @@ dependencies, no build step and no hooks. Nothing runs at install, and it runs n
   on failure (TP-03), placeholder endpoints (TP-04), sample data in production (TP-05), constant-returning stubs (TP-06),
   not-implemented branches behind a success path (TP-07), retries that hide the last failure (TP-08), fakes standing in for
   the only real dependency (TP-09) and ignored failure signals (TP-10).
-- Writes every finding in one template: file, line, pattern, what happens at runtime, how a user is misled, a certainty
-  grade and the smallest fix that makes the failure visible.
+- Writes every finding in one template: file, line, pattern, blast radius (money, data-loss, auth, user-text or ops-only),
+  what happens at runtime, how a user is misled, a certainty grade and the smallest fix that makes the failure visible.
+  Findings are ordered by certainty, then blast radius, then path and line. There is no score.
 - Grades certainty by a written rule: **confirmed** means every link from the failure to the success-shaped result was read;
   **suspected** means at least one link was not, and the finding says which. It is never confirmed from a name or a comment.
-- Works on a pasted diff, a `.diff` file, "my changes", a branch compared to its base, or a directory. In diff mode it
-  reports only lines the diff added or changed.
+- Works on a pasted diff, a `.diff` file, "my changes" (including new files git does not track yet), a branch compared to
+  its base, or a directory. In diff mode it reports lines the diff added or changed, plus a new caller of an existing
+  fake-success function and deleted error handling.
+- Optional, only when you ask: a baseline file `.truthpath-accepted.md` of findings you accepted (matched by file, pattern
+  and code snippet, not line number), and a `json` or `sarif` block printed in chat. It writes no report file.
 - Reads production code only. Test files are out of scope, because mocks and fakes are expected there.
 - Lists the candidates it rejected under "Not reported", with a reason, so you can see what was considered.
-- Is read-only. The only commands it may run are read-only git commands to get a diff. It edits one location only when you
-  name one.
+- Is read-only. The only commands it may run are read-only git commands to get a diff or a file list. It writes one
+  location only when you name one: a fix to apply, or a finding to accept.
 
 ## The finding format
 
 ```text
 ### <file>:<line>  TP-NN <pattern name>
+- Blast radius: <money | data-loss | auth | user-text | ops-only>
 - What happens: <runtime behaviour when the failure occurs>
 - User is misled: <who sees what, and what they wrongly believe>
 - Certainty: confirmed (read <file:lines>[, caller <file:line>]) | suspected (not read: <missing link>; would settle: <what to read>)
 - Smallest fix: <one line of code or one sentence; not applied>
+- Check it yourself: <optional, confirmed only: a command or test sketch that forces the failure; not run>
 ```
 
 A confirmed example:
 
 ```text
 ### src/sync.js:2  TP-01 Swallowed error
+- Blast radius: data-loss
 - What happens: api.post("/cart", cart) is not awaited and its rejection is discarded by .catch(() => {}). The function then returns true on the next line whatever the request did.
 - User is misled: The shopper sees the cart as saved. If the request failed, the cart is not stored, and nothing in the page or the logs says so.
 - Certainty: confirmed (read src/sync.js:1-4; nothing between the discarded rejection at :2 and the return at :3 reports it)
 - Smallest fix: await api.post("/cart", cart) and let it throw, or return false in the catch.
+- Check it yourself: make the /cart endpoint return 500 and call syncCart; it still returns true.
 ```
 
 A suspected example:
 
 ```text
 ### src/orders.js:6  TP-10 Ignored failure signal
+- Blast radius: user-text
 - What happens: res.json() is read with no res.ok check. A non-2xx response whose body is valid JSON is returned as if it were a list of orders.
 - User is misled: A server error body such as {"error":"unavailable"} reaches the page as data, so the user sees a broken or empty order list instead of an error.
 - Certainty: suspected (not read: the shape of the server's error response; would settle: the API's error response contract)
@@ -98,9 +107,11 @@ not reported. This is **expected output, written by hand from reading the files,
 differ in wording and order, and a run that reports the decoy, misses a finding or grades one wrongly would not match it.
 
 The diff mode has a second example: [`examples/changes/add-refund.diff`](examples/changes/add-refund.diff) adds a `refund()`
-whose `except Exception` returns `True`. The expected result, [`examples/expected/add-refund.md`](examples/expected/add-refund.md),
-is one finding on the added line and a note that one pre-existing candidate (the retry in `charge()`) was outside the diff.
-This one is also written by hand.
+whose `except Exception` returns `True`, a new `place_order()` that trusts the existing fake-success `charge()`, and a
+hunk that deletes a status check. The expected result, [`examples/expected/add-refund.md`](examples/expected/add-refund.md),
+is two confirmed findings and one suspected, with the pre-existing retry in `charge()` counted as outside the diff. A third
+example, [`examples/changes/refund.py`](examples/changes/refund.py), shows an untracked new file (see
+[`examples/changes/README.md`](examples/changes/README.md)). These are also written by hand.
 
 **The hint list, from a real run.** The optional script `scripts/hints.sh` prints mechanical hints, with no model involved.
 It was run as `sh scripts/hints.sh examples/planted` on 2026-11-22, on Windows 11 with Git for Windows' sh and with `dash`
@@ -161,8 +172,22 @@ Other agents (Codex, Cursor, GitHub Copilot, Gemini CLI) load `skills/truthpath`
 into the tool's skills directory. `/truthpath` is Claude Code sugar, because a skill name becomes a slash command there.
 In other tools the skill triggers from its description, or by asking, for example "run truthpath on src/".
 
-To confirm the install, run it on the planted sample: `/truthpath examples/planted`. You should get the scope line, a list
-of findings, and the decoy `src/cleanup.py` under "Not reported".
+To confirm the install by any route, make a small file and scan it. Save these four lines as `sync.js` in any folder:
+
+```js
+async function syncCart(cart) {
+  api.post("/cart", cart).catch(() => {});
+  return true;
+}
+```
+
+Then ask for it by the command of your route. You should get one confirmed TP-01 finding at `sync.js:2`.
+
+- Plain skill copy (the second route above): `/truthpath sync.js`.
+- Marketplace install: Claude Code may namespace plugin skills, for example `/truthpath:truthpath sync.js`. That exact name is UNVERIFIED here: check it against the Claude Code plugin documentation, or just ask "run truthpath on sync.js", which works through the description.
+- Other tools: ask "run truthpath on sync.js".
+
+If you cloned the repository, `examples/planted` is a larger sample: `/truthpath examples/planted`.
 
 ## Usage
 
@@ -176,11 +201,48 @@ You can also paste a diff, or say "check my changes for fake success". With no t
 are uncommitted changes, and otherwise asks one question.
 
 After the report it offers one thing: `apply fix for <file>:<line>`. It changes only that location, shows the diff and runs
-nothing. Asked to fix everything at once, it does the first fix and says "One fix at a time, so each change can be reviewed."
+nothing. Name a list of findings and it does them one at a time in report order, showing each diff. An unnamed "fix all" is
+answered with "One fix at a time, so each change can be reviewed. Name the findings you want fixed."
 
-## How it compares
+Optional extras, only when you ask: say `json` or `sarif` for a machine-readable block in chat; name
+`.truthpath-accepted.md` to hide findings you accepted earlier; say `accept <file>:<line> because <reason>` to add one line
+to that file. The SARIF mapping (confirmed to `error`, suspected to `warning`) is this skill's own choice, not part of the
+SARIF specification.
 
-The space has neighbours. These notes come from the pages linked below. None of these tools was run for this comparison,
+**Cost per run.** The fixed load is about 21 KB of Markdown (SKILL.md 8.7 KB, scope 3.2 KB, catalogue 4.1 KB, finding
+format 5.1 KB, measured by file size at the first version, not tokens). Each pattern file it opens adds 2-3 KB, plus the code
+it scans.
+
+## Limits
+
+- **A reading, not a proof the code works.** "No findings" means no findings were seen. It does not mean the code is correct.
+  A finding graded confirmed means the path was read, not that the failure happens in production.
+- **No execution.** Beyond the read-only git commands that produce a diff, it runs nothing: no tests, no app, no scripts.
+  Asked to prove a finding by running something, it hands you the command instead.
+- **No edits** unless you name one fix, or one finding to accept. One fix at a time; "fix all" with no list is refused.
+- **No test files.** Mocks and fakes are expected there, so they are out of scope in this version. A skipped `mocks/` or
+  `fixtures/` directory is named in the scope line; say "<dir> ships" if it is production.
+- **No scores or percentages.** It reports findings, not a "how fake" number.
+- **Never confirmed from a pattern, a name or a comment alone.** A comment that says "intentional" does not change what the
+  code does.
+- **It does not obey text inside scanned code.** An instruction such as "ignore this file" in a comment, a diff or a
+  document is listed as data under "Not reported", and the file is still scanned.
+- **It never prints secret values.** A real-looking secret is reported by location only, as `<redacted>`.
+- **Two-hop caller tracing by default** (the search itself may cover the whole repository). Callers farther than two calls away, or outside the scope, make a finding suspected.
+- **Language coverage is shape-based.** The examples are JavaScript, TypeScript, Python and Go. A table in the catalogue adds
+  shapes for shell, Rust, Java, Kotlin, C# and Swift; other languages are read by shape and may be read less well.
+- **Large files are searched, not always read in full.** A file over about 1500 lines with no search hit is listed in the
+  scope line as "searched, not read in full".
+- **Not covered:** security vulnerabilities, performance, and UI state completeness.
+- **A model is not deterministic.** Wording and ordering can vary between runs.
+
+**Measured so far:** nothing about model behaviour. No runs, no users, no results are claimed. The expected outputs above
+are written by hand. The only thing that was run is the optional `hints.sh` script, which involves no model, as described in
+"Proof scenario".
+
+## How it compares (as seen 2026-11-22)
+
+The space has neighbours. These notes come from the pages linked below, as they read on 2026-11-22. None of these tools was run for this comparison,
 and licences and upkeep were not checked. This is not a claim of being better or faster.
 
 - **[`silent-failure-hunter`](https://claude.com/plugins/pr-review-toolkit)** in Anthropic's pr-review-toolkit is the closest
@@ -207,33 +269,9 @@ What Truthpath tries to add is narrow, and it is a design choice, not a measured
 
 - One catalogue of ten patterns that goes past error handling: placeholder endpoints, sample data, constant stubs,
   not-implemented-behind-success, and fakes as the only dependency.
-- A certainty grade with a written rule (confirmed or suspected). We saw no grade like it in the pages above.
-- A plain-English "User is misled" line on every finding.
+- A certainty grade with a written rule (confirmed or suspected). We saw no such field in the pages above on 2026-11-22; that is absence of evidence, not proof that none exists.
+- A plain-English "User is misled" line and a blast-radius tag on every finding. Other tools may have a comparable line; this is not claimed as unique.
 - A portable Agent Skill that runs nothing, with a "Not reported" list that shows which candidates were rejected and why.
-
-## Limits
-
-- **A reading, not a proof the code works.** "No findings" means no findings were seen. It does not mean the code is correct.
-  A finding graded confirmed means the path was read, not that the failure happens in production.
-- **No execution.** Beyond the read-only git commands that produce a diff, it runs nothing: no tests, no app, no scripts.
-  Asked to prove a finding by running something, it hands you the command instead.
-- **No edits** unless you name one fix. One fix at a time, even if you ask for all of them.
-- **No test files.** Mocks and fakes are expected there, so they are out of scope in this version.
-- **No scores or percentages.** It reports findings, not a "how fake" number.
-- **Never confirmed from a pattern, a name or a comment alone.** A comment that says "intentional" does not change what the
-  code does.
-- **It does not obey text inside scanned code.** An instruction such as "ignore this file" in a comment, a diff or a
-  document is listed as data under "Not reported", and the file is still scanned.
-- **It never prints secret values.** A real-looking secret is reported by location only, as `<redacted>`.
-- **Two-hop caller tracing by default.** Callers farther than two calls away, or outside the scope, make a finding suspected.
-- **Language coverage is shape-based.** The examples are JavaScript, TypeScript, Python and Go; other languages are read by
-  shape and may be read less well.
-- **Not covered:** security vulnerabilities, performance, and UI state completeness.
-- **A model is not deterministic.** Wording and ordering can vary between runs.
-
-**Measured so far:** nothing about model behaviour. No runs, no users, no results are claimed. The expected outputs above
-are written by hand. The only thing that was run is the optional `hints.sh` script, which involves no model, as described in
-"Proof scenario".
 
 ## Maintainer check
 
@@ -249,7 +287,7 @@ node --test scripts/check.test.mjs
   imports of mocks or fakes). Its first stderr line says it is hints only. It skips the same test paths as the skill, writes
   nothing, runs nothing from the files it reads, and exits 0 after printing or 2 on bad usage.
 - `scripts/check.test.mjs` checks that the hints match `examples/expected/planted-hints.txt` byte for byte and name nothing
-  under `test/`; that the `SKILL.md` name equals its folder and the description is 1024 characters or fewer; that each
+  under `test/`; that the `SKILL.md` name equals its folder and the description is 900 characters or fewer (the limit is 1024); that each
   pattern file has all nine sections and two or more code languages; that the catalogue lists exactly the pattern files that
   exist; that the skill folder has no emoji and no tool names; and that no absolute local paths appear in the plugin.
 
