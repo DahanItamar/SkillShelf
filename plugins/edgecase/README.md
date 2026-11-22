@@ -88,22 +88,22 @@ with what the user experiences rather than which rule fired. A clean component s
 > `/plugins`, plural, and opens a dialog**: the lines below are terminal syntax and fail silently
 > there, which looks identical to the install not working.
 
-edgecase ships in the [claude-skills](https://github.com/DahanItamar/claude-skills#readme) marketplace
+edgecase ships in the [SkillShelf](https://github.com/DahanItamar/SkillShelf#readme) marketplace
 with the other skills. It works standalone; `craft` and `accessibility` are optional and not needed.
 
 Plugin route, invoked as `/edgecase:edgecase` or by describing the problem:
 
 ```bash
-/plugin marketplace add DahanItamar/claude-skills
-/plugin install edgecase@claude-skills
+/plugin marketplace add DahanItamar/SkillShelf
+/plugin install edgecase@skillshelf
 ```
 
 Plain-skill route, which needs no plugin UI and so works in web and cloud sessions too. It is invoked as
 `/edgecase` with no plugin namespace, and `.claude-plugin/` is ignored:
 
 ```bash
-git clone https://github.com/DahanItamar/claude-skills.git
-cp -r claude-skills/plugins/edgecase ~/.claude/skills/edgecase
+git clone https://github.com/DahanItamar/SkillShelf.git
+cp -r SkillShelf/plugins/edgecase ~/.claude/skills/edgecase
 ```
 
 On Windows, copy to `%USERPROFILE%\.claude\skills\edgecase`.

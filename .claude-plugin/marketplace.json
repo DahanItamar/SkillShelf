@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
-  "name": "claude-skills",
-  "description": "Seven Claude Code skills: Regwise (compliance), Edgecase (UI states), Blueprint (spec-driven development), Showcase (evidence-based READMEs), Gatehouse (pre-install audit), Casebook (hypothesis-driven debugging) and Hearsay (claims checked against the repo).",
+  "name": "skillshelf",
+  "description": "Standalone AI coding skills: Regwise, Edgecase, Blueprint, Showcase, Casebook. Open Agent Skills format.",
   "owner": {
     "name": "Itamar Dahan",
     "url": "https://github.com/DahanItamar"
@@ -17,7 +17,7 @@
         "name": "Itamar Dahan",
         "url": "https://github.com/DahanItamar"
       },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/regwise",
+      "homepage": "https://github.com/DahanItamar/SkillShelf/tree/main/plugins/regwise",
       "license": "MIT",
       "category": "security",
       "keywords": [
@@ -40,7 +40,7 @@
         "name": "Itamar Dahan",
         "url": "https://github.com/DahanItamar"
       },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/edgecase",
+      "homepage": "https://github.com/DahanItamar/SkillShelf/tree/main/plugins/edgecase",
       "license": "MIT",
       "category": "review",
       "keywords": [
@@ -64,7 +64,7 @@
         "name": "Itamar Dahan",
         "url": "https://github.com/DahanItamar"
       },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/blueprint",
+      "homepage": "https://github.com/DahanItamar/SkillShelf/tree/main/plugins/blueprint",
       "license": "MIT",
       "category": "planning",
       "keywords": [
@@ -99,7 +99,7 @@
         "name": "Itamar Dahan",
         "url": "https://github.com/DahanItamar"
       },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/showcase",
+      "homepage": "https://github.com/DahanItamar/SkillShelf/tree/main/plugins/showcase",
       "license": "MIT",
       "category": "documentation",
       "keywords": [
@@ -112,30 +112,6 @@
       ]
     },
     {
-      "name": "gatehouse",
-      "displayName": "Gatehouse",
-      "source": "./plugins/gatehouse",
-      "description": "Read-only pre-install auditor for skills, plugins and marketplaces: treats every file as untrusted text, quotes the lines that triggered each finding, and ends with install, install with edits, or reject.",
-      "version": "0.1.0",
-      "author": {
-        "name": "Itamar Dahan",
-        "url": "https://github.com/DahanItamar"
-      },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/gatehouse",
-      "license": "MIT",
-      "category": "security",
-      "keywords": [
-        "security",
-        "audit",
-        "skills",
-        "plugins",
-        "marketplace",
-        "prompt-injection",
-        "supply-chain",
-        "review"
-      ]
-    },
-    {
       "name": "casebook",
       "displayName": "Casebook",
       "source": "./plugins/casebook",
@@ -145,7 +121,7 @@
         "name": "Itamar Dahan",
         "url": "https://github.com/DahanItamar"
       },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/casebook",
+      "homepage": "https://github.com/DahanItamar/SkillShelf/tree/main/plugins/casebook",
       "license": "MIT",
       "category": "debugging",
       "keywords": [
@@ -156,31 +132,6 @@
         "regression-test",
         "case-file",
         "troubleshooting"
-      ]
-    },
-    {
-      "name": "hearsay",
-      "displayName": "Hearsay",
-      "source": "./plugins/hearsay",
-      "description": "Fact-checks release notes, changelogs, PR descriptions and README feature lists against the repository. Marks every claim verified, unverified, contradicted or unmeasurable with file and line, and rewrites what the code does not support. Read-only.",
-      "version": "0.1.0",
-      "author": {
-        "name": "Itamar Dahan",
-        "url": "https://github.com/DahanItamar"
-      },
-      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/hearsay",
-      "license": "MIT",
-      "category": "verification",
-      "keywords": [
-        "fact-check",
-        "release-notes",
-        "changelog",
-        "pull-request",
-        "readme",
-        "semver",
-        "verification",
-        "documentation",
-        "review"
       ]
     }
   ]

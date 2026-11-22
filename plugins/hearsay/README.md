@@ -92,20 +92,20 @@ apply the rewrites.
 > `/plugins`, plural, and opens a dialog**: the lines below are terminal syntax and fail silently
 > there, which looks identical to the install not working.
 
-hearsay ships in the [claude-skills](https://github.com/DahanItamar/claude-skills#readme) marketplace
+hearsay ships in the [SkillShelf](https://github.com/DahanItamar/SkillShelf#readme) marketplace
 with the other skills. It works standalone.
 
 ```bash
-/plugin marketplace add DahanItamar/claude-skills
-/plugin install hearsay@claude-skills
+/plugin marketplace add DahanItamar/SkillShelf
+/plugin install hearsay@skillshelf
 ```
 
 Or clone it into your skills directory, which needs no plugin UI and so works in web and cloud
 sessions too:
 
 ```bash
-git clone https://github.com/DahanItamar/claude-skills.git
-cp -r claude-skills/plugins/hearsay ~/.claude/skills/hearsay
+git clone https://github.com/DahanItamar/SkillShelf.git
+cp -r SkillShelf/plugins/hearsay ~/.claude/skills/hearsay
 ```
 
 The second route installs it as a plain skill: the same instructions, invoked as `/hearsay` without the

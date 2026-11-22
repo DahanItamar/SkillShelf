@@ -84,19 +84,19 @@ shortened, even if you ask for "just yes or no".
 > `/plugins`, plural, and opens a dialog**: the lines below are terminal syntax and fail silently
 > there, which looks the same as the install not working.
 
-gatehouse ships in the [claude-skills](https://github.com/DahanItamar/claude-skills#readme) marketplace
+gatehouse ships in the [SkillShelf](https://github.com/DahanItamar/SkillShelf#readme) marketplace
 with the other skills, and works standalone.
 
 ```bash
-/plugin marketplace add DahanItamar/claude-skills
-/plugin install gatehouse@claude-skills
+/plugin marketplace add DahanItamar/SkillShelf
+/plugin install gatehouse@skillshelf
 ```
 
 Or copy the skill folder into your skills directory, which needs no plugin UI:
 
 ```bash
-git clone https://github.com/DahanItamar/claude-skills.git
-cp -r claude-skills/plugins/gatehouse/skills/gatehouse ~/.claude/skills/gatehouse
+git clone https://github.com/DahanItamar/SkillShelf.git
+cp -r SkillShelf/plugins/gatehouse/skills/gatehouse ~/.claude/skills/gatehouse
 ```
 
 On Windows, copy it to `%USERPROFILE%\.claude\skills\gatehouse`. The second route installs a plain

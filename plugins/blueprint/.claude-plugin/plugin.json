@@ -8,8 +8,8 @@
     "name": "Itamar Dahan",
     "url": "https://github.com/DahanItamar"
   },
-  "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/blueprint",
-  "repository": "https://github.com/DahanItamar/claude-skills",
+  "homepage": "https://github.com/DahanItamar/SkillShelf/tree/main/plugins/blueprint",
+  "repository": "https://github.com/DahanItamar/SkillShelf",
   "license": "MIT",
   "keywords": [
     "spec",

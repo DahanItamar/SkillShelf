@@ -29,18 +29,18 @@ project's tests or dev server only after its run-safety gate.**
 There is nothing to run at install. It is Markdown that Claude Code reads. Install as a plugin:
 
 ```bash
-/plugin marketplace add DahanItamar/claude-skills
-/plugin install showcase@claude-skills
+/plugin marketplace add DahanItamar/SkillShelf
+/plugin install showcase@skillshelf
 /reload-plugins
 ```
 
 Or copy only the skill (`SKILL.md` and `references/`) into place:
 
 ```bash
-git clone https://github.com/DahanItamar/claude-skills.git
+git clone https://github.com/DahanItamar/SkillShelf.git
 mkdir -p ~/.claude/skills/showcase
-cp claude-skills/plugins/showcase/SKILL.md ~/.claude/skills/showcase/
-cp -r claude-skills/plugins/showcase/references ~/.claude/skills/showcase/
+cp SkillShelf/plugins/showcase/SKILL.md ~/.claude/skills/showcase/
+cp -r SkillShelf/plugins/showcase/references ~/.claude/skills/showcase/
 ```
 
 The marketplace route is preferred. Both work because `SKILL.md` sits at the plugin root and every

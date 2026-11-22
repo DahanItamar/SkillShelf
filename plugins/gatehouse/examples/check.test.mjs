@@ -67,8 +67,8 @@ test('1 plugin.json has the required fields', () => {
   assert.match(pj.version, /^\d+\.\d+\.\d+$/);
   assert.ok(pj.description && pj.description.length > 20);
   assert.deepEqual(pj.author, { name: 'Itamar Dahan', url: 'https://github.com/DahanItamar' });
-  assert.equal(pj.homepage, 'https://github.com/DahanItamar/claude-skills/tree/main/plugins/gatehouse');
-  assert.equal(pj.repository, 'https://github.com/DahanItamar/claude-skills');
+  assert.equal(pj.homepage, 'https://github.com/DahanItamar/SkillShelf/tree/main/plugins/gatehouse');
+  assert.equal(pj.repository, 'https://github.com/DahanItamar/SkillShelf');
   assert.equal(pj.license, 'MIT');
   assert.ok(Array.isArray(pj.keywords) && pj.keywords.length >= 5);
   assert.match(rd('LICENSE'), /Copyright \(c\) 2026 Itamar Dahan/);

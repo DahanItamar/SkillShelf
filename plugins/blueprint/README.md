@@ -98,8 +98,8 @@ records what is true.
 Requires **Claude Code**. Nothing is installed, compiled or executed.
 
 ```bash
-/plugin marketplace add DahanItamar/claude-skills
-/plugin install blueprint@claude-skills
+/plugin marketplace add DahanItamar/SkillShelf
+/plugin install blueprint@skillshelf
 ```
 
 Then run **`/spec-start`**. It reads the repository and names the one command to run next —
@@ -196,7 +196,7 @@ RESULT orphans=3 status=fail
 
 ## Extending it
 
-Because every stage keys on `AC-###` and plain files, you can add your own stage skill (a compliance pass with [Regwise](https://github.com/DahanItamar/claude-skills/tree/main/plugins/regwise), a UI-states pass with [Edgecase](https://github.com/DahanItamar/claude-skills/tree/main/plugins/edgecase) from the same marketplace). The contract:
+Because every stage keys on `AC-###` and plain files, you can add your own stage skill (a compliance pass with [Regwise](https://github.com/DahanItamar/SkillShelf/tree/main/plugins/regwise), a UI-states pass with [Edgecase](https://github.com/DahanItamar/SkillShelf/tree/main/plugins/edgecase) from the same marketplace). The contract:
 
 1. Read `docs/SPEC.md`; never edit it.
 2. Cite criteria only as `AC-###`; never invent one.
@@ -210,8 +210,8 @@ Natural places to run an optional pass, by hand, are the stage boundaries. Nothi
 
 | Boundary | Optional pass | Entry skill |
 |---|---|---|
-| after `/spec-tasks` | compliance | [Regwise](https://github.com/DahanItamar/claude-skills/tree/main/plugins/regwise) |
-| before `/spec-implement` | UI states | [Edgecase](https://github.com/DahanItamar/claude-skills/tree/main/plugins/edgecase) |
+| after `/spec-tasks` | compliance | [Regwise](https://github.com/DahanItamar/SkillShelf/tree/main/plugins/regwise) |
+| before `/spec-implement` | UI states | [Edgecase](https://github.com/DahanItamar/SkillShelf/tree/main/plugins/edgecase) |
 | any time | criterion integrity | `/spec-check` |
 
 ## What it weighs

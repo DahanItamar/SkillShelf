@@ -452,7 +452,7 @@ Read-only except one file, and that one requires consent.
 
 | Path | Invocation | Resolves to |
 | --- | --- | --- |
-| Plugin | `/plugin marketplace add <owner>/claude-skills` then install `regwise@claude-skills` | root `.claude-plugin/marketplace.json` → plugin at `./plugins/regwise` → `skills/regwise/` |
+| Plugin | `/plugin marketplace add <owner>/SkillShelf` then install `regwise@skillshelf` | root `.claude-plugin/marketplace.json` → plugin at `./plugins/regwise` → `skills/regwise/` |
 | Plain skill | `cp -r skills/regwise ~/.claude/skills/regwise` | `~/.claude/skills/regwise/SKILL.md` |
 | Project skill | `cp -r skills/regwise <project>/.claude/skills/regwise` | project-scoped, same tree |
 

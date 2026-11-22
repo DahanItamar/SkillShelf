@@ -137,19 +137,19 @@ The bug in that example is real and reproducible without any model: `Math.round(
 > is `/plugins`, plural, and opens a dialog**: the lines below are terminal syntax and fail silently
 > there, which looks identical to the install not working.
 
-casebook ships in the [claude-skills](https://github.com/DahanItamar/claude-skills#readme)
+casebook ships in the [SkillShelf](https://github.com/DahanItamar/SkillShelf#readme)
 marketplace with the other plugins. It works standalone.
 
 ```bash
-/plugin marketplace add DahanItamar/claude-skills
-/plugin install casebook@claude-skills
+/plugin marketplace add DahanItamar/SkillShelf
+/plugin install casebook@skillshelf
 ```
 
 Or clone it and copy the two skills into your skills directory, which needs no plugin UI:
 
 ```bash
-git clone https://github.com/DahanItamar/claude-skills.git
-cp -r claude-skills/plugins/casebook/skills/* ~/.claude/skills/
+git clone https://github.com/DahanItamar/SkillShelf.git
+cp -r SkillShelf/plugins/casebook/skills/* ~/.claude/skills/
 ```
 
 The second route installs them as plain skills, without the plugin namespace, and ignores

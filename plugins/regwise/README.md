@@ -132,12 +132,12 @@ Requires **Claude Code**. Nothing else — no Node, no Python, no package manage
 
 ```bash
 # as a plugin, with updates
-/plugin marketplace add DahanItamar/claude-skills
-/plugin install regwise@claude-skills
+/plugin marketplace add DahanItamar/SkillShelf
+/plugin install regwise@skillshelf
 
 # or copy the skill directly
-git clone https://github.com/DahanItamar/claude-skills.git
-cp -r claude-skills/plugins/regwise/skills/regwise ~/.claude/skills/regwise
+git clone https://github.com/DahanItamar/SkillShelf.git
+cp -r SkillShelf/plugins/regwise/skills/regwise ~/.claude/skills/regwise
 ```
 
 Both paths resolve to the same tree — `templates/` and `references/` live inside `skills/regwise/`, so a copy takes everything and nothing above it.
