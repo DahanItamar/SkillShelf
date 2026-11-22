@@ -6,7 +6,7 @@
 
 Markdown and POSIX shell. **Zero dependencies, no build step, no runtime** — the audit is Claude reading your repository, not a scanner you have to maintain.
 
-[![verify](https://github.com/DahanItamar/acsm/actions/workflows/verify.yml/badge.svg)](https://github.com/DahanItamar/acsm/actions/workflows/verify.yml)
+[![verify](https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml)
 [![modules](https://img.shields.io/badge/modules-8-1f6feb)](skills/acsm/references/)
 [![audit checks](https://img.shields.io/badge/audit%20checks-83-1f6feb)](skills/acsm/references/)
 [![instruments cited](https://img.shields.io/badge/instruments%20cited-31-1f6feb)](docs/CITATIONS.md)
@@ -107,11 +107,12 @@ Requires **Claude Code**. Nothing else — no Node, no Python, no package manage
 
 ```bash
 # as a plugin, with updates
-/plugin marketplace add DahanItamar/acsm
+/plugin marketplace add DahanItamar/claude-skills
+/plugin install acsm@claude-skills
 
 # or copy the skill directly
-git clone https://github.com/DahanItamar/acsm.git
-cp -r acsm/skills/acsm ~/.claude/skills/acsm
+git clone https://github.com/DahanItamar/claude-skills.git
+cp -r claude-skills/plugins/acsm/skills/acsm ~/.claude/skills/acsm
 ```
 
 Both paths resolve to the same tree — `templates/` and `references/` live inside `skills/acsm/`, so a copy takes everything and nothing above it.

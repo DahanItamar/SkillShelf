@@ -121,17 +121,17 @@ There is nothing to run. It is Markdown that Claude Code reads.
 
 ```bash
 # as a plugin
-/plugin marketplace add DahanItamar/readme-architect
-/plugin install readme-architect
+/plugin marketplace add DahanItamar/claude-skills
+/plugin install readme-architect@claude-skills
 
 # or drop it in directly
-git clone https://github.com/DahanItamar/readme-architect \
-          ~/.claude/skills/readme-architect
+git clone https://github.com/DahanItamar/claude-skills.git
+cp -r claude-skills/plugins/readme-architect ~/.claude/skills/readme-architect
 ```
 
 Then ask for a README in whatever words you would have used anyway — *"write a README for this"*,
 *"my README is out of date"*, *"make this presentable before I make it public"*. Both install
-routes work because `SKILL.md` sits at the repository root and every path it names is relative to
+routes work because `SKILL.md` sits at the plugin root and every path it names is relative to
 itself.
 
 ## Under the hood — briefly

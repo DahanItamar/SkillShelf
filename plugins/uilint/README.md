@@ -69,18 +69,19 @@ past matter as much as the two it stopped on.
 
 ## Install
 
-The repository is its own marketplace, so there is nothing to add first.
+uilint ships in the [claude-skills](../../README.md) marketplace with the other skills.
 
 ```bash
-/plugin marketplace add DahanItamar/uilint
-/plugin install uilint@uilint
+/plugin marketplace add DahanItamar/claude-skills
+/plugin install uilint@claude-skills
 ```
 
 Or clone it into your skills directory, which needs no plugin UI and so works in web and cloud
 sessions too:
 
 ```bash
-git clone https://github.com/DahanItamar/uilint.git ~/.claude/skills/uilint
+git clone https://github.com/DahanItamar/claude-skills.git
+cp -r claude-skills/plugins/uilint ~/.claude/skills/uilint
 ```
 
 Pick one route, not both, or the same rules load twice. **In the VS Code extension the command is

@@ -8,8 +8,8 @@
     "name": "Itamar Dahan",
     "url": "https://github.com/DahanItamar"
   },
-  "homepage": "https://github.com/DahanItamar/uilint",
-  "repository": "https://github.com/DahanItamar/uilint",
+  "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/uilint",
+  "repository": "https://github.com/DahanItamar/claude-skills",
   "license": "MIT",
   "keywords": [
     "ui",

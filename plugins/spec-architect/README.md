@@ -9,7 +9,7 @@ cites that number.**
 Plain Markdown, read by Claude Code.
 **No `package.json`, no dependencies, no build step, nothing that executes at install.**
 
-<a href="https://github.com/DahanItamar/spec-architect/actions/workflows/test.yml"><img alt="CI status on the main branch" src="https://github.com/DahanItamar/spec-architect/actions/workflows/test.yml/badge.svg?branch=main"></a>
+<a href="https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml"><img alt="CI status on the main branch" src="https://github.com/DahanItamar/claude-skills/actions/workflows/ci.yml/badge.svg?branch=main"></a>
 <img alt="17 tests passing across 4 suites" src="https://img.shields.io/badge/tests-17%20passing-1f6f3f?style=flat-square">
 <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-1f6f3f?style=flat-square">
 <img alt="version 3.2.0" src="https://img.shields.io/badge/version-3.2.0-B55400?style=flat-square">
@@ -101,8 +101,8 @@ records what is true.
 Requires **Claude Code**. Nothing is installed, compiled or executed.
 
 ```bash
-/plugin marketplace add DahanItamar/spec-architect
-/plugin install spec-architect
+/plugin marketplace add DahanItamar/claude-skills
+/plugin install spec-architect@claude-skills
 ```
 
 Then run **`/spec-start`**. It reads the repository and names the one command to run next —

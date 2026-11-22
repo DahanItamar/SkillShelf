@@ -8,8 +8,8 @@
     "name": "Itamar Dahan",
     "url": "https://github.com/DahanItamar"
   },
-  "homepage": "https://github.com/DahanItamar/spec-architect",
-  "repository": "https://github.com/DahanItamar/spec-architect",
+  "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/spec-architect",
+  "repository": "https://github.com/DahanItamar/claude-skills",
   "license": "MIT",
   "keywords": [
     "spec",

@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "claude-skills",
+  "description": "Claude Code skills by Itamar Dahan: compliance, UI states, spec-driven development and evidence-based READMEs.",
+  "owner": {
+    "name": "Itamar Dahan",
+    "url": "https://github.com/DahanItamar"
+  },
+  "plugins": [
+    {
+      "name": "acsm",
+      "source": "./plugins/acsm",
+      "description": "Adaptive Compliance & Security Matrix. Routes a project to the compliance obligations that actually apply to it, audits a repository against them, and drafts the user-facing legal documents they require.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Itamar Dahan",
+        "url": "https://github.com/DahanItamar"
+      },
+      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/acsm",
+      "license": "MIT",
+      "category": "security",
+      "keywords": [
+        "compliance",
+        "security",
+        "gdpr",
+        "ccpa",
+        "pci-dss",
+        "accessibility",
+        "privacy"
+      ]
+    },
+    {
+      "name": "uilint",
+      "displayName": "uilint",
+      "source": "./plugins/uilint",
+      "description": "A linter for the UI states everyone forgets — loading, empty, error, success and partial. 43 rules applied while the interface is written; blocks completion only on the ones that cause silent user harm.",
+      "version": "1.2.0",
+      "author": {
+        "name": "Itamar Dahan",
+        "url": "https://github.com/DahanItamar"
+      },
+      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/uilint",
+      "license": "MIT",
+      "category": "review",
+      "keywords": [
+        "ui",
+        "ux",
+        "frontend",
+        "review",
+        "states",
+        "loading",
+        "error-handling",
+        "forms"
+      ]
+    },
+    {
+      "name": "spec-architect",
+      "displayName": "Spec Architect",
+      "source": "./plugins/spec-architect",
+      "description": "The six-stage spec pipeline for Claude Code. spec-constitution sets the repository's rules, spec-architect writes the spec and its acceptance criteria, spec-tasks turns it into an ordered list, spec-implement executes one task at a time verifying each against the criteria it cites, spec-drift audits whether the code still does what the spec says, and spec-refactor audits whether it can still be changed — proposing structural work that preserves every criterion rather than closing a new one. Refactoring runs are numbered directories under docs/refactorings/ with a permanent smell registry, mirroring how change proposals are versioned under docs/changes/, and spec-drift closes both out — verifying, recording and archiving finished work of either kind. The AC-### identifiers are what join them: assigned once, cited by every later stage.",
+      "version": "3.2.0",
+      "author": {
+        "name": "Itamar Dahan",
+        "url": "https://github.com/DahanItamar"
+      },
+      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/spec-architect",
+      "license": "MIT",
+      "category": "planning",
+      "keywords": [
+        "spec",
+        "prd",
+        "architecture",
+        "system-design",
+        "planning",
+        "acceptance-criteria",
+        "tasks",
+        "implementation",
+        "drift",
+        "audit",
+        "refactoring",
+        "code-smells",
+        "dead-code",
+        "technical-debt"
+      ]
+    },
+    {
+      "name": "readme-architect",
+      "displayName": "README Architect",
+      "source": "./plugins/readme-architect",
+      "description": "Writes a repository README from evidence rather than adjectives — runs the project first, then fills a Winnow-shaped skeleton with real output, observed numbers, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Itamar Dahan",
+        "url": "https://github.com/DahanItamar"
+      },
+      "homepage": "https://github.com/DahanItamar/claude-skills/tree/main/plugins/readme-architect",
+      "license": "MIT",
+      "category": "documentation",
+      "keywords": [
+        "readme",
+        "docs",
+        "documentation",
+        "open-source",
+        "markdown",
+        "onboarding"
+      ]
+    }
+  ]
+}
