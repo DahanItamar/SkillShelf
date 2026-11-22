@@ -8,4 +8,4 @@
 - Covers other tools' instruction files (`AGENTS.md`, `GEMINI.md`, Cursor and Copilot rules) and executables by folder (`scripts/`, `bin/`) and extension.
 - Fewer false rejects: directional marks in Hebrew, Arabic and Indic text are allowed, a quoted injection phrase in a skill is an edit rather than a reject, and a bare "reviewer" no longer matches.
 - Fixtures with golden expectations in `examples/`, including a Hebrew right-to-left fixture that should come out as INSTALL.
-- Not yet measured: no model-run audit has been recorded. See `examples/results/`. The reference-token figure (about 10k tokens of references) is a size-based estimate. `/gatehouse` versus `/gatehouse:gatehouse` and `plugin details` have not been observed live.
+- Measured so far: one recorded run by one model on in-sample fixtures, in `examples/results/claude-opus-5-5-2026-11-22.md`. It is not a detection rate. `plugin details` lists one skill, no hooks, no MCP; both command names ran the skill in headless mode. Not yet measured: a held-out set, other models, and tools other than Claude Code. The reference-token figure (about 10k tokens of references) is a size-based estimate.

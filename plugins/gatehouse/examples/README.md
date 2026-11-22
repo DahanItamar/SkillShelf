@@ -25,8 +25,7 @@ itself, which does not come out as INSTALL; the file says why).
 
 Each golden lists the rule IDs that must be reported, the IDs that must not be, a canary string where
 one is seeded, and one line of reason per ID. The goldens are expectations written by the author. They
-have not been blind-reviewed, and they are not measurements. Scored runs go in [`results/`](results/),
-which is empty until someone records one.
+have not been blind-reviewed, and they are not measurements. Scored runs go in [`results/`](results/): the first one is `claude-opus-5-5-2026-11-22.md`.
 
 Audit a fixture as its own root. Inside a bigger audit (for example `plugins/gatehouse`) the same files
 sit under `examples/`, where the labelled-fixture cap in `rules.md` lowers some findings to edit-level.
