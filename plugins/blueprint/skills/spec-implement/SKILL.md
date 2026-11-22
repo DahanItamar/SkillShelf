@@ -24,7 +24,7 @@ Not five tasks then a test run. Not "I'll check at the end." The failure mode be
 ### Phase 0 — Load the context
 
 1. `docs/CONSTITUTION.md` — read the **verify command** and the conventions your code must obey.
-2. The `TASKS.md` you were pointed at (or, for a small change, the inline `## Tasks` of a `PROPOSAL.md`, run through the same loop) (otherwise glob `docs/changes/*/TASKS.md`, not `archive/`; the one with unchecked boxes is the resume point, and if several, ask which) — or a `docs/refactorings/NNNN-slug/REPORT.md` refactoring list, which runs through the same loop with one difference; see below.
+2. The `TASKS.md` you were pointed at (or, for a small change, the inline `## Tasks` of a `PROPOSAL.md`, run through the same loop) (otherwise glob `docs/changes/*/TASKS.md`, not `archive/`; the one with unchecked boxes is the resume point, and if several, ask which).
 
    If there is no `TASKS.md`, accept a pasted or described task list. Write a short list with a done-condition for each task, show it, get a yes, then run the same loop.
 3. `docs/SPEC.md` (or the proposal) — you need §2.1 to resolve citations, and §5 Data Models to write anything that touches data.
@@ -51,7 +51,7 @@ For each task, in file order:
 
 1. **Read the criteria it cites.** Verbatim, from the spec. Not from memory, not from the task title — the criterion is the contract, and its exact wording is what you are building to.
 2. **Implement**, touching the files the task names. Read `references/verification.md` before the first task if you have not.
-3. **Verify.** Run the constitution's verify command, then confirm each cited criterion specifically. A green test suite is not the same as a satisfied criterion.
+3. **Verify.** Run the constitution's verify command, then confirm each cited criterion specifically. A green test suite is not the same as a satisfied criterion. Where a test runner exists, add or extend a test that names the criterion in its title (`AC-003: flags overlapping shifts`) and watch it fail before the code, pass after.
 4. **On success**, tick the checkbox in `TASKS.md` and continue.
 5. **On failure**, stop. Report which task, which criterion, what you observed, and what you think is wrong.
 
@@ -89,21 +89,14 @@ Then state: tasks completed, criteria closed, files touched outside their task's
 
 No state files, no locks.
 
-- **One commit per task**, message `T-04 closes AC-003`. Git then holds the AC-to-commit trail. The `closes AC-###` part is what a traceability check matches; keep `T-NN` for people. Put the AC id in the titles of the tests you add (for example `AC-003: flags overlapping shifts`) so the check 5 search finds them.
+- **One commit per task**, message `T-04 closes AC-003`. Git then holds the AC-to-commit trail. The `closes AC-###` part is what a traceability check matches; keep `T-NN` for people.
 - **Parallel work:** one `TASKS.md` per milestone directory, one owner per directory. Split large milestones along a dependency cut so two developers never edit the same checkbox file.
 - **Parallel branches** that each add a change proposal use provisional ids (`0000-slug`, `AC-NEW-n`). Whoever merges second takes the next real ordinal and next free `AC-###`, renames the directory and rewrites the `AC-NEW-n` ids and the task lines that cite them, in the merge commit. Squash merges drop commit messages, so put `closes AC-###` in the pull request title or body.
 - **A merge conflict in `TASKS.md`** is resolved by re-verifying every task ticked on either side, not by taking a side.
 
 ## Refactoring lists
 
-A refactoring list (`docs/refactorings/NNNN-slug/REPORT.md`) uses the same checkbox loop, with `R-01` lines that say **`preserves AC-###`** where a task says `closes AC-###`. Four differences follow from that one word:
-
-- **Verification is inverted.** You are not making a criterion newly true; you are proving it did not stop being true. Run the verify command **before** the first entry and record the result — a green run afterwards means nothing without it.
-- **Behavior must not change.** If an entry cannot be completed without altering what a criterion asserts, stop. It is a change proposal, not a refactoring: report it and stop.
-- **One judgment entry per commit.** Entries marked `kind: judgment` land alone. Mechanical ones may share a commit if they are the same kind of move.
-- **On red, revert rather than fix forward.** The point of one entry per commit is that a failure has exactly one cause; debugging out of it forfeits that.
-
-Everything else is identical — file order is execution order, the checkbox is the only state, stop at the first failure.
+A checklist whose lines say `preserves AC-###` instead of `closes AC-###` (a behaviour-preserving restructuring list) runs through the same loop with three changes: run the verify command before the first entry and record it; if an entry cannot be done without changing what a criterion asserts, stop; on red, revert rather than fix forward. This is optional input; the skill works without it.
 
 ---
 

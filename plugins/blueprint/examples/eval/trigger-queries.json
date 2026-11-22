@@ -1,0 +1,284 @@
+[
+  {
+    "skill": "spec-constitution",
+    "query": "Set up our repo conventions and a test command that every agent session should follow",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-constitution",
+    "query": "Our reviewers keep leaving the same comments; write them down once",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-constitution",
+    "query": "The agent keeps ignoring our house style, create a constitution for this repo",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-constitution",
+    "query": "Start a new project: define principles and how we verify changes",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-constitution",
+    "query": "Write our coding standards doc for the team wiki",
+    "should_trigger": false,
+    "note": "borderline: a wiki page is not a repo constitution with a verify command"
+  },
+  {
+    "skill": "spec-constitution",
+    "query": "Add an ESLint rule for unused variables",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-constitution",
+    "query": "Describe the features of our new scheduling app",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-constitution",
+    "query": "Explain what our CONTRIBUTING file says about branches",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-architect",
+    "query": "I want an app that plans employee shifts, where do I start?",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-architect",
+    "query": "Write a tech spec with acceptance criteria for a booking feature",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-architect",
+    "query": "Reverse-engineer a spec from this existing codebase before we change it",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-architect",
+    "query": "Small change: add a CSV export button, three criteria is plenty",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-architect",
+    "query": "Summarise this PRD in five bullets",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-architect",
+    "query": "Pick a database for my project and explain the trade-offs in chat",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-architect",
+    "query": "Draw an architecture diagram of the code we already have",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-architect",
+    "query": "Write the README for this repo",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-tasks",
+    "query": "Break docs/SPEC.md into an ordered task list",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-tasks",
+    "query": "What should we build first for this change proposal?",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-tasks",
+    "query": "Give me an implementation plan for this list of requirements",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-tasks",
+    "query": "Turn these five requirements into tasks with done-conditions",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-tasks",
+    "query": "Write a project plan with dates and owners for the quarter",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-tasks",
+    "query": "Implement the first task in TASKS.md",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-tasks",
+    "query": "Create GitHub issues from this bug list",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-tasks",
+    "query": "Estimate how long this feature will take",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-implement",
+    "query": "Implement the tasks in docs/changes/0002-export/TASKS.md",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-implement",
+    "query": "Continue the milestone where we stopped yesterday",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-implement",
+    "query": "Build this task list one task at a time and verify each",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-implement",
+    "query": "Resume T-05 onward and stop if a criterion fails",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-implement",
+    "query": "Write unit tests for this function",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-implement",
+    "query": "Fix this failing test",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-implement",
+    "query": "Write a TASKS.md for this spec",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-implement",
+    "query": "Add a loading spinner to the dashboard",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-drift",
+    "query": "Does the code still match docs/SPEC.md?",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-drift",
+    "query": "Run a drift check before we start the next feature",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-drift",
+    "query": "We finished milestone 2, merge the shipped proposals back into the spec",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-drift",
+    "query": "Is our spec stale? Report regressions versus outdated criteria",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-drift",
+    "query": "What changed since the last release?",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-drift",
+    "query": "Review this pull request for bugs",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-drift",
+    "query": "Update the changelog for version 2.1",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-drift",
+    "query": "Find out why the build is slower than last month",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-refactor",
+    "query": "Refactor this god object; the next feature is hard to add",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-refactor",
+    "query": "This file is a mess and everyone is afraid to touch it, clean it up",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-refactor",
+    "query": "Remove dead code and unused imports, with evidence",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-refactor",
+    "query": "Find duplicated date arithmetic and plan a safe restructuring",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-refactor",
+    "query": "Rename this variable across the repo",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-refactor",
+    "query": "Find unused imports in this one file and delete them, no report needed",
+    "should_trigger": false,
+    "note": "cleanup only, no spec involved"
+  },
+  {
+    "skill": "spec-refactor",
+    "query": "Rewrite this module in another language",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-refactor",
+    "query": "Change the validation rule so night shifts are rejected",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-check",
+    "query": "Check that every task cites an AC id that exists",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-check",
+    "query": "Find orphan criteria and orphan tasks",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-check",
+    "query": "Show a criterion to task to commit to test table",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-check",
+    "query": "Lint our spec traceability before the merge",
+    "should_trigger": true
+  },
+  {
+    "skill": "spec-check",
+    "query": "Run the test suite and tell me what fails",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-check",
+    "query": "Count the lines of code in each folder",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-check",
+    "query": "Check the spec for grammar mistakes",
+    "should_trigger": false
+  },
+  {
+    "skill": "spec-check",
+    "query": "List the open TODO comments in the repo",
+    "should_trigger": false
+  }
+]

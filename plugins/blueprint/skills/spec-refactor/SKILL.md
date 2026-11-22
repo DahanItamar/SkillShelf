@@ -1,13 +1,11 @@
 ---
 name: spec-refactor
-description: Improve the structure of code that already works, without changing what it does. Use when someone asks to refactor or clean up, says the code is messy, tangled, duplicated or hard to change, reports that a feature is "harder to add than it should be", wants dead code or unused imports removed, mentions a god object, a long function, or a file everyone is afraid of — or when a milestone has just shipped and the next one touches the same area. Writes a numbered report under docs/refactorings/ and changes no code by itself. A change that requires editing an acceptance criterion is not a refactoring; it is a change proposal and is out of scope.
+description: Use when someone asks to refactor or clean up code, says it is messy, tangled, duplicated or hard to change, reports a feature is "harder to add than it should be", wants dead code or unused imports removed, or names a god object, a long function or a file everyone fears. Restructures working code without changing what it does; writes a numbered report under docs/refactorings/ and edits no code itself. Changing an acceptance criterion is a change proposal, not a refactoring.
 ---
 
 # Spec Refactor
 
 A drift check asks whether the code does what the spec says. Refactoring exists because a codebase can answer **yes to every criterion and still be finished** — every test green, every `AC-###` satisfied, and the next feature a week of work because the thing it must extend is a 400-line function with three copies of the same date arithmetic in it.
-
-Implementation checks criteria and a drift check compares two artifacts. Neither has any opinion about structure, and both are right not to — which is why the opinion needs its own pass, with its own rule for when to hold it.
 
 ## The one rule
 
@@ -15,9 +13,9 @@ Implementation checks criteria and a drift check compares two artifacts. Neither
 >
 > If it requires editing, adding or retiring an acceptance criterion, it is not a refactoring. A change that edits a criterion is out of scope for a refactoring; report it and stop.
 
-This is Fowler's definition of the word, and it is what makes this safe to run on working code. It also gives verification a mechanical shape that needs no judgment at all: the constitution's verify command green before, green after, and every `AC-###` in the touched area still true. Behavior preservation is not a promise you make in the summary. It is a thing you check.
+This makes it safe to run on working code. It also gives verification a mechanical shape that needs no judgment at all: the constitution's verify command green before, green after, and every `AC-###` in the touched area still true. Behavior preservation is not a promise you make in the summary. It is a thing you check.
 
-The corollary is the boundary users most often want you to cross: *"while I'm in here, I could also fix…"* — no. That work is real and it belongs in a proposal. A diff that refactors and changes behavior at once is a diff no reviewer can read, because every difference in it has two possible explanations.
+The boundary users most often want you to cross is *"while I'm in here, I could also fix…"*. That work belongs in a proposal: a diff that refactors and changes behavior at once cannot be read, because every difference in it has two possible explanations.
 
 ## The gate
 
@@ -109,7 +107,7 @@ docs/refactorings/
 
 Take the next ordinal by scanning both `docs/refactorings/` and its `archive/`. Write `REPORT.md`, then update `SMELLS.md` — new rows for new smells, a bumped `Allocation:` line, and a status change for anything this run resolves.
 
-**Never overwrite a previous run, and never archive one early.** The registry is the only file edited in place, and even there nothing is deleted: a paid-off smell becomes a tombstone. Archiving happens only in Phase 7, after the smells are verified gone. That history is the point — the second time the same `SM-###` blocks a milestone, the record that it was already removed once is the strongest argument available for fixing the cause rather than the instance.
+**Never overwrite a previous run, and never archive one early.** The registry is the only file edited in place, and nothing in it is deleted: a paid-off smell becomes a tombstone. Archiving happens only in Phase 7, after the smells are verified gone.
 
 **This skill does not edit code.** Not the easy one, not the obvious one-line deletion. Every process that both proposes and applies in one pass eventually applies something nobody agreed to, and on working code that is the one unrecoverable mistake available here.
 
@@ -117,7 +115,7 @@ Take the next ordinal by scanning both `docs/refactorings/` and its `archive/`. 
 
 Show the user the split — how many actionable, what they block, how many logged — and let them choose which to take. Batch that into one message as a numbered list with a recommended default for each, and wait for one reply; if your tool has a structured-question feature you may use it.
 
-The accepted `REPORT.md` is a checkbox list any agent or person can run, one entry per commit. Verify before and after, and revert on red. Run the verify command before the first entry and record the result; a green run afterwards means nothing without it. Entries marked `kind: judgment` land alone; mechanical ones may share a commit if they are the same kind of move. An entry that cannot be completed without altering what a criterion asserts is out of scope for a refactoring; report it and stop.
+The accepted `REPORT.md` is a checkbox list any agent or person can run, one entry per commit; `references/refactoring-safety.md` holds the loop.
 
 ### Phase 7 — Close out a finished run
 

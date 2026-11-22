@@ -160,6 +160,23 @@ The divergence is in the grid tooltip, which no criterion mentions — so an ove
 
 ---
 
+## A small change
+
+A hand-written illustration, not a recorded run. Month 7: managers want a CSV export. That is three criteria and no new data model, so the architect skill writes one proposal with the tasks inline instead of a full spec.
+
+```
+docs/changes/0004-csv-export/PROPOSAL.md
+AC-014  When a manager chooses Export, the system shall download the week as CSV.
+AC-015  If a shift crosses midnight, then the CSV shall show its end as a time on the next day.
+AC-016  If the week has no shifts, then the system shall download a CSV with only the header row.
+## Tasks
+- [ ] T-01 Write the CSV serialiser, including the midnight case — closes AC-014, AC-015, AC-016
+```
+
+The commit is `T-01 closes AC-014`. The linter then reads the files the same way it did for the fixture in [`spec-check-fixture/`](spec-check-fixture/); its real output on that fixture, with its three deliberate orphans, is in the README.
+
+---
+
 ## The loop
 
 ```mermaid

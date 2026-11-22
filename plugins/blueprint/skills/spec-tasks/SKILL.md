@@ -76,7 +76,7 @@ Location: `docs/changes/NNNN-slug/TASKS.md`. For a base-spec milestone with no p
 
 Do not write a verify command into `TASKS.md`; the verify command comes only from the constitution, so a copy here would be ignored and could drift.
 
-The checkboxes are the only state this pipeline keeps. There is no status file, because two records of the same fact eventually disagree.
+The checkboxes are the only state a task file keeps. There is no status file, because two records of the same fact eventually disagree.
 
 ### Phase 5 — Hand over
 

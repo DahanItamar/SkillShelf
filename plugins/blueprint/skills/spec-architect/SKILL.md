@@ -127,20 +127,7 @@ Then hand over: the file path, the 3–5 architectural decisions that matter mos
 
 ## Output shape
 
-A single Markdown file. Sections, in order — full detail in `references/spec-template.md`:
-
-1. **Problem & Users** — what breaks today, for whom
-2. **Scope** — in, explicitly out, and **2.1 Acceptance Criteria**
-3. **Architecture** — components, and the decision record behind them
-4. **Project Layout & Conventions** — pointer to the constitution, or inline
-5. **Data Models** — real types, real constraints
-6. **Interfaces** — every boundary, with signatures
-7. **Core Flows** — the 2–4 paths that define the product, step by step
-8. **Edge Cases & Failure Modes** — what breaks, and what happens when it does
-9. **Security & Permissions** — authn, authz, data handling
-10. **Build Order** — milestones, each independently demoable
-11. **Assumptions** — numbered, so they can be rejected
-12. **Open Questions** — each tagged with what it blocks
+A single Markdown file with twelve numbered sections, in the order and detail given in `references/spec-template.md`. Section 2.1 holds the acceptance criteria.
 
 ## Calibration
 

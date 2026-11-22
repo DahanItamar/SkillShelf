@@ -21,16 +21,18 @@ Plain Markdown skills in the open Agent Skills format.
 
 ## Use it
 
-In Claude Code, add the marketplace and install the plugin:
+Each skill is a folder with a `SKILL.md`: copy the folders in `plugins/blueprint/skills/` into `.agents/skills/` (Codex, Cursor, Gemini CLI, GitHub Copilot) or `.claude/skills/` (Claude Code). Then ask your agent to use a skill by name, for example "use the spec-tasks skill on this spec". Nothing is installed, compiled or executed.
+
+In Claude Code you can instead add the marketplace and install the plugin:
 
 ```bash
 /plugin marketplace add DahanItamar/SkillShelf
 /plugin install blueprint@skillshelf
 ```
 
-Or copy the folders in `plugins/blueprint/skills/` into your tool's skills directory (below). Then ask your agent to use a skill by name, for example "use the spec-tasks skill on this spec". Most tools also list skills by name (Claude Code `/skill`, Codex `$skill`, Gemini CLI `/skills`). Nothing is installed, compiled or executed.
+Folder layout and frontmatter follow the Agent Skills spec and each tool's published docs; they have not been run in every tool.
 
-**Use it in other tools.** Each skill is a folder with a `SKILL.md`, so it follows the open [Agent Skills](https://agentskills.io/specification) layout. Copy the folders in `plugins/blueprint/skills/` into the skills directory of Codex, Cursor, GitHub Copilot or Gemini CLI. The Install section of the [repository README](../../README.md) has the per-tool steps.
+**Use it in other tools.** The skills follow the open [Agent Skills](https://agentskills.io/specification) layout. The Install section of the [repository README](../../README.md) has the per-tool steps.
 
 Effectiveness is not measured yet: `examples/eval` is a protocol with no recorded runs.
 
@@ -138,7 +140,8 @@ Nothing here runs at install. If you want a gate, copy [`skills/spec-check/scrip
 
 ```yaml
 - name: Spec traceability
-  run: sh path/to/spec-check.sh   # from the repository root
+  run: sh path/to/spec-check.sh --tests --strict   # from the repository root
+  # exit 0 = pass, 1 = orphans, 2 = cannot decide
 ```
 
 Checks 1 to 4 and 3b decide the result: cited ids exist, every active criterion is closed by a task, no id appears twice, `preserves` citations resolve, no change ordinal is reused. Check 6 prints as `info:` lines and never changes the status. Optional flags: `--main` (run on `main` or a merge queue, not on feature branches: lists leftover `0000-*` directories and `AC-NEW-n` ids), `--tests` (lists active ids that no test file names; add `--strict` to count them so untested criteria fail the build). The output ends with `RESULT orphans=N status=pass|fail`, after the `Orphans: N` line. It exits 1 when there are orphans, 2 when it cannot decide, and 0 otherwise. Because it is a script rather than a model call, the output is deterministic.
@@ -159,15 +162,15 @@ Bytes from `wc -c`, not token counts (no token count was measured). A skill load
 
 | Skill | `SKILL.md` | Lines | References (all) |
 |---|--:|--:|--:|
-| `spec-constitution` | 7,383 | 124 | 6,831 |
-| `spec-architect` | 12,468 | 158 | 49,583 |
-| `spec-tasks` | 5,920 | 101 | 5,346 |
-| `spec-implement` | 10,868 | 132 | 4,552 |
-| `spec-check` | 5,839 | 69 | none |
+| `spec-constitution` | 7,388 | 124 | 6,831 |
+| `spec-architect` | 11,754 | 145 | 49,583 |
+| `spec-tasks` | 5,918 | 101 | 5,346 |
+| `spec-implement` | 10,098 | 125 | 4,552 |
+| `spec-check` | 5,837 | 69 | none |
 | `spec-drift` | 9,520 | 136 | 18,085 |
-| `spec-refactor` | 13,738 | 156 | 28,371 |
+| `spec-refactor` | 12,660 | 154 | 28,371 |
 
-A single skill loads only its `SKILL.md` (5.8 to 13.7 KB, 69 to 158 lines), and references load only at the step that names them. The 65,736-byte figure is the sum of all seven `SKILL.md` files; no one run loads it.
+A single skill loads only its `SKILL.md` (5.8 to 12.7 KB, 69 to 154 lines), and references load only at the step that names them. The 63,175-byte figure is the sum of all seven `SKILL.md` files; no one run loads it.
 
 ## Under the hood
 
