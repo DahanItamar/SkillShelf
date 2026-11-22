@@ -1,6 +1,6 @@
 // Casebook before/after proof. Run from anywhere:
 //   node --test examples/proof/proof.test.mjs
-// No packages. Needs Node 18+ (tested on 24.15) and a POSIX sh for the lint group.
+// No packages. Tested on Node 24.15 only and a POSIX sh for the lint group.
 //
 // This shows the scenario the skill is built around: a repro that fails
 // before the fix and passes after, plus a lint over the example case files.
@@ -46,7 +46,7 @@ function lint(file, as = "001.md") {
     encoding: "utf8",
   });
   assert.ok(r.error === undefined, `could not run sh: ${r.error}`);
-  const ids = new Set([...r.stdout.matchAll(/^FAIL (L\d):/gm)].map((m) => m[1]));
+  const ids = new Set([...r.stdout.matchAll(/^FAIL (L[0-9]+):/gm)].map((m) => m[1]));
   return { status: r.status, ids, out: r.stdout };
 }
 
@@ -54,7 +54,7 @@ const casesDir = join(root, "examples", "cases");
 for (const name of readdirSync(casesDir).filter((n) => n.endsWith(".md")).sort()) {
   test(`3. lint: ${name}`, () => {
     const first = readFileSync(join(casesDir, name), "utf8").split("\n")[0];
-    const m = first.match(/^<!-- expect: (pass|FAIL (L\d)) -->$/);
+    const m = first.match(/^<!-- expect: (pass|FAIL (L[0-9]+)) -->$/);
     assert.ok(m, `${name} must start with an expect comment`);
     const got = lint(`examples/cases/${name}`);
     if (m[1] === "pass") {

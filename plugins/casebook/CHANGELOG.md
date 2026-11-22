@@ -1,6 +1,6 @@
 # Changelog
 
-Release checklist: version in `plugin.json` == the casebook entry (version and description) in the root `.claude-plugin/marketplace.json` == the head of this file; lint rule count in `scripts/check-case.sh` (`RULE_COUNT`) == README (9); close-check count == `skills/casebook-close/references/close-checks.md` (9); `node --test examples/proof/proof.test.mjs` output pasted into the README came from a real run. The proof test checks the rule count, the close-check count and the README byte counts (the two skill files and the reference-file totals). The marketplace match and the pasted output stay manual. Nothing here runs at install.
+Release checklist: version in `plugin.json` == the casebook entry (version and description) in the root `.claude-plugin/marketplace.json` == the head of this file; lint rule count in `scripts/check-case.sh` (`RULE_COUNT`) == README (10); close-check count == `skills/casebook-close/references/close-checks.md` (9); `node --test examples/proof/proof.test.mjs` output pasted into the README came from a real run. The proof test checks the rule count, the close-check count and the README byte counts (the two skill files and the reference-file totals). The marketplace match and the pasted output stay manual. Nothing here runs at install.
 
 ## 0.2.0 - 2026-11-22
 - Each skill now stands alone. `casebook-close` carries its own `references/case-format.md` (a copy of the one in `casebook`; a proof test keeps the two identical) and no longer needs `casebook`. Neither skill names the other, and there is no constitution file or `(constitution)` mark any more: the verify command is found read-only and approved by you.
@@ -12,6 +12,10 @@ Release checklist: version in `plugin.json` == the casebook entry (version and d
 - Close now always runs the single regression test fresh and runs the full suite again unless you say it already passed at After in this conversation.
 - Personal and regulated data (names, emails, identifiers, health, payment, location) is covered by the redact instruction. The README states this is an instruction, not a scan, and not a compliance claim.
 - The description skips cases where the error text and one stack-trace location already name the fix.
+- Lint accepts the `[probe]` experiment kind (it was rejected before); `case-format.md` lists `[probe]`, `Intermittent: yes`, `Probes removed` and `Attempts`, and no longer mentions the other skill. New example case with a probe.
+- Lint rule L10 (heuristic): flags an email address, an IPv4 address or a run of 9 or more digits in a case file. It finds obvious shapes only and never proves a case is clean.
+- Open skill: if you already named a test command, it is proposed without a search; the past-case search is skipped when `docs/bugs/` does not exist. Close skill says what a fresh run costs without a `Verify one:` command.
+- README: optional CI recipe (run locally in a scratch repo, not in a real CI), the comparison moved to `docs/COMPARISON.md`, Node wording now states only what was run.
 - README: use-it-when block, team use, use in other tools, a shorter comparison list, byte counts with a bytes-divided-by-4 token estimate.
 
 ## 0.1.0 - 2026-11-22

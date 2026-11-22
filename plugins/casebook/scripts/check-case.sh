@@ -15,11 +15,14 @@
 #   1  at least one rule failed; each printed as  FAIL L<n>: <file>:<line> <message>
 #   2  the script could not run (no file, not readable, no awk)
 #
+# L10 is a heuristic: it finds obvious shapes only (an email address, an IPv4
+# address, a run of 9 or more digits) and never proves a case is clean.
+#
 # What this cannot see: an edit the agent made to code without recording it. The
 # gate is a procedure the agent follows, not a lock; this script only checks that
 # the case file itself obeys the rules.
 
-RULE_COUNT=9
+RULE_COUNT=10
 
 AS=""
 if [ "${1:-}" = "--as" ]; then
@@ -177,7 +180,7 @@ END {
 	for (i = 1; i <= nhyp; i++) {
 		h = hyps[i]
 		if (!(h in xp)) add(4, hypln[h], h " has no Experiment: line")
-		else if (xp[h] !~ /^\[(read|verify|user-run|bisect)\]/) add(4, xpln[h], h " Experiment must begin with [read], [verify], [user-run] or [bisect]")
+		else if (xp[h] !~ /^\[(read|verify|user-run|bisect|probe)\]/) add(4, xpln[h], h " Experiment must begin with [read], [verify], [user-run], [bisect] or [probe]")
 	}
 
 	# L5: the gate
@@ -264,7 +267,21 @@ END {
 		}
 	}
 
-	for (r = 1; r <= 9; r++) printf "%s", buf[r]
+	# L10: heuristic personal-data shapes (obvious ones only; never proof a case is clean)
+	d9 = "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]"
+	for (n = 1; n <= NR; n++) {
+		s = line[n]
+		if (s ~ /^<!--/) continue
+		gsub(/<redacted>/, "", s)
+		if (tolower(s) ~ /[^ @]+@[^ @]+[.][a-z][a-z]+/) add(10, n, "looks like an email address; redact as <redacted> (heuristic)")
+		else if (s ~ /(^|[^0-9.])[0-9][0-9]?[0-9]?[.][0-9][0-9]?[0-9]?[.][0-9][0-9]?[0-9]?[.][0-9][0-9]?[0-9]?([^0-9.]|$)/) add(10, n, "looks like an IPv4 address; redact as <redacted> (heuristic)")
+		else {
+			t = s; gsub(/[0-9]*[.][0-9]+/, "", t)
+			if (t ~ d9) add(10, n, "contains a run of 9 or more digits (id, phone, card?); redact as <redacted> (heuristic)")
+		}
+	}
+
+	for (r = 1; r <= 10; r++) printf "%s", buf[r]
 	if (nfail > 0) exit 1
 	exit 0
 }

@@ -1,6 +1,6 @@
 # Case file format
 
-This file is the same in both skills. It is all you need to read or write a case.
+A short schema: all you need to read or write a case.
 
 Location: `docs/bugs/NNN.md`. NNN is the highest existing number plus 1, zero-padded to 3 digits (4 or more when needed). The heading number matches the file name.
 
@@ -16,7 +16,9 @@ Header lines, before the first section:
 - `Proof command:` optional, a backticked command then `(user-approved)`, or `manual checklist: <name>`.
 - `Single hypothesis reason:` optional, allows exactly one hypothesis.
 
-Hypothesis heading: `### H<n> <claim> -- result: <pending|ruled out|inconclusive|confirmed>`, using the ASCII `--`. Below it: `- Because:`, `- Predicts:`, `- Experiment:` (starts with `[read]`, `[verify]`, `[user-run]` or `[bisect]`) and `- Evidence:`.
+Optional lines inside sections: `Intermittent: yes` under `Repro` (a flaky bug); `Probes removed: yes (grep empty)` and `Attempts: <n>` (failed fix attempts so far) under `Fix`.
+
+Hypothesis heading: `### H<n> <claim> -- result: <pending|ruled out|inconclusive|confirmed>`, using the ASCII `--`. Below it: `- Because:`, `- Predicts:`, `- Experiment:` (starts with `[read]`, `[verify]`, `[user-run]`, `[bisect]` or `[probe]`) and `- Evidence:`.
 
 Evidence, for any result except `pending`, is one of three forms:
 

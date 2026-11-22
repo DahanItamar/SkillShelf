@@ -88,7 +88,7 @@ Verify command: `npm test` (user-approved)
 
 The full template, with every field explained, is in
 [`skills/casebook/references/case-template.md`](skills/casebook/references/case-template.md). The short
-schema both skills carry is `case-format.md`. The hard rules:
+schema `casebook` and `casebook-close` each carry as `case-format.md`. The hard rules:
 
 - **Gate.** `Status: fixing` needs at least one hypothesis with a recorded result, and
   `Repro status: observed failing`.
@@ -180,6 +180,7 @@ Both skills follow the open Agent Skills format, so they are plain folders any s
 - Copy both folders under `plugins/casebook/skills/` into `.agents/skills/` (Codex, Cursor),
   `.github/skills/` (Copilot) or `.gemini/skills/` (Gemini CLI).
 - Then ask the agent to "use the casebook skill", or type its name in the tool's skill picker.
+- Verified on: Claude Code only. The format follows the agentskills.io spec; other tools were not run.
 - The root README [Install section](https://github.com/DahanItamar/SkillShelf#install) lists the exact
   paths per tool, including the user-level folders.
 
@@ -217,20 +218,29 @@ Only `{test}` is replaced, and only with the regression test's name. A `cargo te
   the same skills.
 - Optional: run `sh scripts/check-case.sh` over `docs/bugs/` in CI. Nothing installs it for you.
 
+### Enforce it in CI (optional, copy it yourself; nothing here installs it)
+
+Paste this POSIX sh into your own CI job, with `scripts/check-case.sh` copied into your repo. It was run
+locally in a scratch git repo (source-only change fails, source plus a good case passes, a bad case
+fails). It was not run in a real CI service. It checks that a case exists and is well formed, not that
+experiments came first.
+
+```sh
+base=${BASE_REF:-origin/main}
+changed=$(git diff --name-only --diff-filter=AM "$base"...HEAD)
+cases=$(echo "$changed" | grep -E "^docs/bugs/[0-9]+[.]md$" || true)
+src=$(echo "$changed" | grep -Ev -e "[.]md$" -e "^$" || true)
+if [ -n "$src" ] && [ -z "$cases" ]; then
+  echo "FAIL: files changed but no docs/bugs/NNN.md case is part of this change"; exit 1
+fi
+for c in $cases; do
+  sh scripts/check-case.sh "$c" || exit 1
+done
+```
+
 ## How it compares
 
-The space is crowded. These notes come from public descriptions and one raw file; none of these tools
-was run for this comparison, and licences and upkeep were not checked.
-
-- **[superpowers `systematic-debugging`](https://raw.githubusercontent.com/obra/superpowers/main/skills/systematic-debugging/SKILL.md)**: the closest ancestor; root cause first, no persistent case file.
-- **[GSD's debugger](https://www.mintlify.com/gsd-build/get-shit-done/agents/debugger)**: also keeps a persistent list of eliminated hypotheses, in a tool-specific planning directory.
-- **[Debug Mode](https://github.com/doraemonkeys/claude-code-debug-mode)**: adds tagged logging before the fix, where Casebook allows only an approved `[probe]`.
-- **[diagnosing-bugs](https://www.aihero.dev/skills-diagnosing-bugs)**: a feedback loop first, then bisect or instrument; gate not confirmed.
-- **[git-bisect-debugging](https://skills.sh/sjungling/sjungling-claude-plugins/git-bisect-debugging)**: a dedicated bisect skill, no case file.
-
-Casebook adds a checkable order (no edit until a result is recorded), "confirmed" that needs evidence, a
-lintable file, and a separate re-check at close. It does not claim to find bugs faster or more reliably
-than any of the above. That has not been measured.
+A short list of related tools, with what each does differently, is in [`docs/COMPARISON.md`](docs/COMPARISON.md). None of them was run for it.
 
 ## Limits
 
@@ -247,9 +257,9 @@ than any of the above. That has not been measured.
   rebase and renumber the newer case and its heading.
 - **The agent does not commit.** Whether you commit `docs/bugs/` is your choice. Committing it is what makes
   the ruled-out list shared.
-- **Redaction is an instruction, not a scan.** The agent is told to redact secrets and personal or
+- **Redaction is an instruction, plus a heuristic.** The agent is told to redact secrets and personal or
   regulated data (names, emails, account or patient identifiers, health, payment and location data) as
-  `<redacted>`. Nothing checks that it did. The repo owner remains responsible for what is committed in
+  `<redacted>`. Lint rule L10 flags obvious shapes (an email address, an IPv4 address, a run of 9 or more digits). It is a heuristic: it finds obvious shapes only and never proves a case is clean. Names, health or location details are not detected. The repo owner remains responsible for what is committed in
   `docs/bugs/`. This is not a compliance claim of any kind.
 - **The intermittent run count is a default.** An intermittent case needs every one of up to 5 runs
   to pass to close, and at least one failing run for Before. Five is a default, not a measured
@@ -269,25 +279,25 @@ proof test below shows the scenario and measures no model. The one real run, on 
 
 ```text
 node --test examples/proof/*.test.mjs     (Node 24.15.0, Windows, Git's sh and GNU awk, durations omitted)
-tests 31
-pass 31
+tests 35
+pass 35
 fail 0
 ```
 
-Tested locally on Node 24.15; CI uses Node 22 and that job has not been run yet. The lint was also checked by hand
+Tested on Node 24.15 only; the tests use only node:test and have no packages, so older versions are untested. The lint was also checked by hand
 with GNU awk in `--traditional` mode and with `dash`, to avoid GNU-only syntax; it has not been run with
 `mawk`.
 
 ## Cost
 
-Only checkable facts. The two skill files are `skills/casebook/SKILL.md` (12699 bytes) and
-`skills/casebook-close/SKILL.md` (6951 bytes). Reference files are loaded by step, not all at once: the case template at Step 2, `hypotheses.md` at Step 4, `experiments.md` at Step 5, and `close-checks.md` at close step 2. The six reference files (`case-format.md` is one copy in each skill) total 25587 bytes (case-template 6136, experiments 5996, hypotheses 3489, close-checks 5780, case-format 2093 twice). A typical open pass loads SKILL.md plus case-template, hypotheses and experiments: 28320 bytes. A close adds the close skill, case-format and close-checks: 14824 bytes. As an estimate only, tokens are about bytes divided by 4; no model tokenizer was run. A proof test checks these byte counts against the files, so they cannot drift quietly.
+Only checkable facts. The two skill files are `skills/casebook/SKILL.md` (12814 bytes) and
+`skills/casebook-close/SKILL.md` (7097 bytes). Reference files are loaded by step, not all at once: the case template at Step 2, `hypotheses.md` at Step 4, `experiments.md` at Step 5, and `close-checks.md` at close step 2. The six reference files (`case-format.md` is one copy in each skill) total 25911 bytes (case-template 6136, experiments 5996, hypotheses 3489, close-checks 5780, case-format 2255 twice). A typical open pass loads SKILL.md plus case-template, hypotheses and experiments: 28435 bytes. A close adds the close skill, case-format and close-checks: 15132 bytes. As an estimate only, tokens are about bytes divided by 4; no model tokenizer was run. A proof test checks these byte counts against the files, so they cannot drift quietly.
 
 ## Maintainer check
 
 Optional, and nothing runs at install. `sh scripts/check-case.sh docs/bugs/001.md` checks one case file
-against 9 rules (L1 to L9: file name and heading, status values, the nine sections, hypothesis format,
-the gate, evidence, the ruled-out list, closed-case completeness, no leftover placeholders). It only reads
+against 10 rules (L1 to L10: file name and heading, status values, the nine sections, hypothesis format,
+the gate, evidence, the ruled-out list, closed-case completeness, no leftover placeholders, and L10, a heuristic scan for email, IPv4 and long digit runs). It only reads
 the file, writes nothing and runs nothing from it. It exits 0 on pass, 1 on findings and 2 if it cannot
 run. `node --test examples/proof/*.test.mjs` runs the before/after proof, the lint over the example
 case files, and a check that the two copies of `case-format.md` are identical. Neither needs a package. The example files are not named `NNN.md`, so lint them with `--as`: `sh scripts/check-case.sh --as 001.md examples/cases/good-closed.md`. The lint still accepts `observed by Claude` in old files.

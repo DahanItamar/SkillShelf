@@ -43,7 +43,7 @@ Running a `good-*.md` file without `--as` exits 1 by design: the descriptive fil
 node --test examples/proof/proof.test.mjs
 ```
 
-It needs Node 18 or newer (tested locally on Node 24.15; CI uses Node 22) and a POSIX `sh`. No packages.
+Tested on Node 24.15 only; the tests use only node:test and have no packages, so older versions are untested. It also needs a POSIX `sh`.
 
 It has three groups:
 
