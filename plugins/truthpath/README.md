@@ -24,7 +24,7 @@ predicates, optional imports, log-and-reraise).
 
 `truthpath` is one Agent Skill. It reads your production code and reports where a failure can happen and the caller, the
 user or the operator receives something that looks like success, or receives nothing. It is plain Markdown, with no
-dependencies, no build step and no hooks. Nothing runs at install, and it runs nothing when you use it.
+dependencies, no build step and no hooks. Nothing runs at install, and when you use it, it runs only read-only git commands.
 
 ## What it does
 
@@ -88,7 +88,7 @@ rules are in [`skills/truthpath/references/finding-format.md`](skills/truthpath/
 
 ## Proof scenario
 
-[`examples/planted/`](examples/planted/) is a small tree with nine expected findings (eight confirmed, one suspected), one decoy that must not be reported,
+[`examples/planted/`](examples/planted/) is a small tree with nine expected findings (eight confirmed, one suspected; not the same as the nine mechanical hints further below), one decoy that must not be reported,
 and a test file that must be skipped. It was written for this plugin. No model was run on it for this README.
 
 | File | Planted |
@@ -110,40 +110,9 @@ differ in wording and order, and a run that reports the decoy, misses a finding 
 The diff mode has a second example: [`examples/changes/add-refund.diff`](examples/changes/add-refund.diff) adds a `refund()`
 whose `except Exception` returns `True`, a new `place_order()` that trusts the existing fake-success `charge()`, and a
 hunk that deletes a status check. The expected result, [`examples/expected/add-refund.md`](examples/expected/add-refund.md),
-is two confirmed findings and one suspected, with the pre-existing retry in `charge()` counted as outside the diff. A third
+is two confirmed findings and one suspected, with `0 pre-existing candidates outside the diff` because the retry in `charge()` is cited in the new caller's `Depends on` line, not left uncounted. A third
 example, [`examples/changes/refund.py`](examples/changes/refund.py), shows an untracked new file (see
 [`examples/changes/README.md`](examples/changes/README.md)). These are also written by hand.
-
-**The hint list, from a real run.** The optional script `scripts/hints.sh` prints mechanical hints, with no model involved.
-It was run as `sh scripts/hints.sh examples/planted` on 2026-11-22, on Windows 11 with Git for Windows' sh and with `dash`
-(the output was the same), using GNU Awk 5.4.0 (also checked in `--traditional` mode). The output, byte for byte, is in
-[`examples/expected/planted-hints.txt`](examples/expected/planted-hints.txt):
-
-```text
-examples/planted/src/cleanup.py:7  except ... pass  (TP-01)
-examples/planted/src/export.py:10  TODO, FIXME or not-implemented marker  (TP-07)
-examples/planted/src/fakes.py:3  function body is only a constant return  (TP-06)
-examples/planted/src/orders.js:1  placeholder host or token  (TP-04)
-examples/planted/src/profile.js:1  placeholder host or token  (TP-04)
-examples/planted/src/sync.js:2  .catch(() => {}) discards the error  (TP-01)
-examples/planted/src/tax.ts:3  TODO, FIXME or not-implemented marker  (TP-07)
-examples/planted/src/tax.ts:5  function body is only a constant return  (TP-06)
-examples/planted/src/warehouse.py:3  imports a mock or fake  (TP-09)
-```
-
-What reading did with those nine hints:
-
-- `cleanup.py:7` is rejected. The `except` is narrow (`FileNotFoundError` on delete), so the missing file is the desired end
-  state. This is why a hint is not a verdict.
-- `fakes.py:3` is folded into the `warehouse.py:10` finding, because the fake is only used through that one entry point.
-- `profile.js:1` hit the `example.com` e-mail in the sample user. That is part of the sample-data finding at `profile.js:7`
-  (TP-05) and not a separate placeholder finding.
-- `export.py:10`, `tax.ts:3`, `tax.ts:5`, `orders.js:1`, `sync.js:2` and `warehouse.py:3` each lead to a finding.
-- Nothing from `test/` appears.
-
-Four findings produced no hint at all: `orders.js:8` (the catch that returns `[]`), `orders.js:6` (the missing status check),
-`payments.py:15` (the retry that ends in success) and `profile.js:7` (the catch that returns sample data). Some problems
-produce no hint.
 
 ## Install
 
@@ -210,9 +179,41 @@ Optional extras, only when you ask: say `json` or `sarif` for a machine-readable
 to that file. The SARIF mapping (confirmed to `error`, suspected to `warning`) is this skill's own choice, not part of the
 SARIF specification.
 
-**Cost per run.** The fixed load is about 29 KB of Markdown (SKILL.md 11.2 KB, scope 4.9 KB, catalogue 4.9 KB, finding
-format 8.2 KB, measured by file size on 2026-11-22, not tokens). Each pattern file it opens adds 2-3 KB, plus the code
-it scans.
+**Cost per run.** The fixed load is about 32.5 KB of Markdown (SKILL.md 12.7 KB, scope 5.8 KB, catalogue 4.9 KB, finding
+format 9.0 KB, measured by file size on 2026-11-22). Estimate, not a measurement: at about 4 bytes per token that is roughly 8k tokens (32.5 KB / 4) for the fixed load, as of 2026-11-22. Each pattern file it opens adds 2-3 KB, plus the code it scans. The two-pass search (search, then read only hits and changed files) is cheaper than reading the whole scope.
+
+## The hint list, from a real run
+
+These are nine mechanical hints, not nine findings. The optional script `scripts/hints.sh` prints mechanical hints, with no model involved.
+It was run as `sh scripts/hints.sh examples/planted` on 2026-11-22, on Windows 11 with Git for Windows' sh and with `dash`
+(the output was the same), using GNU Awk 5.4.0 (also checked in `--traditional` mode). The output, byte for byte, is in
+[`examples/expected/planted-hints.txt`](examples/expected/planted-hints.txt):
+
+```text
+examples/planted/src/cleanup.py:7  except ... pass  (TP-01)
+examples/planted/src/export.py:10  TODO, FIXME or not-implemented marker  (TP-07)
+examples/planted/src/fakes.py:3  function body is only a constant return  (TP-06)
+examples/planted/src/orders.js:1  placeholder host or token  (TP-04)
+examples/planted/src/profile.js:1  placeholder host or token  (TP-04)
+examples/planted/src/sync.js:2  .catch(() => {}) discards the error  (TP-01)
+examples/planted/src/tax.ts:3  TODO, FIXME or not-implemented marker  (TP-07)
+examples/planted/src/tax.ts:5  function body is only a constant return  (TP-06)
+examples/planted/src/warehouse.py:3  imports a mock or fake  (TP-09)
+```
+
+What reading did with those nine hints:
+
+- `cleanup.py:7` is rejected. The `except` is narrow (`FileNotFoundError` on delete), so the missing file is the desired end
+  state. This is why a hint is not a verdict.
+- `fakes.py:3` is folded into the `warehouse.py:10` finding, because the fake is only used through that one entry point.
+- `profile.js:1` hit the `example.com` e-mail in the sample user. That is part of the sample-data finding at `profile.js:7`
+  (TP-05) and not a separate placeholder finding.
+- `export.py:10`, `tax.ts:3`, `tax.ts:5`, `orders.js:1`, `sync.js:2` and `warehouse.py:3` each lead to a finding.
+- Nothing from `test/` appears.
+
+Four findings produced no hint at all: `orders.js:8` (the catch that returns `[]`), `orders.js:6` (the missing status check),
+`payments.py:15` (the retry that ends in success) and `profile.js:7` (the catch that returns sample data). Some problems
+produce no hint.
 
 ## Limits
 
@@ -221,7 +222,7 @@ it scans.
 - **No execution.** Beyond the read-only git commands that produce a diff, it runs nothing: no tests, no app, no scripts.
   Asked to prove a finding by running something, it hands you the command instead.
 - **No edits** unless you name one fix, or one finding to accept. One fix at a time; "fix all" with no list is refused.
-- **No test files.** Mocks and fakes are expected there, so they are out of scope in this version. A skipped `mocks/` or
+- **No test files.** Mocks and fakes are expected there, so they are out of scope in this version. A fake that lives only in test code and stands in for the only real dependency is never examined; tests may all pass against it. Production code that selects a `mocks/` or `fixtures/` module is reported (TP-09). A skipped `mocks/` or
   `fixtures/` directory is named in the scope line; say "<dir> ships" if it is production.
 - **No scores or percentages.** It reports findings, not a "how fake" number.
 - **Never confirmed from a pattern, a name or a comment alone.** A comment that says "intentional" does not change what the
@@ -272,7 +273,20 @@ What Truthpath tries to add is narrow, and it is a design choice, not a measured
   not-implemented-behind-success, and fakes as the only dependency.
 - A certainty grade with a written rule (confirmed or suspected). We saw no such field in the pages above on 2026-11-22; that is absence of evidence, not proof that none exists.
 - A plain-English "User is misled" line and a blast-radius tag on every finding. Other tools may have a comparable line; this is not claimed as unique.
-- A portable Agent Skill that runs nothing, with a "Not reported" list that shows which candidates were rejected and why.
+- A portable Agent Skill that runs only read-only git commands, with a "Not reported" list that shows which candidates were rejected and why.
+
+## Score your own model
+
+Optional, for a maintainer. `scripts/score.mjs` reads a pasted Truthpath report on stdin, pulls out each `file:line TP-NN grade` triple, and compares them with `examples/expected/planted.md`. It prints found, missed, extra and decoy-reported counts. It needs no packages and is not required to use the skill. Whether the report came from a real run is up to you; the script cannot tell.
+
+```bash
+node scripts/score.mjs < my-report.md
+```
+
+| Model | Date | Found | Missed | Extra | Decoy reported |
+| --- | --- | --- | --- | --- | --- |
+
+No run is recorded yet. The table is empty on purpose.
 
 ## Maintainer check
 
@@ -290,7 +304,7 @@ node --test scripts/check.test.mjs
 - `scripts/check.test.mjs` checks that the hints match `examples/expected/planted-hints.txt` byte for byte and name nothing
   under `test/`; that the `SKILL.md` name equals its folder and the description is 900 characters or fewer (the limit is 1024); that each
   pattern file has all nine sections and two or more code languages; that the catalogue lists exactly the pattern files that
-  exist; that the skill folder has no emoji and no tool names; and that no absolute local paths appear in the plugin.
+  exist; that the skill folder has no emoji and no tool names; that no absolute local paths appear in the plugin; that the fixed-load file sizes are within 5 percent of the KB figure in Cost per run; and that the README has no standalone claim that it runs nothing.
 
 ## Credits
 

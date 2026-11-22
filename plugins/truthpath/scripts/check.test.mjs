@@ -152,3 +152,32 @@ test("planted files keep their line numbers and use LF endings", () => {
     assert.ok(!text(p).includes("\r"), `${rel(p)}: CR found, line endings must be LF`);
   }
 });
+
+test("add-refund summary counts only pre-existing candidates not cited in a Depends on line", () => {
+  const src = text(join(ROOT, "examples", "expected", "add-refund.md"));
+  const cited = new Set([...src.matchAll(/^- Depends on: pre-existing TP-\d\d at (\S+)$/gm)].map((m) => m[1]));
+  const candidates = ["src/payments.py:15"]; // the one pre-existing candidate in add-refund.diff
+  const uncited = candidates.filter((c) => !cited.has(c)).length;
+  assert.ok(src.includes(`; ${uncited} pre-existing candidates outside the diff, not reported.`));
+});
+
+test("README cost figure matches the fixed-load files within 5 percent, and no 'runs nothing' claim", () => {
+  const readme = text(join(ROOT, "README.md"));
+  const kb = Number(readme.match(/fixed load is about ([\d.]+) KB/)?.[1]);
+  assert.ok(kb > 0, "README Cost per run needs 'fixed load is about N KB'");
+  const refs = join(SKILL_DIR, "references");
+  const files = [join(SKILL_DIR, "SKILL.md"), join(refs, "scope.md"), join(refs, "catalogue.md"), join(refs, "finding-format.md")];
+  const actual = files.reduce((n, f) => n + statSync(f).size, 0) / 1000;
+  assert.ok(Math.abs(actual - kb) / actual <= 0.05, `fixed load is ${actual.toFixed(1)} KB, README says ${kb} KB`);
+  assert.ok(!/runs nothing when you use|and it runs nothing/i.test(readme), "README must say 'runs only read-only git commands'");
+});
+
+test("score.mjs scores the expected planted report against itself with nothing missed", async () => {
+  const { score } = await import("./score.mjs");
+  const expected = text(join(ROOT, "examples", "expected", "planted.md"));
+  const r = score(expected, expected);
+  assert.equal(r.found, 9);
+  assert.deepEqual([r.missed, r.extra, r.misgraded], [[], [], []]);
+  assert.equal(r.decoyReported, 0);
+  assert.equal(score("### src/cleanup.py:8  TP-01 X\n- Certainty: confirmed", expected).decoyReported, 1);
+});

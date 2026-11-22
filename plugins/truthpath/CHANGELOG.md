@@ -16,4 +16,10 @@ Release checklist: version in `plugin.json` == the truthpath entry (version and 
 - Optional by request: `.truthpath-accepted.md` baseline (matched by file, pattern and snippet) and a `json` or `sarif` block in chat. No report file is written; the only write is the one accepted line.
 - Fixed contradictions: caller search may use the whole repository, one summary rule with an optional pre-existing clause, "read-only until you name one fix", "fix all" refused only when no list is named.
 - Language table in the catalogue (shell, Rust, Java, Kotlin, C#, Swift, Python suppress, JS allSettled). Shorter description. README: marketplace-safe install check, cost per run, comparison moved below Limits and dated.
+- Re-grade pass: after grading, each suspected finding whose missing link is a file or function in the repository is read once and re-graded; "Still suspected" now applies only to links that cannot be read.
+- TP-09 through production wiring: production code that selects a `mocks/` or `fixtures/` module is reported at the production line, with a scope-line warning; README Limits states the remaining test-fake gap plainly.
+- "Only new" with a baseline file prints accepted matches as a count. Pre-existing count excludes locations cited in a "Depends on" line (add-refund example now shows 0). No-HEAD repositories handled. Lockfiles, `*.min.*`, `*.map` and files over about 1 MB or 20,000 lines are skipped or only searched.
+- Blast radius order explained as a first-fit triage aid; optional `data-loss (audit-trail)` tag. "Check it yourself" is a sketch of at most 3 lines.
+- README: "runs only read-only git commands" replaces "runs nothing"; cost line gives an estimated token figure with its method; hint walkthrough moved below Usage; new "Score your own model" section. No model run is recorded yet.
+- Maintainer checks: `scripts/score.mjs` scorer, plus assertions for the summary count, the fixed-load size and the README wording.
 - Known v1 limits: a reading, not a proof; two-hop caller tracing by default; language coverage is shape-based; output is not deterministic; no model run is claimed.

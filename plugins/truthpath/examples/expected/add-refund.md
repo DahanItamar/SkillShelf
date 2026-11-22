@@ -29,6 +29,6 @@ Suspected:
 
 Not reported: none.
 
-Truthpath: 2 confirmed, 1 suspected, 0 candidates not reported; 1 pre-existing candidate outside the diff, not reported. Read-only; nothing was run or changed.
+Truthpath: 2 confirmed, 1 suspected, 0 candidates not reported; 0 pre-existing candidates outside the diff, not reported. Read-only; nothing was run or changed.
 
 To apply one fix, say 'apply fix for <file>:<line>'.
