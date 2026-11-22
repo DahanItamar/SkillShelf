@@ -18,7 +18,7 @@ reading primary text), `instruments` (list of `name`, `citation`, `url`). Option
 
 ## Citation rules
 
-Every `instruments[].name` appears byte for byte in the plugin's `docs/CITATIONS.md` with an
+Every `instruments[].name` appears byte for byte in the plugin's `skills/regwise/references/citations.md` with an
 official URL and an Accessed date. Cite statutes, not blog counts. Mark an instrument volatile if it
 changed in the last eighteen months. Unverified material says so in the text.
 

@@ -1,5 +1,7 @@
 # 0005 — Make the configuration gate an explicit question
 
+Historical record: paths use the pre-rename name acsm.
+
 > Status: proposed · 2026-08-16 · Against spec version 1.2
 
 ## Motivation

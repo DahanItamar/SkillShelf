@@ -6,7 +6,7 @@ seeded-violation projects for checking an audit by hand: `broken-saas`, `eu-anal
 
 ## Score an audit
 
-1. Open a fresh Claude Code session in the fixture folder with the plugin installed.
+1. Copy the fixture without its answer key, then open a fresh Claude Code session in the copy with the plugin installed: `mkdir /tmp/run && cp -r examples/<fixture>/. /tmp/run/ && rm /tmp/run/EXPECTED-FINDINGS.md`. Never audit inside the original folder; it holds the key.
 2. Ask: "Audit this repository against the rules that apply." Save the reply as `audit.txt`.
 3. List the seeded rows: `grep -o 'AUDIT-[0-9]-[0-9][0-9]' EXPECTED-FINDINGS.md | sort -u`.
 4. List the rows the audit marked failing: `grep -o 'AUDIT-[0-9]-[0-9][0-9]' audit.txt | sort -u`.

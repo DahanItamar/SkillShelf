@@ -2,7 +2,7 @@
 
 Nothing here executes. You need an audit reply and a fixture's `EXPECTED-FINDINGS.md`.
 
-1. Run the audit in a fresh session in the fixture folder (steps 1 and 2 of `examples/README.md`).
+1. Copy the fixture without `EXPECTED-FINDINGS.md` before auditing, and run the audit in a fresh session in that copy (steps 1 and 2 of `examples/README.md`).
    Paste the reply into a scratch file.
 2. For each row id in `EXPECTED-FINDINGS.md`, mark it `found` (reported as fail, with a
    `path:line` that matches the evidence listed), `missed` (absent, or reported as pass), or
