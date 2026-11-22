@@ -6,7 +6,7 @@
 folder names. Every number in what it produces is one it observed, and anything it could not
 observe it tells you it could not observe.**
 
-Six reference files and one workflow, in plain Markdown.
+Seven reference files and one workflow, in plain Markdown.
 **No dependencies, no build step, no runtime. Nothing executes at install; the skill runs your
 project's tests or dev server only after its run-safety gate.**
 
@@ -39,13 +39,17 @@ Not for: a `CHANGELOG`, a `CONTRIBUTING` guide, or API reference docs.
 
 ## Cost and safety
 
-- **Cost.** `SKILL.md` is 14,608 bytes (about 3.6k tokens at 4 bytes per token) and loads on every
-  run. The six reference files total 46,900 bytes and load only at the phase that needs them;
-  `identity-block.md` and `visuals.md` are skipped for a small utility.
+- **Cost.** `SKILL.md` is 16,047 bytes (about 4.0k tokens at 4 bytes per token) and loads on every
+  run. The seven reference files total 49,619 bytes and load only at the phase that needs them. A
+  utility run that skips `identity-block.md` and `visuals.md` loads `SKILL.md` plus five
+  references, 46,515 bytes (about 11.6k tokens). A run that loads everything is 65,666 bytes (about
+  16.4k tokens). Sizes measured with `wc -c`.
 - **Safety.** Phase 1 runs the project, which executes its code. The gate default-allows only the
   test suite and a localhost dev server, asks before network, paid, remote-database, migration,
   deploy or credential-bearing steps, reads `.env.example` and never `.env`, and stops what it
-  started. Anything it did not run is marked `unverified` in the handover.
+  started. Anything it did not run is marked `unverified` in the handover. The gate is a prompt-level rule,
+  not a sandbox: run unfamiliar repositories in a container or VM. It also pairs with, and does not
+  replace, an existing README drift linter.
 
 ## Why most generated READMEs are adjectives
 
@@ -117,6 +121,7 @@ why there is no sixth reference file holding a fabricated sample.
 | `docs/brand/*.svg` | A typographic wordmark, light and dark — never a pictorial mark |
 | `docs/assets/screens/*.png` | Capture succeeded |
 | `docs/SCREENSHOTS.md` | Capture failed, was impossible, or you declined |
+| `docs/EVIDENCE.md` | You accept the evidence table (claim, command, output, date); a later run replays it and edits only stale facts |
 
 That list is the whole write surface. It creates no `CONTRIBUTING.md`, no `CHANGELOG.md`, no
 `ROADMAP.md` unless you ask by name — a visitor did not open your repository for its process, and
@@ -162,8 +167,8 @@ path it names is relative to itself.
 
 ## Under the hood — briefly
 
-- **Progressive disclosure.** `SKILL.md` is 278 lines and loads every invocation; the six
-  reference files are 1,040 lines and load only at the phase that needs them. A reference file is
+- **Progressive disclosure.** `SKILL.md` is 296 lines and loads every invocation; the seven
+  reference files are 1,094 lines and load only at the phase that needs them. A reference file is
   read cold and alone, so each is complete by itself and none depends on another being loaded.
 - **Audit first.** If a README exists, the skill shows a keep / change / cut table before writing,
   and offers an audit-only mode that writes nothing.

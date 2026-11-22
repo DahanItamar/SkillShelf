@@ -166,3 +166,6 @@ Three facts, centred, separated by middots: **who built it**, **the licence** li
 and **the year**. Use the licence and owner detected in Phase 0; if either is unknown, omit the
 footer rather than invent one. Nothing else. A footer that thanks contributors on a solo project, or
 links a roadmap that does not exist, undoes the credibility the rest of the page earned.
+
+**Team or internal service.** Use the Internal service skeleton at the end of
+`readme-template.md` (owner, on-call, health check, runbook) instead of the public skeleton.

@@ -141,3 +141,31 @@ is the correct outcome, not a failure to reach a length.
 sections. An application with a domain worth explaining is a hundred. Padding a small project into
 a long README reads as insecurity, and a reader who scrolls three screens to find the install
 command leaves before they get there.
+
+---
+
+## Internal service skeleton
+
+Use this instead of the skeleton above when Phase 0 finds a team or internal service: private repo,
+on-call rotation, no public audience. Every line is filled from something observed, or omitted.
+
+```markdown
+# <service>
+
+<One sentence: what it does and who depends on it.>
+
+## Owner
+<Team, and the contact or channel. From CODEOWNERS or the manifest, else ask.>
+
+## Run it
+<Commands from clone to running, as in the main skeleton.>
+
+## Health check
+<The real command and its real output, for example a curl of the health endpoint.>
+
+## Dependencies
+<Datastores, queues and upstream services the repo names. Observed in config, not guessed.>
+
+## On-call and runbook
+<Alert source, runbook link, escalation contact. Omit any that does not exist.>
+```

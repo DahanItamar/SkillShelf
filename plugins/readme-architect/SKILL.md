@@ -44,6 +44,7 @@ seems at the time:
 | `docs/brand/<name>-{light,dark}.svg` | No brand assets exist and a wordmark is wanted |
 | `docs/assets/screens/*.png` | Capture succeeded |
 | `docs/SCREENSHOTS.md` | Capture failed, was impossible, or was declined |
+| `docs/EVIDENCE.md` | The user accepts the evidence table from the handover |
 
 **Never run a git command that writes.** No commit, no push, no tag, no branch. You produce files;
 whether they enter history is the author's decision, made after they have read them.
@@ -98,10 +99,14 @@ org, else ask). Neither is invented; the footer needs both.
 
 **Mode.** If a README already exists, audit first: show a keep / change / cut table, keep the
 author's accurate hand-written prose, and write the replacement only after the table is shown.
-Offer **audit only**: a findings list ranked high / med / low that writes nothing. Never overwrite
+Offer **audit only**: a findings list ranked high / med / low that writes nothing. Write each
+finding as three lines: `Where: file:line`, `Problem:`, `Fix:`. If `docs/EVIDENCE.md` exists, enter
+**refresh mode**: replay its commands, compare the output to the README, and edit only the facts
+that are stale, leaving the prose alone. Update the ledger's dates. Never overwrite
 an existing README that has uncommitted edits without saying so.
 
-Special shapes, one line each: **monorepo** - one root README plus a short per-package README
+Special shapes, one line each: **internal or team service** - use the Internal service skeleton
+in `references/readme-template.md`; **monorepo** - one root README plus a short per-package README
 linking up; **library or no tests** - run the examples; **non-English or RTL** - write in the
 author's language and set `dir="rtl"`.
 
@@ -117,6 +122,11 @@ scripts, or `.env` values that look like real credentials. Read `.env.example`, 
 Start background processes with a note of how to stop them, then stop them and delete stray
 artifacts (db files, coverage output) before Phase 6. Whatever was not run is marked `unverified`
 in the handover.
+
+Before starting a dev server, check that its host or port flag or config binds to
+127.0.0.1/localhost (for example `--host`, `HOST`, a listen address). If it binds 0.0.0.0 or cannot
+be confirmed, set it to localhost or ask. Read `references/run-recipes.md` for the likely test
+and dev-server commands per ecosystem.
 
 **If it genuinely cannot be run** — missing credentials, hardware, a paid service, a build that
 fails — say so to the user, then write from the tests instead. They are the next best source of
@@ -169,7 +179,9 @@ that this is the one thing you could not do.
 
 ### Phase 6 — Pressure-test, then hand over
 
-Run the mechanical checks first: `test -f` for every relative link and image path (grep `src=`
+Run the mechanical checks first. **Recheck every number:** re-run each counting command from
+Phase 3 (`wc`, test count, dependency count, timing) and diff the result against the README. Then
+`test -f` for every relative link and image path (grep `src=`
 and `href=` to list them) and grep for `TODO`, `Coming soon` and `Lorem`. Then reread as a
 stranger and fix anything that fails:
 
@@ -179,23 +191,27 @@ stranger and fix anything that fails:
 4. Did the mechanical checks above come back clean?
 5. Is there a number here I did not personally observe?
 6. Does it say what the project deliberately does *not* do or need?
-7. Would this survive a recruiter reading only the first screen?
+7. Owner-facing or portfolio repo: would it survive a recruiter reading only the first screen?
+   Team or internal service: can a new on-call engineer find the owner, the run command and the
+   runbook link on the first screen?
 
-**Then hand over, always reporting four things:**
+**Then hand over, always reporting five things:**
 
 - every path written
-- every number used, and where it came from
+- every number used, as a table: claim, command, observed output, date (offer it as PR text, and
+  optionally save it as `docs/EVIDENCE.md`)
 - every claim you could not verify
 - whether screenshots were captured or listed, and why
 - every setup command not actually run, written as `unverified`
+- the `Verified on <OS, runtime version, date>` line for Run it, filled from the Phase 1 run notes
+  and omitted when nothing was run
 
-Offer the handover as ready-to-paste PR description text. Under Run it, add one line: `Verified on
-<OS, runtime version, date>`, taken from the run you did.
+Offer the handover as ready-to-paste PR description text.
 
-**Stranger test (Application size or larger, optional).** When an Agent or Task tool exists, spawn
-a fresh-context subagent given only `README.md` and the repo tree. It follows the setup path in a
-scratch copy under the same safety gate and reports the first step it had to guess. Without such a
-tool, rely on the reread above.
+**Stranger test (default for an Application with a domain worth explaining or larger).** When an
+Agent or Task tool exists, spawn a fresh-context subagent given only `README.md` and the repo tree.
+It follows the setup path in a scratch copy under the same safety gate and reports the first step it
+had to guess; attach that step to the handover. Without such a tool, rely on the reread above.
 
 ---
 
@@ -246,8 +262,8 @@ somebody forgot to finish.
   the badge, not the row.
 - **Emoji section headers.** They date, they are read aloud, and they replace the work.
 - **"Contributing", "Roadmap", "Acknowledgements" on a solo project.** Empty sections read as an
-  abandoned template. A team or internal repo may carry owners, an on-call line and a runbook link
-  when observed.
+  abandoned template. A team or internal repo uses the Internal service skeleton in
+  `references/readme-template.md` instead.
 - **A feature list of things every project has.** "Responsive design", "clean code", "error
   handling" — the reader assumes these or does not care.
 - **Placeholder text of any kind.** `TODO`, `Coming soon`, `Lorem`, `your-project-name`. If it is
@@ -275,4 +291,6 @@ find the install command leaves.
 - `references/visuals.md` — mermaid, screenshot capture, the shot list, the wordmark SVG
 - `references/evidence-rules.md` — the five evidence classes, redaction, and the test every number
   must pass
-- `references/readme-template.md` — the structure to fill, with per-section guidance
+- `references/readme-template.md` — the structure to fill, with per-section guidance and the
+  Internal service skeleton
+- `references/run-recipes.md` — per-ecosystem test and dev-server commands, loaded only in Phase 1
