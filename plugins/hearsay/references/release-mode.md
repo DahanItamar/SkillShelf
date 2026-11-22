@@ -5,7 +5,7 @@ read-only and uses only the git allowlist in `SKILL.md`.
 
 ## 1. Preflight
 
-- No tag given: infer it with `git describe --tags --abbrev=0` . Print "tag inferred from latest tag
+- No tag given: infer it with `git describe --tags --abbrev=0`. Print "base inferred from latest tag
   <t>" in the header so the user can correct it. No tags at all: ask for `--base <ref>`.
 - Resolve the tag: `git rev-parse --verify <tag>^{commit}`.
 - If it does not resolve, print `git tag --list` (newest 5 by version) and stop. Make no other claim.
@@ -14,12 +14,12 @@ read-only and uses only the git allowlist in `SKILL.md`.
 
 ## 2. Gather
 
-- Commits: `git log --no-merges --format=%h%x09%s <tag>..HEAD`, plus full bodies where a message needs
+- Commits: `git log --no-ext-diff --no-textconv --no-merges --format=%h%x09%s <tag>..HEAD`, plus full bodies where a message needs
   checking for a `BREAKING CHANGE` footer.
 - Files: `git diff --no-ext-diff --no-textconv --name-status -M <tag> HEAD`.
-- Diff range: if `git --no-optional-locks status --porcelain` is dirty, use `git diff <tag>` (working
+- Diff range: if `git --no-optional-locks status --porcelain` is dirty, use `git diff --no-ext-diff --no-textconv <tag>` (working
   tree against the tag) so citations match the files; else `<tag> HEAD`. Print which one in the header.
-- Per-file diffs, and `git show <tag>:<path>` for the base side of any file you cite.
+- Per-file diffs, and `git show --no-ext-diff --no-textconv <tag>:<path>` for the base side of any file you cite.
 - Large ranges: if there are more than 200 files or about 5,000 changed lines, review in priority
   order: public-surface files, manifests, then the rest. State "reviewed N of M files" in the header.
 
@@ -53,7 +53,7 @@ Never say "safe to release". Say what the evidence supports and what is `needs-m
 ## 5. Commit-message check
 
 For each commit read the message (including any Conventional Commits type, scope, `!` and
-`BREAKING CHANGE` footer) and its diff (`git show --stat --format= <sha>`, plus hunks where needed).
+`BREAKING CHANGE` footer) and its diff (`git show --no-ext-diff --no-textconv --stat --format= <sha>`, plus hunks where needed).
 Flag only with diff evidence, citing the short sha and `path:line`.
 
 | Code | Mismatch |

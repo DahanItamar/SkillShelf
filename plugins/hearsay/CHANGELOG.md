@@ -16,4 +16,4 @@ Release checklist: version in `plugin.json` == the hearsay entry (version and de
 - Cap shown honestly: unchecked claims are counted by kind in risk order.
 - Fast path: text of about 10 lines or fewer skips the six references; description shortened.
 - Fixed the `src/fetch.js:5-12` citation and the H-04 evidence in the README; README now has the hearsay-pr note on the first screen, a cost note, a PR recipe and four more comparisons.
-- Not done: the recorded run of the eight fixture cases (R3) was not performed in this pass, so `examples/results/` is still empty and the README says "Nothing yet". The Python and Go or Rust fixtures (R14) are deferred until that run exists. No accuracy figure is claimed.
+- Not done: the recorded run of the eight fixture cases was not performed in this pass, so `examples/results/` is still empty and the README says "Nothing yet". The Python and Go or Rust fixtures are deferred until that run exists. No accuracy figure is claimed.

@@ -211,7 +211,7 @@ are independent.
 
 ## How it is built
 
-[`SKILL.md`](SKILL.md) is about 130 lines and 8 KB: the trigger, the invocation grammar, the seven-step
+[`SKILL.md`](SKILL.md) is about 125 lines and 8 KB: the trigger, the invocation grammar, the seven-step
 procedure, an inline fast path, the output contract and the never-list. Six reference files load on demand:
 [claim-rubric](references/claim-rubric.md) and [verdicts](references/verdicts.md) and
 [ledger-template](references/ledger-template.md) on every run longer than the fast path,

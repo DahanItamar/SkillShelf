@@ -15,8 +15,8 @@ it; it is a judgment or needs real-world measurement ("more intuitive", "product
 **unverified**: checkable in principle from the repo or the diff, but no evidence was found after a
 stated search. This is absence of evidence only. The Note says what was searched (terms and paths)
 and, if only a run could settle it, the command for the user to run ("run `npm test` yourself").
-Includes "all tests pass", "works on Windows", "fixes #123" and anything whose evidence lives outside
-the repo.
+Includes "all tests pass" and "works on Windows". A claim like "fixes #123" is at most "a commit
+mentions it"; issue tracker state is outside the repo and goes under Not checked.
 
 **contradicted**: counter-evidence found at `path:line`: a different flag name, a wrong count, an
 export that was removed, the item already present in the base. A contradicted row always has a cited
