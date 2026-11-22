@@ -120,7 +120,7 @@ paths, `demote` rules or mark paths `strict`. `strict` applies only to the state
 `/edgecase init` reads your routes and prints a suggested `edgecase:` block for you to paste; it writes
 nothing. When you dispute a finding, `/edgecase probe` turns its `Check:` line into a runnable recipe
 (MSW or Playwright, with 500, never-resolving and empty-array bodies) that you run yourself.
-`/edgecase laws` loads the opt-in design laws (Jacob's, Hick's, Tesler's), which never block.
+`/edgecase laws` loads the opt-in design laws (Jakob's, Hick's, Tesler's), which never block.
 
 ## If you also have uilint
 
@@ -173,7 +173,7 @@ three reference files, [states](references/states.md) 16, [feedback](references/
 [forms](references/forms.md) 8, each read only when a row of the Build-mode table matches.
 [`references/modes.md`](references/modes.md) holds the screen audit, policy block and `init`, and is read
 only on those subcommands. The 8 opt-in laws are in [`references/opt-in/laws.md`](references/opt-in/laws.md) and are read only on `/edgecase laws`. File sizes in bytes:
-states.md 12730 and feedback.md 5,875 are the largest; no per-run token figure is published because none has been measured. Estimate from file sizes, not measured: SKILL.md (7,719 bytes) is always loaded; a fetch change adds states.md (12730 bytes), about 20 KB total, roughly 5,000 tokens at 4 bytes per token. Every rule has the same
+states.md 12,730 and feedback.md 5,875 are the largest; no per-run token figure is published because none has been measured. Estimate from file sizes, not measured: SKILL.md (7,719 bytes) is always loaded; a fetch change adds states.md (12,730 bytes), about 20 KB total, roughly 5,000 tokens at 4 bytes per token. Every rule has the same
 shape:
 
 ```markdown
@@ -197,13 +197,13 @@ in [`docs/SPEC.md`](docs/SPEC.md) (20,721 bytes, written for maintainers, never 
 
 ## Other skills read
 
-Read on 2026-11-22; this says what their pages do not define, not which is better, and edgecase has not been benchmarked against them. `ux-feedback` (sickn33/antigravity-awesome-skills) lists 4 states and 17 unnumbered rules; its page defines no stable IDs, no per-rule severity, no `response.ok` or status handling and no stale-response rule. `review-loading-error-empty-states` (Ritual, clawhub.ai) lists 5 checks; its page defines no IDs, severity, output format, status or stale-response handling, and mentions an optional paid cloud service. `react-ui-patterns` was not read and is not described here.
+Counts below come from summaries of the two pages taken on 2026-11-22 and were not re-checked line by line, so verify before quoting them. This says what their pages do not define, not which is better, and edgecase has not been benchmarked against them. `ux-feedback` (sickn33/antigravity-awesome-skills) lists 4 states and 17 unnumbered rules; its page defines no stable IDs, no per-rule severity, no `response.ok` or status handling and no stale-response rule. `review-loading-error-empty-states` (Ritual, clawhub.ai) lists 5 checks; its page defines no IDs, severity, output format, status or stale-response handling, and mentions an optional paid cloud service. `react-ui-patterns` was not read and is not described here.
 
 ## Credits
 
 The rules are independently written, informed by publicly available UX guidance: Nielsen Norman Group
 research, Apple Human Interface Guidelines, WCAG, and Material Design. The fetch-status rule (R-STATE-17) rests on documented
-`fetch` behaviour (MDN, `Response.ok`). The wording is original. Jacob's, Hick's and Tesler's Laws are
+`fetch` behaviour (MDN, `Response.ok`). The wording is original. Jakob's, Hick's and Tesler's Laws are
 credited to Jakob Nielsen, William Hick and Larry Tesler.
 
 ---
