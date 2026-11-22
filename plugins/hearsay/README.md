@@ -98,7 +98,7 @@ git clone https://github.com/DahanItamar/SkillShelf.git
 cp -r SkillShelf/plugins/hearsay ~/.claude/skills/hearsay
 ```
 
-On Windows, copy to `%USERPROFILE%.claudeskillshearsay`. This route needs no plugin UI, so it also
+On Windows, copy to `%USERPROFILE%\.claude\skills\hearsay`. This route needs no plugin UI, so it also
 works in web and cloud sessions; `.claude-plugin/` is ignored.
 
 **2. Claude Code marketplace (second option).** Marketplace install is available once this plugin is
