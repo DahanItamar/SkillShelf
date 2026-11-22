@@ -201,6 +201,20 @@ Not audited: files outside this diff.
 Use the saved config for routing and name which file you used. Print the findings list from
 section 4 at the end.
 
+### Machine-readable output (optional)
+
+Only when the user asks for "machine-readable" or "lines" output. After the report, print one
+line per row whose verdict is not `pass`, sorted by row id, nothing else on the line:
+
+```
+row|verdict|severity|path:line|citation-id
+AUDIT-5-01|fail|blocker|web/app/checkout.html:2|PCI-DSS v4.0.1
+```
+
+Use `-` for a field with no value (for example `n/a` rows have no `path:line`). Two saved
+outputs of the same scope can then be compared with plain `diff`, which makes the diff audit
+above comparable run to run.
+
 ## 5. What the audit never does
 
 - **Never writes to the target repository.** No fixes, no config, no report file unless the

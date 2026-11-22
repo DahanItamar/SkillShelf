@@ -16,6 +16,9 @@ Law as of 2026-11-22: module 2 section 2.6 now has 12 of 19 state rows read agai
 - Wide routes offer blockers first, rest on request.
 - README: Agent Skills portability and per-tool copy steps, quick start, token costs for an audit, and a note that from 2027-02-11 each module states its age before use.
 - New template: ROPA skeleton (CC0) for the existing records-of-processing check.
+- Optional machine-readable output (`row|verdict|severity|path:line|citation-id`) for diffing two audits with plain `diff`.
+- README: portability wording now says what was tested (Claude Code plugin install only); the blockers-first offer is stated next to "every check"; the 7 unverified state rows are named; the age notice is described as one line that never blocks; the Spec link is labelled maintainer history.
+- Law since `last_verified`: Modules 1 to 8: no change read in this release; only the module 2 section 2.6 state rows above were re-read.
 - Not done: no scored fixture run is recorded yet, so no recall or precision figure is claimed.
 
 ## 0.3.0

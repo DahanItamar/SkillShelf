@@ -90,7 +90,7 @@ the row in the same commit.
 
 Official sources for the state-law table. **12 of 19 rows were read against primary text on
 2026-11-22** (Virginia, Texas, Iowa, Tennessee, Minnesota, Delaware, Connecticut, Montana,
-Florida, Maryland, Utah, Kentucky). The other 7 say "not verified" and why; their URLs are entry points to confirm on the
+Florida, Maryland, Utah, Kentucky). The other 7 (Colorado, Oregon, Nebraska, New Hampshire, New Jersey, Indiana, Rhode Island) say "not verified" and why; their URLs are entry points to confirm on the
 next primary-text pass. Counts differ across trackers (20 to 24 enacted), so cite the
 statute, never a count. Reviewed summaries: https://multistate.us/insider/2026/2/4/all-of-the-comprehensive-privacy-laws-that-take-effect-in-2026 and https://iapp.org/news/a/new-year-new-rules-us-state-privacy-requirements-coming-online-as-2026-begins
 

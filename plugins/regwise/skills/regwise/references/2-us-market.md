@@ -149,7 +149,7 @@ early 2026; counts differ between trackers (20 to 24 enacted) depending on wheth
 are counted, so this table cites statutes, not counts. **Verify against primary text before
 relying on any cell.** The values below come from legislature and regulator summaries and have
 not all been checked against statute text (see `references/citations.md`, US state statutes).
-**Status: 12 of 19 rows verified against primary text on 2026-11-22; 7 unverified (listed in citations.md).**
+**Status: 12 of 19 rows verified against primary text on 2026-11-22; 7 unverified: Colorado, Oregon, Nebraska, New Hampshire, New Jersey, Indiana, Rhode Island (details in citations.md).**
 Section 2.6 checked 2026-11-22 (per-row dates in citations.md); the module's `last_verified` is unchanged because the rest of
 the module was not re-read. An audit that fires AUDIT-2-10 to 2-12 lists the unverified states.
 

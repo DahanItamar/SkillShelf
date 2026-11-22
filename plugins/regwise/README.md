@@ -2,7 +2,7 @@
 
 # Regwise
 
-**Plain Markdown in the open Agent Skills format; works in Claude Code, Codex, Cursor, GitHub Copilot and Gemini CLI. It resolves which laws actually apply to your project and audits your code against exactly those, with nothing borrowed from a jurisdiction you don't operate in.**
+**Plain Markdown written to the open Agent Skills format, so it should load in Claude Code, Codex, Cursor, GitHub Copilot and Gemini CLI. It resolves which laws actually apply to your project and audits your code against exactly those, with nothing borrowed from a jurisdiction you don't operate in.**
 
 Markdown and POSIX shell. **Zero dependencies, no build step, no runtime** — the audit is the model reading your repository, not a scanner you have to maintain.
 
@@ -13,7 +13,7 @@ Markdown and POSIX shell. **Zero dependencies, no build step, no runtime** — t
 [![dependencies](https://img.shields.io/badge/dependencies-0-0F766E?style=flat-square)](scripts/verify.sh)
 [![licence](https://img.shields.io/badge/licence-MIT%20%C2%B7%20templates%20CC0-0F766E?style=flat-square)](LICENSE)
 
-[Spec](docs/SPEC.md) · [Citation index](skills/regwise/references/citations.md) · [The router](skills/regwise/SKILL.md) · [Modules](skills/regwise/references/) · [Example configs](examples/)
+[Spec (maintainer history, not needed to use the skill)](docs/SPEC.md) · [Citation index](skills/regwise/references/citations.md) · [The router](skills/regwise/SKILL.md) · [Modules](skills/regwise/references/) · [Example configs](examples/)
 
 </div>
 
@@ -35,12 +35,12 @@ Then ask, inside a repository: `Audit this repository against the rules that app
 > **Regwise produces no legal advice.** It generates engineering directives, audit findings and document drafts that require review by qualified counsel in each market. Nothing it outputs is a compliance certification, and it never describes a project as compliant.
 
 > [!NOTE]
-> **Not covered:** Canada, Brazil, India, Japan, China, and health or biometric data law. `Global` here means US, EU, Israel and UK/APAC. From 2027-02-11 each module states its age before use; the maintainer refreshes modules against `citations.md` and re-dates only what was re-read.
+> **Not covered:** Canada, Brazil, India, Japan, China, and health or biometric data law. `Global` here means US, EU, Israel and UK/APAC. From 2027-02-11 each module states its age before use (the skill prints a one-line notice naming the `last_verified` date, then continues; it never blocks); the maintainer refreshes modules against `citations.md` and re-dates only what was re-read.
 
 | Area | Status |
 |---|---|
 | California and US federal law | Covered |
-| 19 further US state laws | 12 checked against primary text on 2026-11-22, the other 7 are summaries ([citations.md](skills/regwise/references/citations.md)) |
+| 19 further US state laws | 12 checked against primary text on 2026-11-22, the other 7 are summaries ([citations.md](skills/regwise/references/citations.md)). Unverified: Colorado, Oregon, Nebraska, New Hampshire, New Jersey, Indiana, Rhode Island. How a maintainer clears them: "Maintainer checklist" in `citations.md` |
 | EU, UK and Australia (module 3) | Covered |
 | Israel | Covered |
 | Canada, Brazil, India, Japan, China | Not covered |
@@ -54,6 +54,7 @@ Which compliance rules apply to this project? Infer what you can and ask me the 
 Audit this repository against the rules that apply and end with questions for my lawyer.
 Draft a privacy policy for this product, using only the rules that apply.
 Audit only this diff against the saved config.
+Audit this repository and also give machine-readable output.
 ```
 
 ---
@@ -159,7 +160,7 @@ Both paths resolve to the same tree — `templates/` and `references/` live insi
 
 ### Use it in other tools
 
-Copy the folder `plugins/regwise/skills/regwise` (not the plugin folder; here `SKILL.md` sits one level down, unlike plugins that keep it at the plugin root) into your tool's skills directory. Per-tool paths (`.agents/skills`, `.cursor/skills`, `.github/skills`, `~/.codex/skills`) are in the [Install section of the SkillShelf README](../../README.md#install). Discovery was not tested in each tool.
+Copy the folder `plugins/regwise/skills/regwise` (not the plugin folder; here `SKILL.md` sits one level down, unlike plugins that keep it at the plugin root) into your tool's skills directory. Per-tool paths (`.agents/skills`, `.cursor/skills`, `.github/skills`, `~/.codex/skills`) are in the [Install section of the SkillShelf README](../../README.md#install). Tested by the author: Claude Code plugin install. Not tested: Codex, Cursor, Copilot, Gemini CLI; the folder paths come from the Vercel skills CLI docs, a third-party source, not each vendor.
 
 | Command | |
 |---|---|
@@ -182,7 +183,7 @@ Estimate only (bytes divided by 4); no tokenizer was run, so none of these figur
 
 ## Auditing a repository
 
-Point it at code that already exists and every check in every loaded module is evaluated — never a sample.
+Point it at code that already exists and every check in every loaded module is evaluated by default. When 5 or more modules load, the skill offers "blockers first, rest on request"; if you choose it, the report header prints `high, medium rows not run`. Nothing is silently sampled.
 
 | Verdict | Means |
 |---|---|
