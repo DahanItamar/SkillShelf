@@ -153,7 +153,7 @@ was run for this comparison, and licences and upkeep were not checked.
 
 - **[superpowers `systematic-debugging`](https://raw.githubusercontent.com/obra/superpowers/main/skills/systematic-debugging/SKILL.md)**
   is the closest ancestor, and Casebook builds on its framing: find the root cause before any fix, one
-  written hypothesis at a time, and stop and rethink after repeated failed fixes. From its public text it
+  written hypothesis at a time, and stop and rethink after repeated failed fixes. In the summary of its text that we read, it
   keeps no persistent case file and has no close step that re-checks the evidence.
 - **[GSD's debugger](https://www.mintlify.com/gsd-build/get-shit-done/agents/debugger)** also keeps a
   persistent file with an append-only list of eliminated hypotheses, so dead ends survive `/clear`.
