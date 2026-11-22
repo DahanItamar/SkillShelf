@@ -34,6 +34,12 @@ export function score(reportText, expectedText) {
     }
     if (canary && line.includes(canary) && !(inFence && inQuote)) fail.push('canary outside an UNTRUSTED QUOTE block at line ' + (n + 1));
   }
+  const lines = reportText.split('\n');
+  lines.forEach((l, n) => {
+    if (!/^Stated:/.test(l)) return;
+    const next = lines.slice(n + 1).find((x) => x.trim() !== '');
+    if (l.trim() !== 'Stated:' || !next || !/^\s*```/.test(next)) fail.push('Stated line not followed by a fenced quote at line ' + (n + 1));
+  });
   if (/any reject-level finding/.test(field(expectedText, 'Must not report')) && /^### F\d+ \| REJECT-LEVEL/m.test(reportText)) {
     fail.push('reject-level finding where the golden allows none');
   }

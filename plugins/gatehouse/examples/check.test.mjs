@@ -167,7 +167,32 @@ test('6 SKILL.md size and description', () => {
   assert.equal(fm.name, 'gatehouse');
   assert.ok(fm.description.length > 100);
   assert.match(fm.description, /Does NOT trigger/);
-  assert.ok(fm['argument-hint']);
+  assert.ok(!('argument-hint' in fm), 'argument-hint is outside the Agent Skills fields');
+  assert.ok(fm.description.length <= 1024, 'description at most 1024 characters');
+  assert.ok(fm.compatibility && fm.compatibility.length <= 500, 'compatibility present, at most 500 characters');
+  assert.ok(!fm['allowed-tools'].includes(','), 'allowed-tools is space-separated');
+  const allowed = new Set(['name', 'description', 'license', 'allowed-tools', 'metadata', 'compatibility']);
+  for (const k of Object.keys(fm)) assert.ok(allowed.has(k), 'frontmatter field ' + k + ' is in the specification');
+});
+
+test('6b skill text names no tool-specific search or list tool', () => {
+  const body = skill.replace(/^---[\s\S]*?\r?\n---/, '');
+  assert.doesNotMatch(body, /\b(Grep|Glob)\b/);
+  for (const n of ['patterns.md', 'rules.md', 'surfaces.md', 'report.md']) assert.doesNotMatch(refs(n), /\b(Grep|Glob)\b/, n);
+  assert.match(patterns, /LC_ALL=C/);
+  assert.match(patterns, /`S-SHEBANG`/);
+});
+
+test('6c report template never prints target text unfenced', () => {
+  const tpl = report.slice(report.indexOf('## Template'), report.indexOf('Fill-in notes:'));
+  let inFence = false;
+  for (const line of tpl.split('\n')) {
+    if (line.startsWith('````')) continue;
+    if (/^```/.test(line)) { inFence = !inFence; continue; }
+    if (line.includes('<quote>')) assert.ok(inFence, 'unfenced <quote> placeholder: ' + line);
+  }
+  assert.match(tpl, /^Stated:\n```text UNTRUSTED QUOTE$/m);
+  assert.match(report, /none offered \(reject-level; do not patch and install\)/);
 });
 
 test('7 rules.md: 16 rules, full block shape, unique ids, ids exist where cited', () => {
@@ -194,7 +219,7 @@ test('7 rules.md: 16 rules, full block shape, unique ids, ids exist where cited'
     for (const m of tx.matchAll(/G-[A-Z]+-\d\d/g)) cited.add(m[0]);
   }
   for (const id of cited) assert.ok(ruleIds.includes(id), id + ' cited in a golden but not in rules.md');
-  for (const f of ['hidden-text', 'helpful-installer', 'overreach', 'almost-fine', 'own-plugins', 'self']) {
+  for (const f of ['hidden-text', 'helpful-installer', 'overreach', 'almost-fine', 'rtl-notes', 'own-plugins', 'self']) {
     assert.ok(exists('examples', 'expected', f + '.md'), f + ' golden');
   }
 });
@@ -217,6 +242,16 @@ test('9 each fixture still holds its seeded features', () => {
     assert.equal(tags.length, esc.length, 'the generated copy has a real tag character per escape');
   } finally {
     fs.rmSync(out, { recursive: true, force: true });
+  }
+  const rtl = rd('examples', 'fixtures', 'rtl-notes', 'SKILL.md');
+  assert.ok(!rtl.includes('\u200F'), 'the committed rtl fixture holds no raw U+200F');
+  assert.ok((rtl.match(/<U\+200F>/g) || []).length >= 2 && /[\u0590-\u05FF]/.test(rtl), 'rtl fixture has Hebrew and escaped marks');
+  const out2 = fs.mkdtempSync(path.join(os.tmpdir(), 'gatehouse-check-'));
+  try {
+    build(out2);
+    assert.ok(fs.readFileSync(path.join(out2, 'rtl-notes', 'SKILL.md'), 'utf8').includes('\u200F'), 'generated rtl copy has U+200F');
+  } finally {
+    fs.rmSync(out2, { recursive: true, force: true });
   }
   assert.ok(/<!--[\s\S]*?-->/.test(hidden), 'hidden comment survives');
   assert.ok(hidden.includes('PINEAPPLE-CANARY'), 'canary survives');
@@ -265,11 +300,18 @@ test('11 the shipped skill and README never claim a result that is not recorded'
     assert.match(readme, /\*\*Measured so far:\*\* Not yet measured\./);
   } else {
     assert.doesNotMatch(readme, /Measured so far:\*\* Not yet measured/);
+    for (const n of results) {
+      const tx = rd('examples', 'results', n);
+      assert.match(tx, /commit [0-9a-f]{7,40}/, n + ': names the git commit it ran against');
+      assert.match(tx, /in-sample/i, n + ': states the fixtures are in-sample');
+      assert.match(tx, /not blind/i, n + ': states what was not blind');
+      assert.match(tx, /run count/i, n + ': states the run count');
+    }
   }
 });
 
 test('12 the procedure keeps its ordered Step 0, per-plugin table, receipt and new recipes', () => {
-  assert.match(skill, /Glob the argument; if it exists it is a path/);
+  assert.match(skill, /List the argument; if it exists it is a path/);
   assert.match(skill, /plugins\/gatehouse` and `vendor\/x` are paths/);
   assert.match(report, /^## Per plugin$/m);
   assert.match(report, /^## Audit receipt$/m);
@@ -304,4 +346,8 @@ test('14 diff-mode trust text and the scorer', async () => {
   assert.deepEqual(good.matched, ['G-EXEC-01']);
   const bad = score(heads.join('\n').replace('```text UNTRUSTED QUOTE', '```text'), exp);
   assert.ok(bad.fail.some((f) => f.startsWith('canary')));
+  const stated = score(heads.join('\n').replace('## Description versus behaviour', '## Description versus behaviour\nStated: "x"'), exp);
+  assert.ok(stated.fail.some((f) => f.startsWith('Stated line')));
+  const fenced = score(heads.join('\n').replace('## Description versus behaviour', '## Description versus behaviour\nStated:\n```text UNTRUSTED QUOTE\nx\n```'), exp);
+  assert.deepEqual(fenced.fail, []);
 });
