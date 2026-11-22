@@ -101,7 +101,7 @@ Judging: also use the Glob listing. `bin/` files, `.mcp.json` and any `mod` file
 - `S-REMOTE-EXEC`: `(curl|wget|iwr|Invoke-WebRequest)[^\n|]*\|\s*(sudo\s+)?(ba|z|da)?sh|\|\s*(python3?|node|perl|ruby)\b|bash\s+<\(|eval\s*\$\(|iex\s*\(|chmod\s+\+x|git\+https?://|npm\s+(i|install)\s+https?://`
 - `S-REMOTE-FOLLOW`: `(read|fetch|load|follow|obey)[^\n]{0,40}(instructions?|rules|prompt)[^\n]{0,40}https?://`
 - `S-MUTABLE-URL`: `raw\.githubusercontent\.com/[^\s/]+/[^\s/]+/(main|master|HEAD)/|/latest\b`
-- `S-DEP-SPEC`: `\[submodule|"[^"]+"\s*:\s*"(git\+|git://|github:|https?://|file:)[^"]*"|"[^"]+"\s*:\s*"(latest|\*)"` — `.gitmodules` entries, and package dependencies given as a git, URL, tarball or file spec, or as an unpinned `latest`. Judged from the text only; no registry lookup, so typosquat checks are out of scope.
+- `S-DEP-SPEC`: `\[submodule|"[^"]+"\s*:\s*"(git\+|git://|github:|https?://|file:)[^"]*"|"[^"]+"\s*:\s*"(latest|\*)"` — `.gitmodules` entries, and package dependencies given as a git, URL, tarball or file spec, or as an unpinned `latest`. Count only matches inside a `dependencies`, `devDependencies`, `optionalDependencies` or `peerDependencies` block (a `homepage` or `repository` URL is not a dependency). Judged from the text only; no registry lookup, so typosquat checks are out of scope.
 - `S-CI`: run only over `.github/workflows/**`: `pull_request_target|(curl|wget)[^\n|]*\|\s*(ba)?sh|\$\{\{\s*secrets\.[^}]*\}\}` — a `secrets.` value passed into a `run:` step, a download piped to a shell, or a privileged pull-request trigger.
 
 | Family | Example wording |
