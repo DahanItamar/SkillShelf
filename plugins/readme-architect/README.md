@@ -168,8 +168,8 @@ path it names is relative to itself.
 
 ## Under the hood — briefly
 
-- **Progressive disclosure.** `SKILL.md` is 296 lines and loads every invocation; the seven
-  reference files are 1,097 lines and load only at the phase that needs them. A reference file is
+- **Progressive disclosure.** `SKILL.md` is 304 lines and loads every invocation; the seven
+  reference files are 1,103 lines and load only at the phase that needs them. A reference file is
   read cold and alone, so each is complete by itself and none depends on another being loaded.
 - **Audit first.** If a README exists, the skill shows a keep / change / cut table before writing,
   and offers an audit-only mode that writes nothing.
