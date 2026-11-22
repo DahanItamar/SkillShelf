@@ -39,7 +39,7 @@ Not for: a `CHANGELOG`, a `CONTRIBUTING` guide, or API reference docs.
 
 ## Cost and safety
 
-- **Cost.** `SKILL.md` is 14,581 bytes (about 3.6k tokens at 4 bytes per token) and loads on every
+- **Cost.** `SKILL.md` is 14,608 bytes (about 3.6k tokens at 4 bytes per token) and loads on every
   run. The six reference files total 46,907 bytes and load only at the phase that needs them;
   `identity-block.md` and `visuals.md` are skipped for a small utility.
 - **Safety.** Phase 1 runs the project, which executes its code. The gate default-allows only the
