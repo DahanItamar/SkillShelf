@@ -39,11 +39,11 @@ Not for: a `CHANGELOG`, a `CONTRIBUTING` guide, or API reference docs.
 
 ## Cost and safety
 
-- **Cost.** `SKILL.md` is 16,047 bytes (about 4.0k tokens at 4 bytes per token) and loads on every
-  run. The seven reference files total 49,619 bytes and load only at the phase that needs them. A
+- **Cost.** `SKILL.md` is 16,057 bytes (about 4.0k tokens at 4 bytes per token) and loads on every
+  run. The seven reference files total 49,791 bytes and load only at the phase that needs them. A
   utility run that skips `identity-block.md` and `visuals.md` loads `SKILL.md` plus five
-  references, 46,515 bytes (about 11.6k tokens). A run that loads everything is 65,666 bytes (about
-  16.4k tokens). Sizes measured with `wc -c`.
+  references, 46,697 bytes (about 11.7k tokens). A run that loads everything is 65,848 bytes (about
+  16.5k tokens). Sizes measured with `wc -c`.
 - **Safety.** Phase 1 runs the project, which executes its code. The gate default-allows only the
   test suite and a localhost dev server, asks before network, paid, remote-database, migration,
   deploy or credential-bearing steps, reads `.env.example` and never `.env`, and stops what it
@@ -108,8 +108,8 @@ the approach is unusual — those are the raw material of a section, not a secti
 
 **This README is the worked example.** It has no CI badge and no test-count badge because this
 repository has neither a pipeline nor a suite; it has no hero image because none was produced.
-Five badges, all checkable. That is what the test produces when it is applied honestly, and it is
-why there is no sixth reference file holding a fabricated sample.
+Three badges, all checkable. That is what the test produces when it is applied honestly, and it is
+why no reference file holds a fabricated sample.
 
 ## What it writes, and what it refuses to
 
@@ -168,7 +168,7 @@ path it names is relative to itself.
 ## Under the hood — briefly
 
 - **Progressive disclosure.** `SKILL.md` is 296 lines and loads every invocation; the seven
-  reference files are 1,094 lines and load only at the phase that needs them. A reference file is
+  reference files are 1,097 lines and load only at the phase that needs them. A reference file is
   read cold and alone, so each is complete by itself and none depends on another being loaded.
 - **Audit first.** If a README exists, the skill shows a keep / change / cut table before writing,
   and offers an audit-only mode that writes nothing.

@@ -200,9 +200,9 @@ stranger and fix anything that fails:
 - every path written
 - every number used, as a table: claim, command, observed output, date (offer it as PR text, and
   optionally save it as `docs/EVIDENCE.md`)
-- every claim you could not verify
+- every claim you could not verify, including each setup command not actually run, written as
+  `unverified`
 - whether screenshots were captured or listed, and why
-- every setup command not actually run, written as `unverified`
 - the `Verified on <OS, runtime version, date>` line for Run it, filled from the Phase 1 run notes
   and omitted when nothing was run
 
