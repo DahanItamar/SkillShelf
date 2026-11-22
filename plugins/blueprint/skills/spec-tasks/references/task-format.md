@@ -1,6 +1,6 @@
 # Task Format
 
-Sizing, ordering, and the exact line shape `spec-implement` reads.
+Sizing, ordering, and the exact line shape an executor reads.
 
 ---
 
@@ -20,7 +20,7 @@ Sizing, ordering, and the exact line shape `spec-implement` reads.
 | `files:` | yes | Paths expected to be created or modified. An estimate, not a contract |
 | `depends: T-NN` | when needed | Earlier tasks only. A forward reference is invalid |
 
-Order in the file **is** execution order. `spec-implement` walks the list top to bottom and does not reorder.
+Order in the file **is** execution order. An executor walks the list top to bottom and does not reorder.
 
 ---
 
@@ -41,8 +41,8 @@ Twelve tasks is a comfortable ceiling for one milestone. Past twelve, split alon
 ### What is not a task
 
 - **"Write tests for X."** Tests are part of the task that makes X true, not a separate step. A task list where testing is deferred to the end produces a codebase where testing is deferred forever.
-- **"Refactor Y."** Unless a criterion requires it, this is drive-by work — and it belongs to
-  `spec-refactor`, which writes it as an `R-NN` line that *preserves* criteria instead of closing
+- **"Refactor Y."** Unless a criterion requires it, this is drive-by work — and it belongs in a
+  separate refactoring list, written as an `R-NN` line that *preserves* criteria instead of closing
   one. A refactoring in this file has no criterion to cite, which is exactly why it does not belong.
 - **"Research Z."** If a decision is unmade, it belongs in the spec's Open Questions, blocking this milestone — not hidden as a task.
 
@@ -52,7 +52,7 @@ Twelve tasks is a comfortable ceiling for one milestone. Past twelve, split alon
 
 Sort by dependency first, then by demo value.
 
-1. **Dependency.** `depends:` may reference only earlier tasks. This is what lets `spec-implement` be a single forward pass with no scheduler — the simplest thing that works, and the reason a stopped run resumes cleanly.
+1. **Dependency.** `depends:` may reference only earlier tasks. This is what lets an executor be a single forward pass with no scheduler — the simplest thing that works, and the reason a stopped run resumes cleanly.
 2. **Demo value.** Among tasks with no dependency between them, do the one that makes something visible first. A milestone whose first three tasks produce nothing observable is a milestone nobody can course-correct.
 
 Data models usually come first, not because of layering dogma, but because every later task's verification reads them.
@@ -72,7 +72,7 @@ T-04 archive lock                             ●
 ```
 
 - **A row with no dot** → the task closes nothing. Delete it, or find the missing criterion.
-- **A column with no dot** → the criterion is unbuilt. Nothing downstream will catch this: `spec-implement` verifies only what a task cites, so an uncited criterion is never checked and never implemented. Report it explicitly.
+- **A column with no dot** → the criterion is unbuilt. Nothing downstream will catch this: an executor verifies only what a task cites, so an uncited criterion is never checked and never implemented. Report it explicitly.
 
 A criterion may legitimately have no column in *this* slice if it belongs to a later milestone. Say which one, so the gap is a schedule, not an omission.
 
@@ -88,7 +88,7 @@ For a v1 spec with no criteria, keep the format and replace citations with an in
 
 Rules that still hold: one sitting, one outcome, forward-only dependencies, order is execution order.
 
-Say once, in the handover, that the spec predates §2.1 and `spec-architect` can backfill it. Do not repeat the warning per task, and do not refuse to work.
+Say once, in the handover, that the spec predates §2.1 and the criteria can be backfilled. Do not repeat the warning per task, and do not refuse to work.
 
 ---
 

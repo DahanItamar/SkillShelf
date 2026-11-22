@@ -71,7 +71,7 @@ anything, because coupling is what makes "add a second one" a rewrite.
 **Primitive Obsession is the one worth taking seriously**, because it is the smell the proof in
 this repository is about: a shift time stored as `'9:00'` compares lexically, and the overlap check
 silently stops working. When a data-shape smell contradicts §5 of the spec, it is not a smell at
-all — it is drift, and stage 5 owns it.
+all — it is drift, and a drift check owns it.
 
 ---
 

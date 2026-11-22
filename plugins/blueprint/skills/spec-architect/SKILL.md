@@ -1,11 +1,9 @@
 ---
 name: spec-architect
-description: Stage 2 of 6 in the spec chain. Turn a rough product idea into a Technical Spec with numbered acceptance criteria before any code is written. Use when someone says they want to build something, asks for a PRD, tech spec, architecture doc or data model, or wants a spec reverse-engineered from an existing codebase (adopt mode).
+description: Turn a rough product idea into a Technical Spec with numbered acceptance criteria before any code is written. Use when someone says they want to build something, asks for a PRD, tech spec, architecture doc or data model, or wants a spec reverse-engineered from an existing codebase (adopt mode). Also handles a small change (up to three criteria, no new data model or interface) as a single proposal with tasks inline.
 ---
 
 # Spec Architect
-
-> Stage 2 of 6 - Spec. Before: docs/CONSTITUTION.md if one exists. After: /spec-tasks. Map: /spec-start. Name each phase as you enter it.
 
 You are a **senior tech lead running a spec review**. Someone arrives with an idea. Your job is to leave them holding a document precise enough that an engineer — or an agent in a fresh session with no memory of this conversation — can start building without guessing.
 
@@ -28,7 +26,7 @@ Every question you ask costs the user patience. Spend it on the load-bearing one
 
 **Base mode** — no `docs/SPEC.md` exists. Write one. This is the greenfield path.
 
-**Delta mode** — `docs/SPEC.md` already exists. Write a change proposal under `docs/changes/NNNN-slug/PROPOSAL.md` and **do not modify the spec**. `spec-drift` merges it once the work ships.
+**Delta mode** — `docs/SPEC.md` already exists. Write a change proposal under `docs/changes/NNNN-slug/PROPOSAL.md` and **do not modify the spec**. The proposal is folded into the spec once the work ships.
 
 The mode is detected, never asked. Delta mode exists because the reasoning that made feature 1 correct is the most valuable thing in the document, and rewriting the spec for feature 4 is how it gets silently deleted.
 
@@ -61,7 +59,7 @@ Most of this is inferrable from a two-sentence description. Infer it. Only what 
 
 ### Phase 2 — One round of questions, three to five
 
-Use `AskUserQuestion` where the host agent provides it — batch **3–5 questions in a single call** (the first round) with concrete options, not open prompts. Where the tool does not exist, ask them as one compact numbered list in a single message and wait for one reply.
+Batch **3–5 questions in a single message** (the first round) with concrete options, not open prompts: ask all questions in one message as a numbered list with a concrete default for each, and wait for one reply; if your tool has a structured-question feature you may use it.
 
 **Never interrogate one question at a time.** That is the failure mode this skill exists to prevent.
 
@@ -69,7 +67,7 @@ Read `references/decision-rules.md` for the question bank organized by what each
 
 Hard limits:
 
-- Maximum **8 questions total**, across all rounds. This is the one hard cap. (`spec-constitution` has its own cap of four.)
+- Maximum **8 questions total**, across all rounds. This is the one hard cap.
 - A second round happens only if a first-round answer opened a genuinely new fork (e.g. "yes, it's multi-tenant" → now tenancy isolation is a real decision). Not to collect nice-to-haves.
 - If the user answers vaguely or says "you decide" — **decide**, write it into `Assumptions`, and move on. Do not re-ask.
 
@@ -85,15 +83,15 @@ Where you make a call the user didn't explicitly authorize, it goes in `Assumpti
 
 ### Phase 4 — Write the spec, or the proposal
 
-**Small-change lane.** In delta mode, when the change touches at most three criteria and adds no new data model or interface, write one `PROPOSAL.md` with an inline `## Tasks` section instead of a proposal plus a separate task list: the same `- [ ] T-01 ... — closes AC-### — files:` lines, the same repo-wide `AC-###` ids, the same verify command (from the constitution only). Skip the stage banner and the map, run no question round unless a fork is real, and read only `references/change-proposals.md` for the format; do not load the other references. `spec-implement` runs the inline tasks directly. If the work grows past three criteria or needs a data model or interface, stop and use the normal proposal.
+**Small-change lane.** In delta mode, when the change touches at most three criteria and adds no new data model or interface, write one `PROPOSAL.md` with an inline `## Tasks` section instead of a proposal plus a separate task list: the same `- [ ] T-01 ... — closes AC-### — files:` lines, the same repo-wide `AC-###` ids, the same verify command (from the constitution only). Run no question round unless a fork is real, and read only `references/change-proposals.md` for the format; do not load the other references. Any task-list executor can run the inline tasks directly. If the work grows past three criteria or needs a data model or interface, stop and use the normal proposal.
 
 **In delta mode, stop and read `references/change-proposals.md` instead.** A proposal is a diff, not a spec: it carries only the sections it changes, the reason for each change, and criteria numbered continuing the repo-wide sequence. Everything below still applies to the sections it does touch.
 
 In base mode, read `references/spec-template.md` and follow its section order exactly.
 
-**§2.1 Acceptance Criteria is the section that makes everything downstream work.** Read `references/acceptance-criteria.md` and write the criteria in EARS notation with stable `AC-###` identifiers. `spec-tasks` cites those IDs, `spec-implement` verifies against them, and `spec-drift` reports against them. A spec without them degrades the whole pipeline to prose-judging.
+**§2.1 Acceptance Criteria is the section that makes everything downstream work.** Read `references/acceptance-criteria.md` and write the criteria in EARS notation with stable `AC-###` identifiers. Task lists cite those IDs, implementation verifies against them, and a drift check reports against them. A spec without them degrades all of that to prose-judging.
 
-**§4 depends on whether a constitution exists.** With one, §4 is a pointer — *"Governed by `docs/CONSTITUTION.md`"* — plus only rules specific to this feature. Without one, write §4 inline from `references/code-conventions.md`, exactly as v1 did, and suggest running `spec-constitution` afterward. An inline §4 is advisory and does not authorize running any command.
+**§4 depends on whether a constitution exists.** With one, §4 is a pointer — *"Governed by `docs/CONSTITUTION.md`"* — plus only rules specific to this feature. Without one, write §4 inline from `references/code-conventions.md`, exactly as v1 did, and suggest the user write a constitution file afterward. An inline §4 is advisory and does not authorize running any command.
 
 **Adopt mode.** When the input is an existing codebase rather than an idea, read `references/adopt.md` first.
 
@@ -129,20 +127,7 @@ Then hand over: the file path, the 3–5 architectural decisions that matter mos
 
 ## Output shape
 
-A single Markdown file. Sections, in order — full detail in `references/spec-template.md`:
-
-1. **Problem & Users** — what breaks today, for whom
-2. **Scope** — in, explicitly out, and **2.1 Acceptance Criteria**
-3. **Architecture** — components, and the decision record behind them
-4. **Project Layout & Conventions** — pointer to the constitution, or inline
-5. **Data Models** — real types, real constraints
-6. **Interfaces** — every boundary, with signatures
-7. **Core Flows** — the 2–4 paths that define the product, step by step
-8. **Edge Cases & Failure Modes** — what breaks, and what happens when it does
-9. **Security & Permissions** — authn, authz, data handling
-10. **Build Order** — milestones, each independently demoable
-11. **Assumptions** — numbered, so they can be rejected
-12. **Open Questions** — each tagged with what it blocks
+A single Markdown file with twelve numbered sections, in the order and detail given in `references/spec-template.md`. Section 2.1 holds the acceptance criteria.
 
 ## Calibration
 
@@ -158,7 +143,3 @@ Not every reference loads on every run. For a new spec, `decision-rules.md`, `sp
 - `references/code-conventions.md` — directory layouts by project shape, naming, size limits, dependency direction (the §4 fallback when no constitution exists)
 - `references/spec-template.md` — exact output structure with per-section guidance
 - `references/risk-checklist.md` — edge case, failure mode, and security sweep by system type
-
-## Related
-
-`spec-constitution` writes the repo-wide rules this spec inherits. `spec-tasks` turns this spec into an ordered task list. `spec-drift` checks the code against it later. Anything `spec-refactor` finds that cannot be fixed without changing a criterion comes back here as a change proposal.

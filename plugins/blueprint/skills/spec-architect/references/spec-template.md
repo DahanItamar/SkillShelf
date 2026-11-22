@@ -35,7 +35,7 @@ didn't ask for: visible, but not committed.>
 
 <The contract. One EARS sentence per observable behavior, each with a stable ID.
 Read references/acceptance-criteria.md before writing this section — the patterns and
-the ID rules are both load-bearing. Downstream stages cite these IDs; renumbering
+the ID rules are both load-bearing. Task lists and checks cite these IDs; renumbering
 later breaks every citation.>
 
 | ID | Criterion |
@@ -86,7 +86,7 @@ work. Never restate a rule docs/CONSTITUTION.md already carries:
     - <new directory this feature introduces, and its rule>
 
 WITHOUT a constitution — write it inline from references/code-conventions.md, using
-the subsections below, and suggest running spec-constitution afterward. Any verify
+the subsections below, and suggest writing a constitution file afterward. Any verify
 command written here is advisory: it does NOT authorize running anything. Only
 docs/CONSTITUTION.md can.>
 
@@ -234,6 +234,6 @@ detail, and it should have been decided.>
 
 **No hedging.** "We should probably consider using…" is not a spec sentence. Decide, state the reason, note what would change your mind.
 
-**§2.1 is the machine-readable part; everything else is the human-readable part.** Both are required. Criteria without §3 Decisions tell a later reader what but never why — and *why* is what stops `spec-drift` from blessing a regression.
+**§2.1 is the machine-readable part; everything else is the human-readable part.** Both are required. Criteria without §3 Decisions tell a later reader what but never why — and *why* is what stops a later drift check from blessing a regression.
 
 **Write for the reader who wasn't in the conversation.** This document exists to be loaded into a fresh context. Nothing in it may depend on something said in chat but not written down.

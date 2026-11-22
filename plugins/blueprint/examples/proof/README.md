@@ -16,7 +16,7 @@ Four versions of the same feature — *does this shift conflict with an existing
 | --- | --- |
 | [`naive.mjs`](naive.mjs) | The check from the "without the skill" run, lifted out of the component unchanged. A shift is `{ employee, day, start, end }` — all strings, because nothing forced otherwise. |
 | [`spec-derived.mjs`](spec-derived.mjs) | The same feature built against §5 and §8 of [the spec](../shift-planner-spec.md). A shift is `{ id, employeeId, date, startMinute, endMinute }`. |
-| [`drifted.mjs`](drifted.mjs) | `spec-derived.mjs` three weeks later, after one locally sensible validation change silently reversed §8. This is what [`spec-drift`](../the-loop.md) exists to catch. |
+| [`drifted.mjs`](drifted.mjs) | `spec-derived.mjs` three weeks later, after one locally sensible validation change silently reversed §8. This is what [a drift check](../the-loop.md) exists to catch. |
 | [`smelly.mjs`](smelly.mjs) | `spec-derived.mjs` six months later. Every criterion still holds and drift comes back clean — and adding the next rule means four edits nothing will ask for. This is what `spec-refactor` exists to catch. |
 
 The first two are fed the same three scenarios in their own shapes.
@@ -39,9 +39,9 @@ The first two are fed the same three scenarios in their own shapes.
   ✔ still handles ordinary shifts, so nothing looks wrong
   ✔ but the night shift can no longer be saved — §8 is contradicted
   ✔ and the rejection is silent: the overlap is simply never detected
-  ✔ the spec still says the opposite — this is what spec-drift reports
+  ✔ the spec still says the opposite — this is what a drift check reports
 ▶ smelly — passes every criterion and is still unshippable
-  ✔ behaves exactly like the spec-derived version — spec-drift finds nothing
+  ✔ behaves exactly like the spec-derived version — a drift check finds nothing
   ✔ SM-001 Shotgun Surgery: one rule kind is known in four places
   ✔ SM-002 Duplicate Code: the same day arithmetic, copied three times
   ✔ and the copies have already diverged, in the one path no criterion covers
@@ -91,11 +91,11 @@ assert.equal(codeAllows, false);   // code: throws above 1439
 assert.notEqual(specAllows, codeAllows);
 ```
 
-That last assertion is the gap `spec-drift` reports. Nothing about the drifted code looks wrong in isolation — which is precisely why nobody catches it without comparing the two artifacts on purpose. Full walkthrough in [the-loop.md](../the-loop.md).
+That last assertion is the gap a drift check reports. Nothing about the drifted code looks wrong in isolation — which is precisely why nobody catches it without comparing the two artifacts on purpose. Full walkthrough in [the-loop.md](../the-loop.md).
 
 ## And then it stopped drifting, and got worse anyway
 
-The fourth block is the case stage 5 is blind to, and the reason there is a stage 6.
+The fourth block is the case a drift check is blind to, and the reason there is a a refactoring pass.
 
 [`smelly.mjs`](smelly.mjs) is the spec-derived version six months and four features later. It is **correct**. Every criterion holds, the overnight case works, identity is still an id — run `spec-drift` over it and the report comes back clean, which is the honest answer to the question that skill asks.
 
@@ -113,4 +113,4 @@ assert.equal(exportDuration(night), 480);    // 22:00 → 06:00 is eight hours
 assert.equal(tooltipDuration(night), -960);  // the grid says minus sixteen
 ```
 
-No criterion mentions the tooltip. So this is not drift, stage 5 is right to stay silent, and the defect sits there being green. Correctness and changeability are different properties, and asserting one says nothing about the other — which is exactly the split between the last two stages.
+No criterion mentions the tooltip. So this is not drift, a drift check is right to stay silent, and the defect sits there being green. Correctness and changeability are different properties, and asserting one says nothing about the other — which is exactly the split between the last two stages.

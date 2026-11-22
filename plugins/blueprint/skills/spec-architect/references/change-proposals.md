@@ -12,7 +12,7 @@ Three reasons, in order of how much they cost when ignored:
 2. **A proposal is reviewable.** A rewritten spec is a 900-line diff nobody reads. A proposal is one page, and the reviewer can see exactly what changes.
 3. **The spec must stay loadable.** It exists to be read whole into a fresh context. Growing it by a full feature description every time ends that.
 
-So: the spec is the truth, and a proposal is a pending amendment. `spec-drift` merges it once the work ships.
+So: the spec is the truth, and a proposal is a pending amendment. it is merged into the spec once the work ships.
 
 ---
 
@@ -22,7 +22,7 @@ So: the spec is the truth, and a proposal is a pending amendment. `spec-drift` m
 docs/changes/
 ├── 0004-shift-templates/
 │   ├── PROPOSAL.md
-│   └── TASKS.md            ← written later by spec-tasks
+│   └── TASKS.md            ← written later
 └── archive/
     ├── 0001-m1-scheduling/
     └── 0002-pdf-export/
@@ -107,7 +107,7 @@ Every edit names its section, its operation, and — for the sections that recor
 
 > **Removing or replacing an item in §3 Decisions, §8 Edge Cases, or §9 Security without a stated reason is not permitted.**
 
-Those three sections exist because someone thought about a problem and wrote down the conclusion. An unexplained reversal is indistinguishable from a later session not knowing — which is precisely what `spec-drift` classifies as a regression. Stating the reason converts it into a decision on the record.
+Those three sections exist because someone thought about a problem and wrote down the conclusion. An unexplained reversal is indistinguishable from a later session not knowing — which is precisely what a drift check classifies as a regression. Stating the reason converts it into a decision on the record.
 
 When a §3 Decision genuinely reverses, do not delete it. Write the new decision with what changed:
 
@@ -126,7 +126,7 @@ The old reason stays visible. That is the whole point.
 
 - **Continue the repo-wide sequence.** If the spec ends at `AC-040`, this proposal starts at `AC-041`. Never restart at 001 per feature — IDs are unique across the repository, including archived proposals, because an archived task list still cites them.
 - **Retiring is not deleting.** A retired criterion becomes a tombstone in §2.1 on merge, keeping its ID forever. One line, and every old citation still resolves.
-- **Retire explicitly, never by omission.** A criterion the proposal simply stops mentioning is still active, and `spec-drift` will keep checking it.
+- **Retire explicitly, never by omission.** A criterion the proposal simply stops mentioning is still active, and a drift check will keep checking it.
 
 ---
 
@@ -138,7 +138,7 @@ If another open proposal edits a section you are about to edit:
 
 - **Say so in `## Impact`**, naming the ordinal and the section.
 - **Do not resolve it yourself.** Two proposals editing §5 in incompatible ways is a sequencing decision the user makes, not a merge you perform.
-- `spec-drift` refuses to merge either one until the overlap is resolved.
+- Merge neither one until the overlap is resolved.
 
 Independent proposals touching different sections merge in any order. That is the common case, and it needs no coordination.
 
@@ -146,12 +146,12 @@ Independent proposals touching different sections merge in any order. That is th
 
 ## What delta mode does not change
 
-Everything else in `spec-architect` still applies: one round of questions, decide rather than ask, delete anything that could be removed with the product still working, numbered assumptions for calls the user did not authorize.
+Everything else in this skill still applies: one round of questions, decide rather than ask, delete anything that could be removed with the product still working, numbered assumptions for calls the user did not authorize.
 
 Two additions specific to this mode:
 
 - **Question budget is lower.** The spec already answered the architectural forks. Three questions is generous; often none are needed, because the constraint set is already written down.
-- **Check the change against §8 before proposing it.** A new feature that reintroduces a failure mode §8 already solved is the single most common regression, and it is cheapest to catch here — before a task list exists, before code is written, and before `spec-drift` has to explain what was lost.
+- **Check the change against §8 before proposing it.** A new feature that reintroduces a failure mode §8 already solved is the single most common regression, and it is cheapest to catch here — before a task list exists, before code is written, and before a drift check has to explain what was lost.
 
 ---
 
@@ -159,8 +159,10 @@ Two additions specific to this mode:
 
 Two branches that each write a proposal will both scan `docs/changes/` and both pick the same next ordinal, and both continue the sequence from the same last `AC-###`. Branches cannot see each other, so allocate the real numbers where the work meets: at merge time, on `main`.
 
-- **On a branch, use provisional ids.** Name the directory `0000-slug` and number new criteria `AC-NEW-1`, `AC-NEW-2`. `spec-tasks` may cite an `AC-NEW-n` that is defined in the unmerged `PROPOSAL.md` beside it.
-- **At merge, the person merging runs `/spec-drift` merge** on the up-to-date `main`. It scans `main` for the next real ordinal and the next free `AC-###`, renames the directory, replaces each `AC-NEW-n` in the proposal and its `TASKS.md`, and only then applies the edits (see `spec-drift/references/merge.md`).
-- **Check the result.** `spec-check` check 3 already reports duplicate ids and reused tombstones after the fact. Run `/spec-check` on the merge result; a duplicate means two branches skipped the provisional step. A leftover `0000-*` directory or `AC-NEW-n` on `main` means the merge step itself was skipped: `sh scripts/spec-check.sh --main` lists both. Use `--main` on `main` or in a merge queue only, never on a feature branch, where provisional ids are expected.
-- **No hashes, no per-branch ranges.** They would break the `AC-###` format that every other stage matches on and the rule that ids are never renumbered once merged.
+- **On a branch, use provisional ids.** Name the directory `0000-slug` and number new criteria `AC-NEW-1`, `AC-NEW-2`. A task list may cite an `AC-NEW-n` that is defined in the unmerged `PROPOSAL.md` beside it.
+- **At merge, whoever merges second renumbers, in the merge commit.** On the up-to-date `main`: take the next real ordinal (scan `docs/changes/` and `docs/changes/archive/`) and the next free `AC-###`, rename the directory, replace each `AC-NEW-n` in the proposal and its `TASKS.md`, then apply the edits to the spec.
+- **Worked collision.** Branch A and branch B each create `docs/changes/0000-<slug>/` with an `AC-NEW-1`. A merges first and becomes `0007` with `AC-041`. B merges next: it takes `0008` and `AC-042`, and rewrites its `AC-NEW-1` to `AC-042` everywhere, including the `T-` lines that cite it. Nobody else touches A.
+- **Squash merges drop commit messages.** Put `closes AC-###` in the pull request title or body so the trail survives.
+- **Check the result.** Search the spec for a duplicate `AC-###` or a reused tombstone: that means two branches skipped the provisional step. A leftover `0000-*` directory or `AC-NEW-n` on `main` means the merge step was skipped. Provisional ids are expected on feature branches, so look only on `main` or in a merge queue.
+- **No hashes, no per-branch ranges.** They would break the `AC-###` format that every consumer matches on and the rule that ids are never renumbered once merged.
 - **Solo work is unchanged.** One person on one branch at a time can keep allocating real ordinals and ids when writing the proposal.
