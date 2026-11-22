@@ -1,5 +1,10 @@
 <div align="center">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/skillshelf-dark.svg">
+  <img src="docs/brand/skillshelf-light.svg" alt="SkillShelf logo: a bookcase with one skill pulled out" width="96">
+</picture>
+
 # SkillShelf
 
 **AI coding skills that each stand on their own. Install only what you need.**
