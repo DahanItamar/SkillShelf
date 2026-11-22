@@ -1,6 +1,6 @@
 # Laws
 
-Five established principles, stated as things to do rather than things to know. Each has a named
+Eight rules drawn from established principles, stated as things to do rather than things to know. Each has a named
 origin, but the citation is not the point — the applied rule is.
 
 ---
@@ -70,21 +70,12 @@ engineer spends once is time every user would otherwise spend repeatedly.
 *Check:* for each thing you ask the user to decide — could the product work it out instead?
 *Severity:* recommended
 
-### R-LAW-09 · Size and place targets for the finger already on the screen — Fitts's Law
-**DO:** Make frequent targets large, and put them near where the pointer or thumb already rests.
-*Why:* The time to hit a target falls as it grows and as the distance to it shrinks. This is the
-reason primary navigation belongs at the bottom of a phone screen: that is where the thumb already is.
-*Applies:* navigation bars, toolbars, action rows, any cluster of adjacent controls
-*Check:* on a physical device, one-handed, hit each of a row of adjacent controls ten times. Count the
-mis-hits — then fix the targets rather than asking users to aim better.
-*Severity:* recommended
+### Retired: R-LAW-09 and R-LAW-10
 
-### R-LAW-10 · Make the hit area bigger than the thing you drew
-**DO:** Extend the tappable region past the visible bounds of the control — padding around an icon,
-the label as well as the checkbox, the whole row where the row has a single destination.
-*Why:* How big a control looks and how reliably a finger lands on it are two different problems. You
-can fix the second without touching the first, which is why a small icon can still be easy to hit.
-*Applies:* icon buttons, checkboxes and radios with labels, list rows and cards with one destination
-*Check:* start a drag on the card and move. Does it scroll, or did it activate? A whole-card target
-that beats the scroll gesture has traded one frustration for a worse one.
-*Severity:* recommended
+Both are retired in 1.4.0 and their IDs are never reused: neither can be checked from code without
+a physical device. Their advice survives as notes, not rules, and is never a finding on its own.
+
+- **Fitts's Law.** Make frequent targets large and put them near where the thumb already rests; on a
+  phone that means primary navigation at the bottom.
+- **Hit area.** Extend the tappable region past the drawn bounds (padding around an icon, the label
+  with the checkbox). Do not let a whole-card target beat the scroll gesture.

@@ -25,13 +25,13 @@ breaking them.
 *Severity:* required
 
 ### R-FORM-03 · Validate when the field is left, not at submit
-**DO:** Check a field as soon as the user moves away from it.
+**DO:** Validate on blur after the first touch, never on first focus or while the first value is still being typed.
 *Why:* Holding every complaint until submit means filling everything in, waiting, then hunting back
 up the page for the one thing that was wrong — and the further down the form, the more work is at
 risk.
 *Applies:* fields with a format or uniqueness constraint
 *Check:* type an invalid email and click elsewhere. Do you find out now, or after submitting?
-*Severity:* required
+*Severity:* recommended (demoted in 1.4.0)
 
 ### R-FORM-04 · Show limits while typing
 **DO:** Display remaining characters on any length-limited field as the user types.
