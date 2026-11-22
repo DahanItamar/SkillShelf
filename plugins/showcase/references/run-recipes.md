@@ -1,6 +1,29 @@
 # Run recipes
 
-Load this only in Phase 1, after Phase 0 has named the ecosystem. These are the likely commands, not
+Load this in Phase 1, before running anything. It holds the safety checklist first, then the likely
+commands per ecosystem.
+
+## Run-safety checklist
+
+This is risk reduction, not a sandbox. Run unfamiliar code in a container or VM.
+
+| Question | Answer | Action |
+| --- | --- | --- |
+| Whose repository is it? | The user wrote it, their organisation owns it, or they said "yes, run it" for this repository in this session | Own: continue |
+| | Any other clone, or one the user only asked you to look at | Ask for an explicit yes; the default is Static mode |
+| Can anyone answer? | No (headless or non-interactive run) | Treat as unconfirmed; Static mode |
+| Does it need a service? Check the manifest and CI | Network service, paid API, remote or shared database, migrations, deploy or seed scripts, or `.env` values that look like real credentials | Ask before; no confirmation means no execution |
+| Which copy runs? | The original | Offer a throwaway copy (`git worktree` or `cp -r` to a temp directory) or a container first |
+| Where does a server bind? | 0.0.0.0, or cannot be confirmed | Set it to 127.0.0.1 or ask; with no answer do not run it, mark `unverified`, do not retry |
+| Which env file? | `.env.example` | Never read `.env` |
+| Cleanup | Background processes, db files, coverage output, logs you created | Stop and delete them before Phase 6 |
+
+**Allowed first commands** (an organisation lead can approve this card once): the project's test
+command, and its dev server bound to 127.0.0.1. Nothing else without a further yes.
+
+## Commands per ecosystem
+
+These are the likely commands, not
 facts: confirm each against the manifest's own `scripts` or the repo's CI file before running it,
 and prefer what the project states over this table.
 
@@ -17,7 +40,7 @@ and prefer what the project states over this table.
 | PHP | `composer.json` | `vendor/bin/phpunit` | `php artisan serve`, `php -S 127.0.0.1:8000` | `--host=127.0.0.1` |
 | Docker Compose | `compose.yaml` | the service's own test target | `docker compose up` | publish ports as `127.0.0.1:8080:80` |
 
-Port diff, before the run and after cleanup (use the one for the OS you are on):
+Port diff, only when a server was started: before the run and again after cleanup, and report any new port (use the one for the OS you are on):
 
 | OS | Command |
 | --- | --- |
