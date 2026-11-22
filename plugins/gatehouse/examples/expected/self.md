@@ -23,7 +23,7 @@ Downgraded to note (conditions (a)-(d) in rules.md), listed by file in a real re
 Dropped as failing Applies (not downgraded): "fails silently" and "do not show immunity" style prose hits for G-INJ-02.
 
 Must not report
-- Any finding in skills/gatehouse/SKILL.md. It contains no rule phrase, no hook, no blob, no comment and no invisible character. Its one grant, `allowed-tools: Read, Grep, Glob`, is within G-PERM-01.
+- Any finding in skills/gatehouse/SKILL.md. It contains no rule phrase, no hook, no blob, no comment and no invisible character. Its one grant, `allowed-tools: Read Grep Glob`, is within G-PERM-01.
 - G-TEXT-01 anywhere. The generated copy of hidden-text, audited as its own root, is a separate test and still expects G-TEXT-01 (see expected/hidden-text.md).
 - A hook, MCP server or bin file at the plugin root (there is none). The hooks, the MCP server and the bin file in "What it can do once installed" are the fixtures' own, under examples/fixtures/, and the report must say they are not loaded by Claude Code.
 
