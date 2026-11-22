@@ -157,7 +157,7 @@ calculation diverged where no criterion looks — stage 6 catches that.
 
 ## Try spec-check in a minute
 
-[`examples/spec-check-fixture/`](examples/spec-check-fixture) is a hand-built fixture, not a recorded run: a `SPEC.md` and one `TASKS.md` with three deliberate orphans. Copy them into a scratch repo as `docs/SPEC.md` and `docs/changes/0001-m1-fixture/TASKS.md`, run `/spec-check`, and you should see `Orphans: 3`.
+[`examples/spec-check-fixture/`](examples/spec-check-fixture) is a hand-built fixture, not a recorded run: a `SPEC.md` and one `TASKS.md` with three deliberate orphans. Copy them into a scratch repo as `docs/SPEC.md` and `docs/changes/0001-m1-fixture/TASKS.md`, run `/spec-check`, and you should see `Orphans: 3`. Or run `sh scripts/spec-check.sh examples/spec-check-fixture/SPEC.md examples/spec-check-fixture/TASKS.md` for the same three, without Claude.
 
 ## Compared with other spec tools
 
@@ -175,19 +175,23 @@ Honest limits: Claude Code only, no CLI, no IDE integration, no multi-agent port
 
 ## Optional CI recipe
 
-Nothing here runs at install. If you want a gate, copy this into your own workflow. It assumes the Claude Code CLI is installed and authenticated in CI; adapt the invocation to your setup.
+Nothing here runs at install. If you want a gate, copy [`scripts/spec-check.sh`](scripts/spec-check.sh) into your repository and run it in your own workflow. It is plain POSIX `sh` and `awk` with no dependencies, it reads files and runs nothing it finds in your repository, and it does not need Claude or a network.
 
 ```yaml
 - name: Spec traceability
-  run: |
-    claude -p "Run the spec-check skill and print only its output" > spec-check.txt
-    cat spec-check.txt
-    test -s spec-check.txt
-    grep -q '^Orphans: [0-9]' spec-check.txt
-    tail -n 1 spec-check.txt | grep -qx 'Orphans: 0'
+  run: sh scripts/spec-check.sh
 ```
 
-The model writes that last line, so treat the gate as advisory and read the table before trusting it. Not verified on any Claude Code version; test it in your own CI. Slash-invoked skills are documented as interactive-only in headless mode and some versions fail silently with `-p`, which is why the prompt is plain text and the `test` and `grep` lines fail on empty output. `--bare` skips skill discovery, so do not use it here.
+It covers checks 1 to 4 of `/spec-check` only: cited ids exist, every active criterion is closed by a task, no id appears twice, and `preserves` citations resolve. It exits 1 when there are orphans, 2 when it cannot decide (`Orphans: unknown`), and 0 otherwise. The test and commit checks (5 and 6) stay with the skill, because they are candidates for a person to read, not facts. Because it is a script rather than a model call, the final `Orphans: N` line is deterministic.
+
+Run against the hand-built fixture, the real output was (Node test: `node --test examples/spec-check-fixture/spec-check.test.mjs`):
+
+```text
+T-03 cites AC-009, which does not exist (examples/spec-check-fixture/TASKS.md)
+AC-003 active, closed by no task
+AC-003 appears twice in section 2.1
+Orphans: 3
+```
 
 ## Extending it
 
