@@ -10,7 +10,8 @@ Release checklist: version in `plugin.json` == the hearsay entry (version and de
 - Fast path limits raised from 10 lines and 1,200 characters to 20 lines and 2,500 characters, with the four rubric essentials inlined.
 - Rubric: removed the one-letter kind ids; added a Kind tie-break (Compatibility first) and a Metric note. "Now works on Windows" is Compatibility.
 - README: copy route first, per-tool invocation, comparisons moved to COMPARISON.md, arXiv figures marked as reported and not re-checked, Hardening syntax checked on 2026-11-22 with the documented limits of deny rules.
-- Still not done: the blind recorded run of the eight cases. It needs fresh sessions that have not read the goldens; none was possible in this pass, so `examples/results/` holds only the template and the README says "Nothing yet". No accuracy figure is claimed.
+- Still not done: the blind recorded run of the eight cases. It needs one fresh session per case that has not read the goldens; the pass that edited the docs below had no way to start such sessions, so `examples/results/` still holds only the template and the README says "Nothing yet". No accuracy figure is claimed.
+- README: first screen trimmed (flowchart removed, PyPI note and the arXiv paragraph moved to How it compares), read-only-by-instruction sentence in the intro, Cursor invocation quoted from the root README (not tested here), five more example deny rules, a not-a-compliance-audit limit. Results template gains Blind setup and Raw ledgers fields. Examples README and six goldens give the plain-words request next to the `/hearsay` shorthand.
 
 ## 0.1.0
 - First version. Fact-checks release notes, a changelog entry, a PR description or a README feature list against the repository, one claim at a time, and marks each verified, unverified, contradicted or unmeasurable with file and line.

@@ -2,6 +2,8 @@
 
 Command: `/hearsay <path>/examples/inputs/notes-1.4.0.md --diff <path>/examples/changes/pagegrab.diff`, run inside a fixture repo (see `../README.md`). Evidence paths are relative to that repo.
 
+In words: fact-check notes-1.4.0.md against the diff file pagegrab.diff
+
 Expected: 6 claims. 1 verified, 1 unverified, 3 contradicted, 1 unmeasurable.
 
 | # | Claim | Kind | Verdict | Evidence | Note |

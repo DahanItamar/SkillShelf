@@ -10,21 +10,15 @@
 
 </div>
 
-Not the `hearsay-pr` package on PyPI: that is a separate, deterministic CLI by other authors (see [COMPARISON.md](COMPARISON.md)).
-
 ---
 
 Release notes, PR descriptions and README feature lists drift from the code. A flag gets a different
 name than the notes say, "no functional change" sits over a changed default, a README lists something
-that was never built. Text written by an agent tends to overstate: one study of 23,247 agent-authored
-pull requests reported 406 (1.7%) with high inconsistency between the description and the code, and
-reported "descriptions claim unimplemented changes" as the most common issue, at 45.4%
-([arXiv 2601.04886](https://arxiv.org/abs/2601.04886), read 2026-11-22; figures as stated in the
-abstract, not re-checked here; agent-authored PRs only, it says nothing about human-written text).
+that was never built.
 
 `hearsay` is plain Markdown that an AI agent reads (an Agent Skills folder). It splits the text into claims, looks each one up in the
 repository, and prints a ledger: what holds, what does not, what nobody can tell from the files, with a
-file and line for each. No dependencies, nothing to build, nothing runs at install, no network.
+file and line for each. No dependencies, nothing to build, nothing runs at install, no network. It is read-only by instruction, not by a sandbox; see Hardening for a mechanical guard.
 
 ## The four verdicts
 
@@ -35,16 +29,7 @@ file and line for each. No dependencies, nothing to build, nothing runs at insta
 | **contradicted** | Counter-evidence found at `path:line`. Absence alone never contradicts, except in a closed set read in full (a whole manifest, a complete diff file list) |
 | **unmeasurable** | No command could settle it: a judgment or a real-world measurement ("production-ready", a bare "3x faster"). The row says what to measure. A benchmark script with no results is unverified instead, with the run command in the note |
 
-```mermaid
-flowchart TD
-  A[Claim] --> B{Could any file, diff or command output in this repo settle it?}
-  B -- no --> M[unmeasurable]
-  B -- yes --> C{Counter-evidence found?}
-  C -- yes --> X[contradicted]
-  C -- no --> D{Evidence for every part?}
-  D -- yes --> V[verified]
-  D -- no --> U[unverified]
-```
+Decision order: [`references/verdicts.md`](references/verdicts.md).
 
 Wrong accusations cost more than missed ones, so when torn between contradicted and unverified it
 chooses unverified. It also re-opens and quotes the cited line before printing contradicted, and
@@ -121,7 +106,7 @@ Copy the `plugins/hearsay` folder into your tool's skills directory (the folder 
 - Codex: `$hearsay`, or pick it with the `/skills` picker.
 - Gemini CLI: no manual invoke; the model activates the skill from its description and asks you to
   confirm. Phrase the request as "fact-check these release notes against the repo".
-- Cursor: reads the same `SKILL.md` from its skills folder; see the root README for how to invoke it.
+- Cursor: reads the same `SKILL.md` from `.cursor/skills` or `.agents/skills`. Per the root README: "Cursor picks skills up on start. Type `/` in Agent chat to run one by name." Or ask: "fact-check CHANGELOG.md against the repo". Documented in the root README, not tested here.
 
 The plain-words request works everywhere, for example "fact-check CHANGELOG.md against the repo". To
 confirm the install, open a repository and ask it to fact-check `README.md`; you should get a ledger
@@ -187,6 +172,7 @@ Limits, plainly:
   `git --no-optional-locks status --porcelain`, and declares no tool permissions. These flags reduce
   the risk from a repository that names diff drivers in its own config; they do not remove it. Your
   tool's own permission prompts still apply.
+- It is not a compliance audit: "no PHI logged" or "encrypted at rest" are checked like any other claim, and verified only means the prose matches the code.
 - It reads; it does not parse. It can miss an export that is registered dynamically, by reflection, by
   code generation or by macros. Such changes are marked `needs-maintainer`.
 - It never runs the project, so "all tests pass" is unverified plus a command for you to run, never
@@ -203,19 +189,19 @@ Limits, plainly:
 
 If you want a mechanical guard instead of an instruction, add deny rules to your own settings (the
 plugin ships none). In Claude Code, for example in `.claude/settings.json`:
-`{"permissions": {"deny": ["Bash(git commit *)", "Bash(git push *)", "Bash(git reset *)", "Bash(git checkout *)", "Bash(git stash *)", "Bash(git config *)", "Bash(git rebase *)"]}}`.
+`{"permissions": {"deny": ["Bash(git commit *)", "Bash(git push *)", "Bash(git reset *)", "Bash(git checkout *)", "Bash(git stash *)", "Bash(git config *)", "Bash(git rebase *)", "Bash(git merge *)", "Bash(git tag *)", "Bash(git add *)", "Bash(git fetch *)", "Bash(git pull *)"]}}`.
 Syntax checked against the Claude Code permissions page on 2026-11-22. Deny rules are evaluated before
-ask and allow rules. The list is not complete (no merge, tag, fetch, pull or add), and the same page
+ask and allow rules. The list is not complete, and the same page
 says a Bash deny rule "isn't a security boundary": `Bash(git push *)` does not stop
 `git -C . push`, `git -c push.default=current push` or `sh -c ...` forms. For enforcement that does
 not depend on command text it points to sandboxing and PreToolUse hooks. In other tools, use the
-tool's read-only or plan mode and keep approval prompts on; check its documentation. Either way this
+tool's read-only or plan mode and keep approval prompts on; check its documentation. The git allowlist in `SKILL.md` is the main guard; the deny list in settings is a supplement that can be bypassed. Either way this
 stays an instruction, not a sandbox.
 
 ## How it compares
 
 Other tools in this space are programs you run; Hearsay is instructions an agent follows, so it is
-zero-install and language-agnostic, and it is non-deterministic. For repeatable verdicts or a CI check
+zero-install and language-agnostic, and it is non-deterministic. Text written by an agent tends to overstate: one study of 23,247 agent-authored pull requests reported 406 (1.7%) with high inconsistency between the description and the code, and reported "descriptions claim unimplemented changes" as the most common issue, at 45.4% ([arXiv 2601.04886](https://arxiv.org/abs/2601.04886), read 2026-11-22; figures as stated in the abstract, not re-checked here; agent-authored PRs only, it says nothing about human-written text). The `hearsay-pr` name on PyPI is a different, deterministic CLI by other authors. For repeatable verdicts or a CI check
 on PR text, use `hearsay-pr`; for mechanical README checks, RealityLint. Release-note drafters and
 other skills are listed too. Full tables, dated as read on 2026-11-22 (snapshots, may have changed), and
 credits: [COMPARISON.md](COMPARISON.md).
@@ -240,7 +226,7 @@ Version history is in [`CHANGELOG.md`](CHANGELOG.md).
 Nothing yet. No recorded run exists: the `examples/expected/` files are expectations written by the
 skill's author, not recorded output, and `examples/results/` holds only a template. A fair run needs
 a session that has not read the goldens or the expected output printed in this README (see
-`examples/README.md`), and that has not been done. No accuracy figure is claimed anywhere in this
+`examples/README.md`), and that has not been done (starting such sessions was not possible in the last pass). No accuracy figure is claimed anywhere in this
 README. This section changes only when a `results/<model>-<date>.md` file exists, and then quotes it
 exactly, with its stated bias (one run, same model family as the author, JavaScript-only).
 

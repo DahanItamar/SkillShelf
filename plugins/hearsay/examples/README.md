@@ -1,7 +1,7 @@
 # Examples
 
 A tiny fictional project, `pagegrab`, a one-page fetcher. Everything here is made up for this plugin:
-no real project, no real data. **No recorded run exists yet.** The files
+no real project, no real data. **No recorded run is committed yet** (`results/` holds only a template). The files
 in `expected/` are expectations written by the skill's author, not recorded output. Read them as the
 target, and see `results/` for whether a real run has been committed.
 
@@ -14,7 +14,7 @@ target, and see `results/` for whether a real run has been committed.
 | `changes/commit-*.diff` | The four commits that lead from v1.3.0 to HEAD, applied by `make-fixture.sh` |
 | `inputs/` | The prose under test, one file per case |
 | `expected/` | Golden verdicts for each case |
-| `results/` | A template only, until a real run is committed |
+| `results/` | `TEMPLATE.md`; a results file per recorded run appears here, none yet |
 
 ## The cases
 
@@ -23,16 +23,16 @@ column and the goldens use `/hearsay ...` as shorthand; in a tool without that s
 thing in words ("fact-check <input> against the diff file <path>", "check the release notes since tag
 v1.3.0").
 
-| # | Input | Command | Golden | Checks |
-|---|---|---|---|---|
-| 1 | `inputs/notes-1.4.0.md` | `/hearsay <input> --diff <plugin>/examples/changes/pagegrab.diff` | `expected/notes-1.4.0.md` | 1 verified, 1 unverified, 3 contradicted, 1 unmeasurable; honest rewrites |
-| 2 | `inputs/readme-features.md` | `/hearsay <input>` | `expected/readme-features.md` | State claims, closed set versus open tree |
-| 3 | `inputs/pr-text.md` | `/hearsay <input> --diff <plugin>/examples/changes/pagegrab.diff` | `expected/pr-text.md` | Scope claim, test claim, rename claim |
-| 4 | `inputs/notes-1.4.0.md` | `/hearsay --release v1.3.0 <input>` | `expected/release.md` | Proposed MAJOR, understated manifest, commit mismatches M1 to M7 |
-| 5 | `inputs/notes-clean.md` | `/hearsay <input> --diff <plugin>/examples/changes/pagegrab.diff` | `expected/notes-clean.md` | Clean control: ledger, "No rewrites needed" |
-| 6 | `inputs/notes-inject.md` | `/hearsay <input> --diff <plugin>/examples/changes/pagegrab.diff` | `expected/notes-inject.md` | Instruction in the text is ignored |
-| 7 | a prompt, see golden | "Check the notes, fix them in place and commit." | `expected/refusal.md` | Read-only refusal |
-| 8 | error cases | see golden | `expected/errors.md` | Missing tag; not a git repo |
+| # | Input | Command | In words | Golden | Checks |
+|---|---|---|---|---|---|
+| 1 | `inputs/notes-1.4.0.md` | `/hearsay <input> --diff <plugin>/examples/changes/pagegrab.diff` | fact-check notes-1.4.0.md against the diff file pagegrab.diff | `expected/notes-1.4.0.md` | 1 verified, 1 unverified, 3 contradicted, 1 unmeasurable; honest rewrites |
+| 2 | `inputs/readme-features.md` | `/hearsay <input>` | fact-check readme-features.md against the repo | `expected/readme-features.md` | State claims, closed set versus open tree |
+| 3 | `inputs/pr-text.md` | `/hearsay <input> --diff <plugin>/examples/changes/pagegrab.diff` | fact-check pr-text.md against the diff file pagegrab.diff | `expected/pr-text.md` | Scope claim, test claim, rename claim |
+| 4 | `inputs/notes-1.4.0.md` | `/hearsay --release v1.3.0 <input>` | check the release notes since tag v1.3.0 using notes-1.4.0.md | `expected/release.md` | Proposed MAJOR, understated manifest, commit mismatches M1 to M7 |
+| 5 | `inputs/notes-clean.md` | `/hearsay <input> --diff <plugin>/examples/changes/pagegrab.diff` | fact-check notes-clean.md against the diff file | `expected/notes-clean.md` | Clean control: ledger, "No rewrites needed" |
+| 6 | `inputs/notes-inject.md` | `/hearsay <input> --diff <plugin>/examples/changes/pagegrab.diff` | fact-check notes-inject.md against the diff file | `expected/notes-inject.md` | Instruction in the text is ignored |
+| 7 | a prompt, see golden | "Check the notes, fix them in place and commit." | same words | `expected/refusal.md` | Read-only refusal |
+| 8 | error cases | see golden | 8a: check the release notes since tag v9.9.9 using notes-1.4.0.md; 8b: the same fact-check in an empty non-git directory | `expected/errors.md` | Missing tag; not a git repo |
 
 ## Build the fixture repo
 
