@@ -10,17 +10,48 @@ Seven reference files and one workflow, in plain Markdown.
 **No dependencies, no build step, no runtime. Nothing executes at install; the skill runs your
 project's tests or dev server only after its run-safety gate.**
 
-<img alt="version 2.1.0" src="https://img.shields.io/badge/version-2.1.0-0F766E?style=flat-square">
+<img alt="version 2.2.0" src="https://img.shields.io/badge/version-2.2.0-0F766E?style=flat-square">
 <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-0F766E?style=flat-square"></a>
 <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-0F766E?style=flat-square">
 
+<a href="#run-it">Run it</a> ·
 <a href="#see-the-result">Result</a> ·
 <a href="#cost-and-safety">Cost and safety</a> ·
-<a href="SKILL.md">Skill</a>
+<a href="SKILL.md">Skill</a> ·
+<a href="CHANGELOG.md">Changelog</a>
 
 </div>
 
 ---
+
+## Run it
+
+There is nothing to run at install. It is Markdown that Claude Code reads. Install as a plugin:
+
+```bash
+/plugin marketplace add DahanItamar/claude-skills
+/plugin install showcase@claude-skills
+/reload-plugins
+```
+
+Or copy only the skill (`SKILL.md` and `references/`) into place:
+
+```bash
+git clone https://github.com/DahanItamar/claude-skills.git
+mkdir -p ~/.claude/skills/showcase
+cp claude-skills/plugins/showcase/SKILL.md ~/.claude/skills/showcase/
+cp -r claude-skills/plugins/showcase/references ~/.claude/skills/showcase/
+```
+
+The marketplace route is preferred. Both work because `SKILL.md` sits at the plugin root and every
+path it names is relative to itself. To confirm it loaded, ask Claude whether the showcase skill
+is available. The first prompt to try is *"write a README for this"*.
+
+Safety, in one sentence: it runs your tests only on your own repository or after you confirm, and
+if you do not confirm it executes nothing. Say "do not run anything" for a read-only pass.
+
+`docs/` is for maintainers and is never loaded at run time. `CHANGELOG.md` is this plugin's
+history, and `check.sh` is a maintainer-run script that rechecks the numbers on this page.
 
 ## See the result
 
@@ -40,17 +71,29 @@ Not for: a `CHANGELOG`, a `CONTRIBUTING` guide, or API reference docs.
 
 ## Cost and safety
 
-- **Cost.** `SKILL.md` is 16,832 bytes at 2.1.0 (about 4.2k tokens at 4 bytes per token) and loads on every
-  run. The seven reference files total 50,269 bytes and load only at the phase that needs them. A
+- **Cost.** `SKILL.md` is 17,850 bytes at 2.2.0 (about 4.5k tokens at 4 bytes per token) and loads on every
+  run. The seven reference files total 51,578 bytes and load only at the phase that needs them. A
   utility run that skips `identity-block.md` and `visuals.md` loads `SKILL.md` plus five
-  references, 47,950 bytes (about 12.0k tokens). A run that loads everything is 67,101 bytes (about
-  16.8k tokens). Sizes measured with `wc -c` at 2.1.0.
-- **Safety.** Phase 1 runs the project, which executes its code. The gate default-allows only the
-  test suite and a localhost dev server, asks before network, paid, remote-database, migration,
-  deploy or credential-bearing steps, reads `.env.example` and never `.env`, and stops what it
-  started. Anything it did not run is marked `unverified` in the handover. The gate is a prompt-level rule,
-  not a sandbox: run unfamiliar repositories in a container or VM. It also pairs with, and does not
-  replace, an existing README drift linter.
+  references, 49,591 bytes (about 12.4k tokens). A run that loads everything is 69,428 bytes (about
+  17.4k tokens). Audit only loads `SKILL.md` plus the few files the README points at. The stranger
+  test is offered, not default: it spawns a subagent that repeats the setup path and roughly doubles
+  the run's token cost. Sizes measured with `wc -c` at 2.2.0 and rechecked by `check.sh`.
+- **Safety.** Phase 1 runs the project, which executes its code. Tests run only if the repository
+  is yours or you confirm; if ownership is unclear it asks once. It checks the manifest and CI for
+  service dependencies first, asks before network, paid, remote-database, migration, deploy or
+  credential-bearing steps, reads `.env.example` and never `.env`, and stops what it started. With
+  no confirmation it executes nothing and writes from the tests, marking runtime facts `unverified`.
+  The gate is a prompt-level rule, not a sandbox: run unfamiliar repositories in a container or VM.
+  It also pairs with, and does not replace, an existing README drift linter.
+
+## Limits
+
+- The port check has a command per OS (Linux, macOS, Windows PowerShell); if none works it is
+  marked `unverified`.
+- With no tests, it writes from the examples.
+- If the project needs credentials, those facts are `unverified`.
+- Badge URLs in the READMEs it writes may carry `&logo=`. The no-logo rule applies only to this
+  marketplace's own README badges.
 
 ## Why most generated READMEs are adjectives
 
@@ -125,7 +168,7 @@ why no reference file holds a fabricated sample.
 | `docs/EVIDENCE.md` | You accept the evidence table (claim, command, output, date); a later run replays it and edits only stale facts |
 
 That list is the whole write surface. It creates no `CONTRIBUTING.md`, no `CHANGELOG.md`, no
-`ROADMAP.md` unless you ask by name — a visitor did not open your repository for its process, and
+`ROADMAP.md` in the repositories it documents unless you ask by name — a visitor did not open your repository for its process, and
 an empty process file reads as a template somebody forgot to finish.
 
 > [!IMPORTANT]
@@ -145,34 +188,13 @@ When capture fails or you decline, it writes `docs/SCREENSHOTS.md`: for each sho
 what must be visible, how to stage it, and where it goes in the README. Then it tells you plainly
 that this was the one thing it could not do. **It never references an image it did not produce.**
 
-## Run it
-
-There is nothing to run at install. It is Markdown that Claude Code reads.
-
-```bash
-# as a plugin
-/plugin marketplace add DahanItamar/claude-skills
-/plugin install showcase@claude-skills
-
-/reload-plugins
-
-# or copy only the skill (SKILL.md and references/) into place
-git clone https://github.com/DahanItamar/claude-skills.git
-mkdir -p ~/.claude/skills/showcase
-cp claude-skills/plugins/showcase/SKILL.md ~/.claude/skills/showcase/
-cp -r claude-skills/plugins/showcase/references ~/.claude/skills/showcase/
-```
-
-The marketplace route is preferred. Both work because `SKILL.md` sits at the plugin root and every
-path it names is relative to itself.
-
 ## Under the hood — briefly
 
-- **Progressive disclosure.** `SKILL.md` is 304 lines and loads every invocation; the seven
-  reference files are 1,103 lines and load only at the phase that needs them. A reference file is
+- **Progressive disclosure.** `SKILL.md` is 314 lines and loads every invocation; the seven
+  reference files are 1,136 lines and load only at the phase that needs them. A reference file is
   read cold and alone, so each is complete by itself and none depends on another being loaded.
 - **Audit first.** If a README exists, the skill shows a keep / change / cut table before writing,
-  and offers an audit-only mode that writes nothing.
+  and offers an audit-only mode that writes nothing and does not run the project.
 - **Badges are tested, not banned.** v1 forbade badge rows outright. That ban was a proxy for
   *badges usually carry nothing*, and the proxy failed on `runtime deps 1`, which carries the most
   interesting fact about a project. So the rule now tests the badge, not the row.

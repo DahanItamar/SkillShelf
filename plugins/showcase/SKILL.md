@@ -63,10 +63,8 @@ on the page.
 
 Seven phases. **State them before starting, and name each one as you enter it.**
 
-The user invoked a skill and is about to watch a long run of reading, running and writing before
-anything they recognise appears. Without markers that is an undifferentiated wall: no way to tell
-gathering from writing, and therefore no way to judge whether now is the moment to interrupt. Two
-lines of output turn it into a progress bar.
+Without markers a long run of reading, running and writing is a wall the user cannot judge or
+interrupt. Two lines of output turn it into a progress bar.
 
 Open with this, filled in for the run you are about to do:
 
@@ -91,22 +89,31 @@ Read, in this order:
 4. Any `docs/`, `SPEC.md`, `CONTRIBUTING.md`, and the existing README
 5. `.env.example` — the setup story, and what it needs from the user
 
-**Read all five before writing any prose.** A README written from a directory listing reads exactly
+**For write modes, read all five before writing any prose; audit only reads what the README's
+claims point at.** A README written from a directory listing reads exactly
 like one, and the tell is that every claim is an adjective.
 
 Also detect the **licence** (`LICENSE`, then the manifest) and the **owner** (manifest author or
-org, else ask). Neither is invented; the footer needs both.
+org, else ask once; if unanswerable and no `.showcase.md` exists, omit the footer). Neither is invented.
 
-**Mode.** If a README already exists, audit first: show a keep / change / cut table, keep the
-author's accurate hand-written prose, and write the replacement only after the table is shown.
-Offer **audit only** (trigger: "audit my README"): a findings list that writes nothing. Write each
-finding as four lines: `Where: file:line`, `Problem:`, `Fix:`, `Rank: high|med|low`. If
-`docs/EVIDENCE.md` exists, enter **refresh mode**: replay its commands, compare the output to the
-README, and edit only the facts that are stale, leaving the prose alone. Record a short hash of
-each command's output in the ledger and edit only rows whose hash changed. Update the ledger's
-dates. If `.showcase.md` exists, read it and let it override the footer, section list and
-tone; it never overrides the run-safety gate or the evidence rules. Never overwrite
-an existing README that has uncommitted edits without saying so.
+**Mode.** Pick one from the user's words and the repository, and say which.
+
+| Mode | Trigger | Phases run | Writes |
+| --- | --- | --- | --- |
+| Write | No README, or "write a README" | 0 to 6 | The paths in Hard rules |
+| Audit, then rewrite | A README exists | 0 to 6; show a keep / change / cut table before writing | Same |
+| Audit only | "audit my README", "do not change it" | 0, then the Phase 6 mechanical checks. No Phase 1 run, no visuals, no stranger test; read only the README, manifest, entry point and referenced paths | Nothing |
+| Refresh | `docs/EVIDENCE.md` exists | 0, replay its commands under the Phase 1 gate, Phase 6 checks | Stale facts and the ledger's dates |
+| Static | "do not run anything" | 0 and 2 to 6, no Phase 1 | As write; every runtime fact is `unverified` |
+
+Audit findings are four lines each: `Where: file:line`, `Problem:`, `Fix:`, `Rank: high|med|low`.
+When a README exists, keep the author's accurate hand-written prose and show the table before
+writing. Refresh stores each claim's extracted value (count, version, status) in the ledger, not
+raw output, and compares extracted values only. Compare timings and other volatile fields
+(timestamps, ids, ports) within a stated tolerance, or list them as "re-measure on request". Edit a
+row only when its extracted value changed, and leave the prose alone. If `.showcase.md` exists, read
+it (format in `references/readme-template.md`); it never overrides the run-safety gate or the
+evidence rules. Never overwrite an existing README that has uncommitted edits without saying so.
 
 Special shapes, one line each: **internal or team service** - use the Internal service skeleton
 in `references/readme-template.md`; **monorepo** - one root README plus a short per-package README
@@ -118,22 +125,27 @@ author's language and set `dir="rtl"`.
 Start it. Hit an endpoint. Run the test suite. Trigger the interesting path. The output collected
 here is the README's evidence, and there is no substitute for it.
 
-**Run-safety gate.** Running a stranger's project executes their code, so classify first.
-Default-allow only the test suite and a dev server bound to localhost. **Ask before** anything that
-touches a network service, a paid API, a remote or shared database, migrations, deploy or seed
-scripts, or `.env` values that look like real credentials. Read `.env.example`, never `.env`.
-Start background processes with a note of how to stop them, then stop them and delete stray
-artifacts (db files, coverage output) before Phase 6. Whatever was not run is marked `unverified`
-in the handover.
+**Run-safety gate.** Running a project executes its code, so classify first. Run the tests only if
+the repository is the user's own (the user named it, or it is the working directory with a git
+history the user created) or the user confirms. If ownership is unclear, ask once before any
+execution. Tests may touch the network, files or databases, so check the manifest and CI for
+service dependencies first; a test that needs one is "ask before". A dev server bound to localhost
+follows the same ownership rule. **Ask before** anything that touches a network service, a paid
+API, a remote or shared database, migrations, deploy or seed scripts, or `.env` values that look
+like real credentials. No confirmation means no execution: write from the tests and static reading
+and mark every runtime fact `unverified`. If the user says "do not run anything", use Static mode.
+Read `.env.example`, never `.env`. Start background processes with a note of how to stop them, then
+stop them and delete stray artifacts (db files, coverage output) before Phase 6. Whatever was not
+run is marked `unverified` in the handover.
 
 Before starting a dev server, check that its host or port flag or config binds to
 127.0.0.1/localhost (for example `--host`, `HOST`, a listen address). If it binds 0.0.0.0 or cannot
-be confirmed, set it to localhost or ask; if you cannot ask, skip the run and mark it
+be confirmed, set it to localhost or ask; with no answer, do not run it, mark it
 `unverified`, and do not retry. A failed or timed-out run is recorded as `unverified: <exit or
 reason>` and retried at most once. Before the run and again after cleanup, list listening ports
-(`ss -ltn` or `netstat -an`) and diff them; report any new port in the handover. Read
-`references/run-recipes.md` for the likely test
-and dev-server commands per ecosystem.
+and diff them; report any new port in the handover. Read `references/run-recipes.md` for the likely
+test and dev-server commands per ecosystem and the per-OS port commands. If none works, mark the
+port check `unverified`.
 
 **If it genuinely cannot be run** — missing credentials, hardware, a paid service, a build that
 fails — say so to the user, then write from the tests instead. They are the next best source of
@@ -216,10 +228,12 @@ stranger and fix anything that fails:
 
 Offer the handover as ready-to-paste PR description text.
 
-**Stranger test (default for an Application with a domain worth explaining or larger).** When an
-Agent or Task tool exists, spawn a fresh-context subagent given only `README.md` and the repo tree.
-It follows the setup path in a scratch copy under the same safety gate and reports the first step it
-had to guess; attach that step to the handover. Without such a tool, rely on the reread above.
+**Stranger test (offered, run only if the user says yes).** Offer it with its cost: it spawns a
+subagent that repeats the setup path, roughly doubles the run's token cost, and is a second
+execution under the same safety gate. If yes and an Agent or Task tool exists, spawn a
+fresh-context subagent given only `README.md` and the repo tree. It follows the setup path in a
+scratch copy and reports the first step it had to guess; attach that step to the handover.
+Otherwise rely on the reread above.
 
 ---
 
@@ -242,10 +256,6 @@ An element is admitted because it **carries** something, never because it would 
 **A capability section that carries none of the five becomes a bullet** in `Under the hood —
 briefly`. It is not padded until it looks like a section, and it is not deleted — the information
 is usually worth one line, and one line is what it gets.
-
-This matters because *"include it if it is earned"* is exactly the judgement that resolves toward
-**yes** on everything, and a README where every element was admitted is the padded README this
-skill exists to prevent.
 
 ## Companion documents
 

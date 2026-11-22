@@ -124,6 +124,20 @@ Built by <a href="https://github.com/<owner>"><Owner></a> · <a href="LICENSE"><
 
 ---
 
+## The `.showcase.md` file
+
+Optional, in the repository root. Plain `key: value` lines; `sections` is a comma-separated list.
+It never overrides the run-safety gate or the evidence rules.
+
+```text
+footer: omit
+owner: Example Org
+licence: MIT
+tone: plain
+sections: Run it, Under the hood
+badge_colour: 0F766E
+```
+
 ## Filling it in
 
 **Write the pitch last.** It has to say what the thing is *and* why it is not ordinary, in one
