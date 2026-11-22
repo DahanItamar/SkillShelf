@@ -4,7 +4,9 @@ function Files({ files, onRemoved, toast }) {
   async function remove(f) {
     setBusy(f.id);
     try {
-      await fetch(`/api/files/${f.id}`, { method: "DELETE", signal: AbortSignal.timeout(10000) });
+      const r = await fetch(`/api/files/${f.id}`, { method: "DELETE", signal: AbortSignal.timeout(10000) });
+      if (r.status === 401) { setError("Your session expired. Sign in again to delete files."); return; }
+      if (!r.ok) { setError(`Could not delete ${f.name}. Try again.`); return; }
       onRemoved(f.id);
       toast("File deleted. Undo", { timeout: 3000 });
     } catch {

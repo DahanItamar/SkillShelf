@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "edgecase",
   "displayName": "Edgecase",
-  "version": "1.4.0",
-  "description": "A linter for the UI states everyone forgets — loading, empty, error, success and partial. 40 rules applied while the interface is written; blocks completion only on the ones that cause silent user harm.",
+  "version": "1.5.0",
+  "description": "Stable-ID review of the UI states everyone forgets (loading, empty, error, success, partial): 34 rules with Applies lines, split into blocking and non-blocking, applied while the interface is written. A review the model runs before it reports done; it advises and does not enforce.",
   "author": {
     "name": "Itamar Dahan",
     "url": "https://github.com/DahanItamar"
