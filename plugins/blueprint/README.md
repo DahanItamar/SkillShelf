@@ -120,7 +120,7 @@ both and every command shows up twice in the picker, from two copies that drift 
 
 ## An executable illustration
 
-The one thing here that executes. These tests exercise hand-written versions of the feature; they show what the skills are designed to catch, they do not measure model output. No install: Node 18+ (CI runs 22), output below is v24.15.0:
+The one thing here that executes. These tests exercise hand-written versions of the feature; they show what the skills are designed to catch, they do not measure model output. No install: it needs Node (CI runs Node 22); the output below came from Node v24.15.0:
 
 ```bash
 node --test examples/proof/proof.test.mjs
@@ -145,10 +145,10 @@ each does to a shift that crosses midnight:
 
 | Version | Tests green | Matches the spec | Cheap to extend |
 |---|:-:|:-:|:-:|
-| `naive.mjs` — no spec, shapes chosen by convenience | ✅ | ❌ | ❌ |
-| `spec-derived.mjs` — built against §5 and §8 | ✅ | ✅ | ✅ |
-| `drifted.mjs` — three weeks and one sensible-looking fix later | ✅ | ❌ | ✅ |
-| `smelly.mjs` — six months and four features later | ✅ | ✅ | ❌ |
+| `naive.mjs` — no spec, shapes chosen by convenience | yes | no | no |
+| `spec-derived.mjs` — built against §5 and §8 | yes | yes | yes |
+| `drifted.mjs` — three weeks and one sensible-looking fix later | yes | no | yes |
+| `smelly.mjs` — six months and four features later | yes | yes | no |
 
 The last two rows are the argument. `drifted.mjs` contradicts §8 of its own spec, so a night shift
 silently stops being storable — stage 5 catches that. `smelly.mjs` contradicts nothing and still
@@ -191,7 +191,7 @@ The model writes that last line, so treat the gate as advisory and read the tabl
 
 ## Extending it
 
-Because every stage keys on `AC-###` and plain files, you can add your own stage skill (a compliance pass with [Regwise](../regwise), a UI-states pass with [Edgecase](../edgecase) from the same marketplace). The contract:
+Because every stage keys on `AC-###` and plain files, you can add your own stage skill (a compliance pass with [Regwise](https://github.com/DahanItamar/claude-skills/tree/main/plugins/regwise), a UI-states pass with [Edgecase](https://github.com/DahanItamar/claude-skills/tree/main/plugins/edgecase) from the same marketplace). The contract:
 
 1. Read `docs/SPEC.md`; never edit it.
 2. Cite criteria only as `AC-###`; never invent one.
@@ -205,8 +205,8 @@ Natural places to run an optional pass, by hand, are the stage boundaries. Nothi
 
 | Boundary | Optional pass | Entry skill |
 |---|---|---|
-| after `/spec-tasks` | compliance | [Regwise](../regwise) |
-| before `/spec-implement` | UI states | [Edgecase](../edgecase) |
+| after `/spec-tasks` | compliance | [Regwise](https://github.com/DahanItamar/claude-skills/tree/main/plugins/regwise) |
+| before `/spec-implement` | UI states | [Edgecase](https://github.com/DahanItamar/claude-skills/tree/main/plugins/edgecase) |
 | any time | criterion integrity | `/spec-check` |
 
 ## Under the hood — briefly
