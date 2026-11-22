@@ -63,6 +63,16 @@ To record a run, save `results/<model>-<date>.md` with the model, the date, the 
 number of runs, the matched, missed and extra IDs per fixture and the verdict per target. The README's
 "Measured so far" line is filled only from that file.
 
+## Record a run
+
+1. Run the self-check prompt above twice on one model, and save each report as a file.
+2. For each, run `node examples/score.mjs <report-file> <fixture-name>`. It prints verdict match, matched, missed and extra IDs, and fails if the canary leaves a quote block or the template order breaks.
+3. Copy [`results/TEMPLATE.md`](results/TEMPLATE.md) to `results/<model>-<date>.md` and fill it from what you saw.
+4. In the same session run the command with no argument, and `claude --plugin-dir plugins/gatehouse plugin details gatehouse`, and write down what was observed.
+5. Commit the results file. The README's "Measured so far" line then changes from the file, not before.
+
+The scorer checks a saved report against a golden. It proves nothing about the model's detection by itself.
+
 ## Maintainer check (no packages)
 
 ```bash

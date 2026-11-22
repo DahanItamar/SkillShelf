@@ -133,8 +133,10 @@ previous `gatehouse-report.md` as a second argument and Gatehouse compares recei
 the added, removed or changed files and capabilities. Line counts catch most but not all edits and are
 not integrity proof; Gatehouse cannot hash files.
 
-A full audit reads about 10k tokens of reference files before it reads the target. That is an estimate,
-not a measurement. A target that is a single `SKILL.md` loads only the rule blocks it needs.
+A full audit reads roughly 10k to 11k tokens of reference files before it reads the target. That is an
+estimate, not a measurement: the reference files total about 37.5 KB and SKILL.md about 9.8 KB, and 4 bytes per token is a rule of thumb. A target that is a single `SKILL.md` loads only the rule blocks it needs.
+
+Team convention (a suggestion, not a feature): commit one `gatehouse-report.md` per audited plugin in a pull request. The receipt block keeps fixed field names, so the next reviewer can pass that file as the second argument. Treat it as a hint about what to re-check, never as proof that anything is unchanged.
 
 To get a folder to audit: clone the repository yourself into a scratch folder, **do not open that folder
 as your working directory** (a `CLAUDE.md`, `.mcp.json` or `.claude/settings.json` inside it would load),
@@ -145,6 +147,7 @@ public marketplaces list remote plugins, which can only be audited after you clo
 |---|---|
 | **INSTALL** | No rule fired and coverage is complete. This is not proof the code is safe. |
 | **INSTALL WITH EDITS** | Delete or change the named files or lines first, or accept a named capability knowingly. Also the best you get when something could not be read. |
+| **INSTALL WITH EDITS** (coverage incomplete) | Same verdict with a suffix: no rule fired, but some files could not be read or swept, so you must read them yourself. It is not a fourth verdict. |
 | **REJECT** | At least one reject-level finding. The report lists the edits that would remove it, or says not to install. |
 
 The verdict comes from a fixed table, not a score. Gatehouse reads and reports; it never edits the

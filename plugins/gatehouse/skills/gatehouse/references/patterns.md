@@ -28,6 +28,7 @@ Judging: a hit on line 1 at the first character is probably a byte-order mark (n
 - `S-COMMENT` (multiline mode): `(?s)<!--.*?-->` — read every comment found.
 - `S-HIDDEN`: `<[^>]+\bhidden\b|"hidden"\s*:|display\s*:\s*none|visibility\s*:\s*hidden|font-size\s*:\s*0` — the word `hidden` counts only inside a tag or as a JSON key, so prose that says "hidden" does not hit.
 - `S-PAD`: `^[ \t]{200,}\S` — a line pushed far off-screen by padding.
+- `S-BLANKS` (count mode): pattern `^$` over instruction and execution files, compared with each file's line total from the receipt count. A file with more than 500 blank lines, or a line of 2,000 characters or more (`S-LONGLINE`), is an edit-level note: read that file to its last line with Read's offset and limit. Any file not read to its last line makes coverage incomplete (a payload can sit after thousands of blank lines).
 
 Judging: first work out whether the comment sits inside a fenced block or a code span (shown literally, so not hidden). Then read the comment text and judge it under the other rules as if it were visible.
 
@@ -116,7 +117,7 @@ Judging: also use the Glob listing. `bin/` files, `.mcp.json` and any `mod` file
 
 - `S-OBFUSC`: `\beval\s*\(|new\s+Function|String\.fromCharCode|atob\(|exec\(.{0,20}(base64|b64)|base64\s+(-d|--decode)`
 - `S-LONGLINE`: `^.{2000,}$` — a single line of 2,000 characters or more.
-- Glob by extension: `**/*.{exe,dll,so,dylib,bin,jar,wasm,pyc,node}`.
+- Glob by extension: `**/*.{exe,dll,so,dylib,bin,jar,wasm,pyc,node,zip,tar,gz,tgz,whl,docx,xlsx,pptx,pdf,7z}`. An archive or Office file is listed as Unreadable: it can carry a script that no sweep sees.
 
 Judging: any file Read cannot present as text goes in Coverage as "Not read" with name, size and extension, and makes coverage incomplete.
 

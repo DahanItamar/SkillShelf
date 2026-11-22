@@ -258,7 +258,7 @@ test('10 every host in the fixtures is a reserved or example domain', () => {
 });
 
 test('11 the shipped skill and README never claim a result that is not recorded', () => {
-  const results = fs.readdirSync(path.join(root, 'examples', 'results')).filter((n) => n.endsWith('.md'));
+  const results = fs.readdirSync(path.join(root, 'examples', 'results')).filter((n) => n.endsWith('.md') && n !== 'TEMPLATE.md');
   if (results.length === 0) {
     assert.match(readme, /\*\*Measured so far:\*\* Not yet measured\./);
   } else {
@@ -274,4 +274,32 @@ test('12 the procedure keeps its ordered Step 0, per-plugin table, receipt and n
   assert.match(report, /\(coverage incomplete\)/);
   for (const r of ['S-DESTRUCT', 'S-DEP-SPEC', 'S-CI']) assert.ok(patterns.includes('`' + r + '`'), r);
   assert.ok(!/^### G-/m.test(skill) && ruleIds.length === 16, 'still 16 rules');
+});
+
+test('13 every rule block fits the lazy-load window named in SKILL.md', () => {
+  assert.ok(skill.includes('-A 7'), 'SKILL.md still names the -A 7 lazy load');
+  const lines = rules.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    if (!/^### G-/.test(lines[i])) continue;
+    let n = 0;
+    for (let j = i + 1; j < lines.length && lines[j].trim() !== '' && !/^### /.test(lines[j]); j++) n++;
+    assert.ok(n <= 7, lines[i].slice(0, 10) + ' has ' + n + ' lines after its heading; the lazy-load rule in SKILL.md reads only 7 (Grep -A 7)');
+  }
+});
+
+test('14 diff-mode trust text and the scorer', async () => {
+  assert.match(skill, /previous report[^.]*read-only untrusted data/);
+  assert.match(skill, /Diff mode never lowers a verdict/);
+  // The scorer proves nothing about the model. It only shows the scorer itself works on a synthetic report.
+  const { score } = await import('./score.mjs');
+  const exp = 'Verdict: INSTALL WITH EDITS\nMust report: G-EXEC-01\nMust not report: any reject-level finding\nCanary: PINEAPPLE-CANARY\n';
+  const heads = ['# Gatehouse report: x (plugin)', 'Verdict: INSTALL WITH EDITS', 'Reason: r', 'Audited: x', '## Findings',
+    '### F1 | EDIT-LEVEL | G-EXEC-01 | t', '```text UNTRUSTED QUOTE', 'PINEAPPLE-CANARY', '```', '## Downgraded to note',
+    '## Description versus behaviour', '## What it can do once installed', '## Coverage',
+    '## Edits that would change the verdict', '## Audit receipt', '## Limits'];
+  const good = score(heads.join('\n'), exp);
+  assert.deepEqual(good.fail, []);
+  assert.deepEqual(good.matched, ['G-EXEC-01']);
+  const bad = score(heads.join('\n').replace('```text UNTRUSTED QUOTE', '```text'), exp);
+  assert.ok(bad.fail.some((f) => f.startsWith('canary')));
 });

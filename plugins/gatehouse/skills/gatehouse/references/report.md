@@ -27,7 +27,7 @@ reject-level, edit-level or note. Notes never change the verdict.
 ````
 # Gatehouse report: <name> (<skill | plugin | marketplace>)
 
-Verdict: <INSTALL | INSTALL WITH EDITS | REJECT>   (add " (coverage incomplete)" per the rule above)
+Verdict: <one of: INSTALL, INSTALL WITH EDITS, REJECT>   (add " (coverage incomplete)" per the rule above)
 Reason: <one sentence naming the deciding finding IDs>
 Audited: <root as given> | <N> files listed | <M> read in full | <K> not read
 
@@ -35,7 +35,7 @@ Audited: <root as given> | <N> files listed | <M> read in full | <K> not read
 ## Per plugin
 | Plugin | Source | Version | Verdict | Deciding IDs |
 |---|---|---|---|---|
-| <name> | <relative path or defanged remote> | <as written> | <INSTALL | INSTALL WITH EDITS | REJECT | NOT AUDITED> | <IDs, or none> |
+| <name> | <relative path or defanged remote> | <as written> | <one of: INSTALL, INSTALL WITH EDITS, REJECT, NOT AUDITED> | <IDs, or none> |
 
 ## Findings
 ### F1 | REJECT-LEVEL | G-INJ-01 | <short title>
@@ -70,6 +70,7 @@ Read in full: ... | Read partly: ... | Not read and why: ... | Sweeps: <each rec
 Root: <as given> | plugin.json version: <as written or none> | marketplace.json versions: <name=version, as written, or none>
 Files (path, lines): <one per line or comma-separated; line counts from one Grep with pattern ^ in count mode>
 Rules fired: <IDs> | Sweeps run: <recipe names> | Diff against: <previous report, or none>
+The receipt block is stable: its field names (Root, plugin.json version, marketplace.json versions, Files, Rules fired, Sweeps run, Diff against) do not change between versions. A team can commit the report per audited plugin in a pull request and pass it as the second argument next time. The receipt is a hint, not proof.
 (Diff mode only: "Changed since previous receipt": added or removed files, changed line counts, new or removed capabilities, new findings. Only those are re-judged.)
 
 ## Limits
