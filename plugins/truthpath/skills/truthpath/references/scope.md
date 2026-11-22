@@ -19,6 +19,7 @@ Truthpath reads production code. This file says what to read, what to skip, and 
 Only these read-only git commands may be run to get a diff or a file list:
 
 - `git diff`
+- `git diff HEAD`
 - `git diff --staged`
 - `git diff <base>...HEAD`
 - `git show <ref>`
@@ -46,7 +47,7 @@ Skip these paths. They are not production code.
 - Test and fixture directories: `test/`, `tests/`, `__tests__/`, `spec/`, `__mocks__/`, `mocks/`, `fixtures/`, `testdata/`, `e2e/`, `cypress/`
 - Test file names: `*.test.*`, `*.spec.*`, `*_test.go`, `test_*.py`, `*_test.py`, `conftest.py`, `*.stories.*`
 - Dependencies and build output: `node_modules/`, `vendor/`, `dist/`, `build/`, `.git/`
-- Generated or minified files (a header saying generated, or a `.min.` name), `*.min.*`, `*.map`
+- Generated files (a header saying generated), minified files `*.min.*`, source maps `*.map`
 - Lockfiles: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `poetry.lock`, `Cargo.lock`, `go.sum`, `Gemfile.lock`
 - Size cap: any file over about 1 MB or 20,000 lines is searched, not read, and is named in the scope line. The "about 1500 lines" read-in-full rule for other files is unchanged.
 

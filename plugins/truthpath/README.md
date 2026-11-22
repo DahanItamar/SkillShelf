@@ -56,7 +56,7 @@ dependencies, no build step and no hooks. Nothing runs at install, and when you 
 - User is misled: <who sees what, and what they wrongly believe>
 - Certainty: confirmed (read <file:lines>[, caller <file:line>]) | suspected (not read: <missing link>; would settle: <what to read>)
 - Smallest fix: <one line of code or one sentence; not applied>
-- Check it yourself: <optional, confirmed only: a command or test sketch that forces the failure; not run>
+- Check it yourself: <optional, confirmed only: at most 3 lines in a runnable shape: the stub, the forced failure, the assertion that currently passes wrongly; text only, not run>
 - Depends on: <only when the failing code is unchanged: pre-existing TP-NN at file:line>
 ```
 
@@ -180,7 +180,7 @@ to that file. The SARIF mapping (confirmed to `error`, suspected to `warning`) i
 SARIF specification.
 
 **Cost per run.** The fixed load is about 32.5 KB of Markdown (SKILL.md 12.7 KB, scope 5.8 KB, catalogue 4.9 KB, finding
-format 9.0 KB, measured by file size on 2026-11-22). Estimate, not a measurement: at about 4 bytes per token that is roughly 8k tokens (32.5 KB / 4) for the fixed load, as of 2026-11-22. Each pattern file it opens adds 2-3 KB, plus the code it scans. The two-pass search (search, then read only hits and changed files) is cheaper than reading the whole scope.
+format 9.0 KB, measured by file size on 2026-11-22). Estimate, not a measurement: at about 4 bytes per token that is roughly 8k tokens for the fixed load. Each pattern file it opens adds 2-3 KB, plus the code it scans. The two-pass search (search, then read only hits and changed files) is cheaper than reading the whole scope.
 
 ## The hint list, from a real run
 
@@ -277,14 +277,14 @@ What Truthpath tries to add is narrow, and it is a design choice, not a measured
 
 ## Score your own model
 
-Optional, for a maintainer. `scripts/score.mjs` reads a pasted Truthpath report on stdin, pulls out each `file:line TP-NN grade` triple, and compares them with `examples/expected/planted.md`. It prints found, missed, extra and decoy-reported counts. It needs no packages and is not required to use the skill. Whether the report came from a real run is up to you; the script cannot tell.
+Optional, for a maintainer. `scripts/score.mjs` reads a pasted Truthpath report on stdin, pulls out each `file:line TP-NN grade` triple, and compares them with `examples/expected/planted.md`. It prints found, missed, extra, decoy-reported and misgraded counts. It needs no packages and is not required to use the skill. Whether the report came from a real run is up to you; the script cannot tell.
 
 ```bash
 node scripts/score.mjs < my-report.md
 ```
 
-| Model | Date | Found | Missed | Extra | Decoy reported |
-| --- | --- | --- | --- | --- | --- |
+| Model | Date | Found | Missed | Extra | Decoy reported | Misgraded |
+| --- | --- | --- | --- | --- | --- | --- |
 
 No run is recorded yet. The table is empty on purpose.
 
@@ -304,7 +304,7 @@ node --test scripts/check.test.mjs
 - `scripts/check.test.mjs` checks that the hints match `examples/expected/planted-hints.txt` byte for byte and name nothing
   under `test/`; that the `SKILL.md` name equals its folder and the description is 900 characters or fewer (the limit is 1024); that each
   pattern file has all nine sections and two or more code languages; that the catalogue lists exactly the pattern files that
-  exist; that the skill folder has no emoji and no tool names; that no absolute local paths appear in the plugin; that the fixed-load file sizes are within 5 percent of the KB figure in Cost per run; and that the README has no standalone claim that it runs nothing.
+  exist; that the skill folder has no emoji and no tool names; that no absolute local paths appear in the plugin; that the fixed-load file sizes are within 5 percent of the KB figure in Cost per run; that the README has no standalone claim that it runs nothing; and that `scripts/score.mjs` scores the expected planted report against itself with nothing missed.
 
 ## Credits
 
