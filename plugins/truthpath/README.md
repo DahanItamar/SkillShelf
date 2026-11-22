@@ -57,6 +57,7 @@ dependencies, no build step and no hooks. Nothing runs at install, and it runs n
 - Certainty: confirmed (read <file:lines>[, caller <file:line>]) | suspected (not read: <missing link>; would settle: <what to read>)
 - Smallest fix: <one line of code or one sentence; not applied>
 - Check it yourself: <optional, confirmed only: a command or test sketch that forces the failure; not run>
+- Depends on: <only when the failing code is unchanged: pre-existing TP-NN at file:line>
 ```
 
 A confirmed example:
@@ -197,8 +198,8 @@ If you cloned the repository, `examples/planted` is a larger sample: `/truthpath
 /truthpath main...HEAD
 ```
 
-You can also paste a diff, or say "check my changes for fake success". With no target, Truthpath uses `git diff HEAD` if there
-are uncommitted changes, and otherwise asks one question.
+You can also paste a diff, or say "check my changes for fake success". With no target, Truthpath uses `git diff HEAD` plus any
+untracked new files if there are uncommitted changes, and otherwise asks one question.
 
 After the report it offers one thing: `apply fix for <file>:<line>`. It changes only that location, shows the diff and runs
 nothing. Name a list of findings and it does them one at a time in report order, showing each diff. An unnamed "fix all" is
@@ -209,8 +210,8 @@ Optional extras, only when you ask: say `json` or `sarif` for a machine-readable
 to that file. The SARIF mapping (confirmed to `error`, suspected to `warning`) is this skill's own choice, not part of the
 SARIF specification.
 
-**Cost per run.** The fixed load is about 21 KB of Markdown (SKILL.md 8.7 KB, scope 3.2 KB, catalogue 4.1 KB, finding
-format 5.1 KB, measured by file size at the first version, not tokens). Each pattern file it opens adds 2-3 KB, plus the code
+**Cost per run.** The fixed load is about 29 KB of Markdown (SKILL.md 11.2 KB, scope 4.9 KB, catalogue 4.9 KB, finding
+format 8.2 KB, measured by file size on 2026-11-22, not tokens). Each pattern file it opens adds 2-3 KB, plus the code
 it scans.
 
 ## Limits
