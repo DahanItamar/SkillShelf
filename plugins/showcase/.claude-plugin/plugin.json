@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "showcase",
   "displayName": "Showcase",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Writes a repository README from evidence rather than adjectives — runs the project first, then fills a fixed skeleton with real output, observed numbers, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact. Nothing executes at install; it runs your project's tests or dev server only after a safety gate.",
   "author": {
     "name": "Itamar Dahan",

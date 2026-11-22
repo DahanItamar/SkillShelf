@@ -139,7 +139,8 @@ Captured files go in `docs/assets/screens/`, named for what they show — `evide
 image fails. Name the screen, its state, and what the reader should notice:
 
 ```html
-alt="An idea open in Winnow, showing the two harvested complaints it was built from, each with a
+<!-- Sample only. Never reuse its names, wordmark, alt text or pitch; derive them from this repository. -->
+alt="An idea open in Lantern, showing the two harvested complaints it was built from, each with a
      verbatim quote and a link to the source thread"
 ```
 
@@ -185,9 +186,10 @@ Two variants, in `docs/brand/`, differing only in colour — never in shape, wei
 that a reader switching themes sees the same mark and not a second identity:
 
 ```svg
+<!-- Sample only. Never reuse its names, wordmark, alt text or pitch; derive them from this repository. -->
 <!-- docs/brand/<name>-light.svg — dark type for a light background -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 96" role="img" aria-label="Winnow">
-  <text x="0" y="68" font-family="Georgia, serif" font-size="64" fill="#1a1c22">Winnow</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 96" role="img" aria-label="Lantern">
+  <text x="0" y="68" font-family="Georgia, serif" font-size="64" fill="#1a1c22">Lantern</text>
 </svg>
 ```
 

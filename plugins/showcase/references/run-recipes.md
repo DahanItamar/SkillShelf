@@ -17,6 +17,16 @@ and prefer what the project states over this table.
 | PHP | `composer.json` | `vendor/bin/phpunit` | `php artisan serve`, `php -S 127.0.0.1:8000` | `--host=127.0.0.1` |
 | Docker Compose | `compose.yaml` | the service's own test target | `docker compose up` | publish ports as `127.0.0.1:8080:80` |
 
+Port diff, before the run and after cleanup (use the one for the OS you are on):
+
+| OS | Command |
+| --- | --- |
+| Linux | `ss -ltnp` |
+| macOS | `lsof -iTCP -sTCP:LISTEN -nP` |
+| Windows (PowerShell) | `Get-NetTCPConnection -State Listen` |
+
+If no command works, say so and mark the port check `unverified`.
+
 Notes:
 
 - A Compose file starts databases and other services. That reaches the "ask before" list in the

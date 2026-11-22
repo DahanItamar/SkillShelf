@@ -124,6 +124,25 @@ Built by <a href="https://github.com/<owner>"><Owner></a> · <a href="LICENSE"><
 
 ---
 
+## The `.showcase.md` file
+
+Optional, in the repository root. Plain `key: value` lines; `sections` is a comma-separated list.
+It never overrides the run-safety gate or the evidence rules.
+
+```text
+footer: omit
+owner: Example Org
+licence: MIT
+tone: plain
+sections: Run it, Under the hood
+badge_colour: 0F766E
+```
+
+For an agency or team: commit a shared `.showcase.md` per client repo, or keep one preset in a team
+template and copy it in. Set `footer: omit`, or `owner:` to the client or agency name, per repo.
+The file may hold no secrets, contact emails, or client names the client has not agreed to publish.
+`.showcase.md` cannot relax the run-safety gate.
+
 ## Filling it in
 
 **Write the pitch last.** It has to say what the thing is *and* why it is not ordinary, in one

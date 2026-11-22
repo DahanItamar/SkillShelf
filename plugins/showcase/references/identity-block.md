@@ -39,9 +39,10 @@ Where light and dark variants exist, reference them through a `<picture>` elemen
 with the reader's theme:
 
 ```html
+<!-- Sample only. Never reuse its names, wordmark, alt text or pitch; derive them from this repository. -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/winnow-dark.svg">
-  <img src="docs/brand/winnow-light.svg" alt="Winnow" width="420">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/lantern-dark.svg">
+  <img src="docs/brand/lantern-light.svg" alt="Lantern" width="420">
 </picture>
 ```
 
@@ -59,7 +60,9 @@ the asset. Where none exists, `# Project Name` is a perfectly good header and al
 One or two bold sentences: what this is, and the thing about it that is not ordinary. Not a
 category — *"a booking app"* — but a claim:
 
-> **Winnow reads what developers complain about in public and turns it into project ideas that
+*Sample only. Never reuse its names, wordmark, alt text or pitch; derive them from this repository.*
+
+> **Lantern reads what developers complain about in public and turns it into project ideas that
 > carry their evidence — every idea quoting the threads it came from, with a link back.**
 
 Write it last, once the rest of the README has told you what the interesting thing was.
@@ -116,6 +119,9 @@ Where a project has no test suite, there is no test badge. The absence is stated
 where it can be honest about itself.
 
 ### The grammar
+
+**Colour.** Reuse the project's existing brand colour if it has one, else one neutral default,
+and never more than two colours across the row.
 
 One badge vocabulary, so the admission test stays checkable by reading the URL:
 
@@ -193,8 +199,9 @@ Alt text describes what is visible and what the reader should notice in it, beca
 aloud and it is what renders when the image fails:
 
 ```html
+<!-- Sample only. Never reuse its names, wordmark, alt text or pitch; derive them from this repository. -->
 <img src="docs/assets/screens/evidence.png" width="830"
-     alt="An idea open in Winnow, showing the two harvested complaints it was built from, each
+     alt="An idea open in Lantern, showing the two harvested complaints it was built from, each
           with a verbatim quote and a link to the source thread">
 ```
 
