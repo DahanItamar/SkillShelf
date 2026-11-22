@@ -4,7 +4,7 @@ Server-rendered form with no JS handler, so the empty-catch grep does not apply.
 
 Blocking, 2:
 - `profile.html.erb:2 · R-FEEDBACK-07` (the POST always redirects back with no flash, so a saved profile and a rejected one look identical)
-- `profile.html.erb:2 · R-FEEDBACK-02` (a failed validation also redirects, so the user sees nothing and the error is never shown next to the field)
+- `profile.html.erb:2 · R-FEEDBACK-02` (the form has no error element and the redirect discards validation errors, so the user sees no reason; the rule applies to the absence of any error path)
 
 Worth fixing: none.
 

@@ -1,6 +1,6 @@
 # Changelog
 
-Release checklist: version in `plugin.json` == the uilint entry in the marketplace's `marketplace.json` == the head of this file, and the rule count in both == `grep -c '^### R-' references/*.md` summed (14+10+8+8 = 40 today). Nothing here runs; check by hand.
+Release checklist: version in `plugin.json` == the uilint entry (version and description) in the root `.claude-plugin/marketplace.json` == the head of this file; the rule count in both == `grep -c '^### R-' references/*.md` summed (14+10+8+8 = 40 today); a fresh `examples/results/<model>-<date>.md` is committed per model release. Nothing here runs; check by hand.
 
 ## 1.4.0 - 2026-11-22
 - Build mode now writes loading, error and empty handling into the first draft for the paths the change touches, and states in one line what it added. The earlier "do not silently add states" line is gone.
@@ -14,6 +14,7 @@ Release checklist: version in `plugin.json` == the uilint entry in the marketpla
 - Added a Probe option (`references/states.md`, opt-in via `/uilint probe`) and `/uilint init`, which prints a suggested policy block and writes nothing. Team policy now states monorepo precedence.
 - Two more examples: `files.jsx` (only a recommended rule fires; a removed row must not report R-FEEDBACK-07) and `profile.html.erb` (server-rendered form). Every golden ID now carries a reason.
 - Removed the unmeasured token estimate from the README.
+- Monorepo precedence is now one rule with two examples (`ignore` > `strict` > `demote`; a nearer `CLAUDE.md` without a block inherits). Added `archive.jsx`, the opposite case to `files.jsx`, a first committed self-test result in `examples/results/`, and a note that the goldens are not blind-reviewed. `/uilint screen` may be saved as `docs/STATES.md` when asked.
 
 ### Rule changes
 - Demoted to `recommended`: R-STATE-01 (it is the checklist in `SKILL.md`), R-FORM-03.

@@ -110,7 +110,7 @@ Instead of the list above, print one table: rows are the screen's regions (heade
 sidebar...), columns are loading, empty, error, success, partial. Each cell is `file:line` where the
 state is handled, `absent (decided)` where the region cannot be in that state, or `MISSING`. Then
 list only the `MISSING` cells that hit a `required` rule, in the normal finding format. Skip this
-for single-component requests.
+for single-component requests. Save it as `docs/STATES.md` only when asked.
 
 ## Team policy (optional)
 
@@ -127,9 +127,11 @@ uilint:
 `recommended` rule as `required`. Overrides in `CLAUDE.md` win over this file. When any is applied,
 say so in the verdict line ("2 rules demoted by CLAUDE.md"). Nothing else is read from it.
 
-Precedence in a monorepo: the `CLAUDE.md` nearest the file wins over one higher up. For the same
-rule on the same file, `strict` beats `demote`, and `ignore` beats both. Example: root demotes
-R-FORM-03, `payments/CLAUDE.md` marks `payments/**` strict, so R-FORM-03 is required there.
+Precedence in a monorepo: the nearest `CLAUDE.md` decides which blocks apply; a nearer one with no
+`uilint:` block inherits the parent's unchanged. Within the merged set, per rule per file:
+`ignore` > `strict` > `demote`. Example: root demotes R-FORM-03, `payments/CLAUDE.md` marks
+`payments/**` strict, so R-FORM-03 is required there. Example: root ignores `payments/**` and
+`payments/CLAUDE.md` marks it strict, so it stays ignored (say so in the verdict line).
 
 `/uilint init`: read the routes, propose a `uilint:` block (ignore for admin and prototypes, strict
 for payments and auth) and print it for the user to paste. Write nothing.

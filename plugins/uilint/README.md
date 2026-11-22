@@ -115,8 +115,7 @@ paths, `demote` rules or mark paths `strict`. See [`SKILL.md`](SKILL.md#team-pol
 nothing. When you dispute a finding, `/uilint probe` turns its `Check:` line into a runnable recipe
 (MSW or Playwright, with 500, never-resolving and empty-array bodies) that you run yourself.
 
-**Measured so far:** not yet measured. The goldens in `examples/` are expectations, and no scored
-self-test run is committed. Server-rendered templates have one seeded case (ERB); other template
+**Measured so far:** one self-test run, `claude-sonnet-5-5`, 2026-11-22, 1 run, not blind for four of ten files: 28 of 32 expected IDs matched, 4 missed, 1 extra, 0 findings on the clean control (see [`examples/results/`](examples/results/claude-sonnet-5-5-2026-11-22.md)). The goldens are expectations written by the skill author. Server-rendered templates have one seeded case (ERB); other template
 engines have none.
 
 **Roadmap, not built:** domain packs as separate plugins (payments, streaming AI chat with a stalled

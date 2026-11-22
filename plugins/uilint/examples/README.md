@@ -1,6 +1,6 @@
 # Examples and self-test
 
-Nine small files: eight with seeded state bugs and one clean control. Each has a golden list of the
+Ten small files: nine with seeded state bugs and one clean control. Each has a golden list of the
 rule IDs `uilint` should report, in `expected/`. Nothing here runs and none of it is loaded while
 you use the skill; it exists so the claims can be checked.
 
@@ -14,9 +14,10 @@ you use the skill; it exists so the claims can be checked.
 | [`comments.html`](comments.html) | HTMX | [`expected/comments.md`](expected/comments.md) | Silent swap failures |
 | [`files.jsx`](files.jsx) | React | [`expected/files.md`](expected/files.md) | Only a recommended rule fires; a delete that removes the row must NOT report R-FEEDBACK-07 |
 | [`profile.html.erb`](profile.html.erb) | Rails ERB | [`expected/profile.md`](expected/profile.md) | Server-rendered form POST that redirects with no flash and no error re-render |
+| [`archive.jsx`](archive.jsx) | React | [`expected/archive.md`](expected/archive.md) | Counter-example to `files.jsx`: an archive that leaves the row in place MUST report R-FEEDBACK-07 |
 | [`pass.jsx`](pass.jsx) | React | [`expected/pass.md`](expected/pass.md) | None: a correct component |
 
-Each expected ID carries a one-line reason, so a miss or an extra can be judged. Goldens are expectations written by the skill author, not measurements; no scored run is committed yet (see the README).
+Each expected ID carries a one-line reason, so a miss or an extra can be judged. The goldens were written by the skill author and have not been blind-reviewed; open a PR to dispute any ID. When a second reviewer (human or a different model) writes `pass.md` and `files.md` blind, the result goes in the results file. Goldens are expectations, not measurements; scored runs live in [`results/`](results/).
 
 Line numbers in the golden files are for the files as shipped. Open a file and run `/uilint` to see a
 finding in the exact output format from `SKILL.md`.
@@ -26,7 +27,7 @@ finding in the exact output format from `SKILL.md`.
 Paste this into Claude Code from the plugin folder:
 
 ```text
-Run uilint on every file in examples/ except README.md and expected/. For each file, compare the
+Run uilint on every file in examples/ except README.md, expected/ and results/. For each file, compare the
 rule IDs you report with expected/<name>.md and print one line per file: matched, missed, extra.
 Then print totals. Treat pass.jsx as a false-positive check: any finding there is an extra.
 ```
