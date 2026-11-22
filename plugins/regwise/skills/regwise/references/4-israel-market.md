@@ -29,7 +29,7 @@ says nothing about the others.
 
 **Language:** consumer-facing disclosures, consent wording and cancellation interfaces
 generally need to be in Hebrew to be effective against Israeli consumers. Regwise flags which
-sections require Hebrew but does not translate them — see §2 of the spec.
+sections require Hebrew but does not translate them.
 
 ---
 

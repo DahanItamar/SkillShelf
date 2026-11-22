@@ -149,8 +149,8 @@ early 2026; counts differ between trackers (20 to 24 enacted) depending on wheth
 are counted, so this table cites statutes, not counts. **Verify against primary text before
 relying on any cell.** The values below come from legislature and regulator summaries and have
 not all been checked against statute text (see `references/citations.md`, US state statutes).
-**Status: 10 of 19 rows verified against primary text on 2026-11-22; 9 unverified (listed in citations.md).**
-Section 2.6 checked 2026-11-22 (10 of 19; per-row dates in citations.md); the module's `last_verified` is unchanged because the rest of
+**Status: 12 of 19 rows verified against primary text on 2026-11-22; 7 unverified (listed in citations.md).**
+Section 2.6 checked 2026-11-22 (per-row dates in citations.md); the module's `last_verified` is unchanged because the rest of
 the module was not re-read. An audit that fires AUDIT-2-10 to 2-12 lists the unverified states.
 
 | Law | In effect | Applies when (summary) | Universal opt-out signal | Sensitive data | Cure period |
@@ -158,7 +158,7 @@ the module was not re-read. An audit that fires AUDIT-2-10 to 2-12 lists the unv
 | Virginia VCDPA | 2023-01-01 | 100k consumers, or 25k and over half of revenue from sale | no | opt-in | 30 days |
 | Colorado CPA | 2023-07-01 | 100k consumers, or 25k and revenue or discount from sale | yes, since 2024-07-01 | opt-in | none since 2025-01-01 |
 | Connecticut CTDPA | 2023-07-01 | from 2026-07-01 (P.A. 25-113): 35k consumers, or any sensitive-data processing, or offering personal data for sale; before that 100k, or 25k and over 25% of revenue from sale | yes, since 2025-01-01 | opt-in | mandatory ended 2024-12-31; AG discretion since |
-| Utah UCPA | 2023-12-31 | revenue over $25M and 100k consumers (or 25k and half of revenue from sale) | no | notice and opt-out | 30 days |
+| Utah UCPA | 2023-12-31 | revenue $25M or more, and 100k consumers, or over 50% of revenue from sale and 25k consumers | no | notice and opt-out | 30 days |
 | Texas TDPSA | 2024-07-01 | does business in Texas, not an SBA small business | yes, since 2025-01-01 | opt-in | 30 days |
 | Oregon OCPA | 2024-07-01 | 100k consumers, or 25k and 25% of revenue from sale | yes, since 2026-01-01 | opt-in | ended 2026-01-01 |
 | Montana MCDPA | 2024-10-01 | 25k consumers, or 15k and over 25% of gross revenue from sale | yes, since 2025-01-01 | opt-in | none in 30-14-2817 since the 2025 amendment; 2820(2) cross-reference is dangling; ask counsel |
@@ -172,12 +172,12 @@ the module was not re-read. An audit that fires AUDIT-2-10 to 2-12 lists the unv
 | Minnesota MCDPA | 2025-07-31 | 100k consumers, or 25k and 25% of revenue from sale | yes, since 2025-07-31 | opt-in | ended 2026-01-31 |
 | Maryland MODPA | 2025-10-01 | 35k consumers, or 10k and over 20% of revenue from sale | optional method, not mandatory | only where strictly necessary | ends 2027-04-01 |
 | Indiana ICDPA | 2026-01-01 | 100k consumers, or 25k and half of revenue from sale | no | opt-in | 30 days |
-| Kentucky KCDPA | 2026-01-01 | 100k consumers, or 25k and half of revenue from sale | no | opt-in | 30 days |
+| Kentucky KCDPA | 2026-01-01 | 100k consumers, or 25k and over 50% of gross revenue from sale | no | opt-in | 30 days |
 | Rhode Island RIDTPPA | 2026-01-01 | 35k consumers, or 10k and 20% of revenue from sale | yes | opt-in | none |
 
 Verified against primary text on 2026-11-22: Virginia, Texas, Iowa, Tennessee, Minnesota, Delaware,
-Connecticut, Montana, Florida, Maryland. Still unverified: Colorado, Utah, Oregon, Nebraska, New Hampshire, New
-Jersey, Indiana, Kentucky, Rhode Island. Re-check flags: Connecticut 2026 bills SB 4 and
+Connecticut, Montana, Florida, Maryland, Utah, Kentucky. Still unverified: Colorado, Oregon, Nebraska, New Hampshire, New
+Jersey, Indiana, Rhode Island. Re-check flags: Utah 13-61-102 has a version effective 2027-01-01 (same thresholds, adds motor vehicle manufacturers) and Kentucky 367.3611 and 367.3617 have versions effective 2027-07-01 that were not read; Connecticut 2026 bills SB 4 and
 HB 5126 amend the CTDPA and their status was not confirmed; Delaware 85 Del. Laws c.463 changes
 12D-102 to 12D-111 again from 2027-01-01, so re-read then; Maryland's cure notice is discretionary
 with at least 60 days for violations on or before 2027-04-01.
@@ -198,7 +198,7 @@ claiming coverage.
 - Cure periods are ending in most states. Do not plan around receiving a warning first.
 
 **Citation:** state statutes listed in `references/citations.md` under US state statutes; each cell
-above is an unverified summary until that section shows an access date (10 of 19 do, as of 2026-11-22).
+above is an unverified summary until that section shows an access date (see the Status line above for the count).
 
 ---
 
