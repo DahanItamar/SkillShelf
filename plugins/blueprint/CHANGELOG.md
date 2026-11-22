@@ -21,6 +21,11 @@ All notable changes to this plugin. Format follows [Keep a Changelog](https://ke
 - The README comparison table fills cells only where a source is linked, and says the sources are third-party write-ups.
 - The scope is stated: one spec set per repository root.
 
+- `scripts/spec-check.sh` also: `--main` (leftover `0000-*` directories and `AC-NEW-n` ids), a duplicate change-ordinal check (3b), `--tests` and `--strict` (active ids with no test file naming them), `info:` lines for check 6, and a final `RESULT orphans=N status=pass|fail` line after the unchanged `Orphans: N` line.
+- A `DRIFT-VERDICT: <regression|stale|clean> count=N` trailer for `spec-drift` reports.
+- A shared-constitution note for agencies: copy the file and keep a `Template:` header.
+- A results-row format in `examples/eval/README.md`. No runs have been recorded.
+
 ### Removed
 - The `Verify:` header line in `TASKS.md` examples. `spec-implement` never used it.
 - The emoji in the README, the CI badge, and the relative links to other plugins.

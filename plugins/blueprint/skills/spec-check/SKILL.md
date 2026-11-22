@@ -22,23 +22,24 @@ It checks integrity of references, not truth of behavior. Whether the code still
 | 1 | Every task cites an `AC-###` that exists in section 2.1 | Invented work, or a typo, or a deleted criterion |
 | 2 | Every active criterion is closed by at least one task, or is tombstoned | A requirement nothing builds |
 | 3 | No `AC-###` id appears twice in section 2.1, and no tombstoned id is reused | Archived task lists now cite the wrong requirement |
+| 3b | No change ordinal (the leading four digits of a `docs/changes/` or `docs/changes/archive/` directory) is used twice; `0000` is provisional and excluded | An ordinal was reused, which `change-proposals.md` forbids |
 | 4 | Every `preserves AC-###` in a `REPORT.md` resolves to an active criterion | A refactoring guarding something that is gone |
-| 5 | Each active criterion has a test or code location | Candidate only: a grep for the id and for key words of the criterion in test files and source. Label every hit `candidate, not proof`. A test whose title names the id (`AC-003: ...`) is the strongest candidate |
+| 5 | Each active criterion has a test or code location | Candidate only unless `scripts/spec-check.sh --tests` was run (it lists active ids whose literal `AC-###` appears in no test file as `no titled test`; informational unless `--strict`). Otherwise a grep for the id and for key words of the criterion in test files and source. Label every hit `candidate, not proof`. A test whose title names the id (`AC-003: ...`) is the strongest candidate |
 | 6 | Commit convention | For each closed criterion, no `git log` message contains `closes AC-###` for that id. The AC id is the key; `T-NN` is optional text, and task numbers that repeat from one milestone to the next do not matter. List it as `no conforming commit`. Informational: not a failure, not counted in `Orphans: N`. Scope: search the current branch only (`git log`). If the repo squash-merges, match the PR title or body instead; if that is not possible, treat check 6 as not applicable and print one line saying so, rather than listing every criterion |
 
-A provisional `AC-NEW-n` cited by a task is resolved against the unmerged `PROPOSAL.md` in the same directory; if there is none, it is an orphan like any other id that does not exist. Duplicate ids after parallel branches merge are caught by check 3.
+A provisional `AC-NEW-n` cited by a task is resolved against the unmerged `PROPOSAL.md` in the same directory; if there is none, it is an orphan like any other id that does not exist. Duplicate ids after parallel branches merge are caught by check 3. A leftover `docs/changes/0000-*` directory or `AC-NEW-n` in section 2.1 means the `/spec-drift` merge step was skipped; the script reports both only with `--main`, meant for `main` or a merge queue, because feature branches may legitimately hold them.
 
 Do not infer a closing task from similar wording. A criterion is closed only where a task cites its id.
 
 ## Optional script
 
-If `scripts/spec-check.sh` exists in the repository and the user has run it, prefer its output for checks 1-4 (it is deterministic) and use the model only for the check 5 candidates and check 6. This skill never runs the script itself.
+If `scripts/spec-check.sh` exists in the repository and the user has run it, prefer its output for checks 1-4 and 3b (it is deterministic; it also does check 6 as `info:` lines) and use the model only for the check 5 candidates and check 6. This skill never runs the script itself.
 
 ## Output
 
-Print orphans first, then the table, then one final line `Orphans: N` (N is the count of orphan lines, `0` when none; fixed format so CI can match it). Nothing else.
+Print orphans first, then the table, then `Orphans: N` (N is the count of orphan lines, `0` when none; fixed format so CI can match it), then one last line `RESULT orphans=N status=pass|fail` (`orphans=unknown status=unknown` when it cannot decide) so a bot can read the verdict without JSON. Nothing else.
 
-Fail closed: if `docs/SPEC.md` section 2.1 is missing or holds zero `AC-###` ids, or the run is otherwise empty or malformed, never print `Orphans: 0`. Print `Orphans: unknown` and the reason as the final line.
+Fail closed: if `docs/SPEC.md` section 2.1 is missing or holds zero `AC-###` ids, or the run is otherwise empty or malformed, never print `Orphans: 0`. Print `Orphans: unknown` and the reason, then `RESULT orphans=unknown status=unknown` as the final line.
 
 ```markdown
 Orphans
@@ -52,13 +53,14 @@ Orphans
 | AC-003 | T-04 | none found | src/overlap.js |
 
 Orphans: 3
+RESULT orphans=3 status=fail
 ```
 
 The commit column comes from the one-commit-per-task convention in `spec-implement`. Write `none found` when no message matches; never guess one.
 
 ## `--diff <base>`
 
-Read-only. Take `git diff --name-only <base>`, match the changed paths against the code and test locations check 5 already found, and print `AC-### at risk` as a paste-ready PR comment. Label every hit `candidate, not proof`: a changed file near a criterion is a prompt to look, not a finding. Same output rule: nothing else, and `Orphans: N` stays the last line of a normal run.
+Read-only. Take `git diff --name-only <base>`, match the changed paths against the code and test locations check 5 already found, and print `AC-### at risk` as a paste-ready PR comment. Label every hit `candidate, not proof`: a changed file near a criterion is a prompt to look, not a finding. Same output rule: nothing else, and the `RESULT` line stays the last line of a normal run.
 
 ## Boundaries
 

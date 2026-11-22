@@ -1,16 +1,29 @@
 #!/bin/sh
-# Optional, maintainer-run checker for checks 1-4 of the spec-check skill.
+# Optional, maintainer-run checker for checks 1-4, 3b and 6 of the spec-check skill.
 # Never run by install, never wired to a hook. Reads files, writes only a
 # temporary directory, runs no command found in your repository.
 #
 #   sh scripts/spec-check.sh                          # docs/ layout, run from the repo root
-#   sh scripts/spec-check.sh SPEC.md TASKS.md ...     # explicit files (no REPORT.md checks)
+#   sh scripts/spec-check.sh SPEC.md TASKS.md ...     # explicit files (no REPORT.md or directory checks)
 #
-# Prints orphan lines, then a final "Orphans: N" line.
+# Flags (first, before any file):
+#   --main     also report leftover provisional ids (docs/changes/0000-*, AC-NEW-n in 2.1).
+#              Use it on main or in a merge queue; feature branches may legitimately hold them.
+#   --tests    list active ids whose literal "AC-###" appears in no test file (informational).
+#   --strict   count the --tests lines in Orphans: N.
+#
+# Prints orphan lines, informational lines starting "info:" (not counted), then "Orphans: N",
+# then a final "RESULT orphans=N status=pass|fail" line (status=unknown when it cannot decide).
 # Exit 0 when N is 0, 1 when N is above 0, 2 when it cannot decide ("Orphans: unknown").
 
 set -u
-tmp=$(mktemp -d 2>/dev/null) || { echo "Orphans: unknown (no temporary directory)"; exit 2; }
+main=0; tests=0; strict=0
+while [ $# -ge 1 ]; do
+  case $1 in --main) main=1 ;; --tests) tests=1 ;; --strict) strict=1 ;; *) break ;; esac
+  shift
+done
+explicit=0; [ $# -ge 1 ] && explicit=1
+tmp=$(mktemp -d 2>/dev/null) || { echo "Orphans: unknown (no temporary directory)"; echo "RESULT orphans=unknown status=unknown"; exit 2; }
 trap 'rm -rf "$tmp"' EXIT HUP INT TERM
 : > "$tmp/tasks"; : > "$tmp/reports"
 
@@ -23,7 +36,7 @@ else
   for f in docs/refactorings/*/REPORT.md docs/refactorings/archive/*/REPORT.md; do [ -f "$f" ] && echo "$f" >> "$tmp/reports"; done
 fi
 
-unknown() { echo "Orphans: unknown ($1)"; exit 2; }
+unknown() { echo "Orphans: unknown ($1)"; echo "RESULT orphans=unknown status=unknown"; exit 2; }
 [ -f "$spec" ] || unknown "$spec not found"
 
 # Leading ids of table rows and bullets inside section 2.1. State A = active, T = tombstone (~~AC-###~~).
@@ -81,7 +94,42 @@ while IFS= read -r f; do
     awk -v F="$f" 'NR == FNR { a[$1] = 1; next } !($2 in a) { print $1 " preserves " $2 ", which is not an active criterion (" F ")" }' "$tmp/active" -
 done < "$tmp/reports" >> "$tmp/orphans"
 
+# Check 3b: a four-digit change ordinal is never reused, archive included (0000 is provisional).
+if [ "$explicit" -eq 0 ]; then
+  for d in docs/changes/[0-9][0-9][0-9][0-9]-* docs/changes/archive/[0-9][0-9][0-9][0-9]-*; do [ -d "$d" ] && basename "$d" | cut -c1-4; done |
+    grep -v ^0000 | sort | uniq -d | while read -r o; do echo "ordinal $o used by more than one change directory"; done >> "$tmp/orphans"
+fi
+
+# With --main: leftover provisional ids mean the /spec-drift merge step was skipped.
+if [ "$main" -eq 1 ] && [ "$explicit" -eq 0 ]; then
+  for d in docs/changes/0000-*; do [ -d "$d" ] && echo "$d exists, run /spec-drift merge"; done >> "$tmp/orphans"
+  grep ^AC-NEW- "$tmp/known" | while read -r id; do echo "$id in SPEC.md section 2.1"; done >> "$tmp/orphans"
+fi
+
+: > "$tmp/info"
+# With --tests: active ids whose literal id appears in no test file.
+if [ "$tests" -eq 1 ]; then
+  find . -type f \( -name "*test*" -o -name "*spec*" -o -path "*/tests/*" -o -path "*/test/*" -o -path "*/__tests__/*" \) \
+    -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "./docs/*" -not -name "*.md" -not -name "spec-check.sh" > "$tmp/testfiles"
+  while read -r id; do
+    hit=0
+    while IFS= read -r tf; do grep -Eq "$id([^0-9]|$)" "$tf" 2>/dev/null && { hit=1; break; }; done < "$tmp/testfiles"
+    [ "$hit" -eq 0 ] && echo "$id no titled test"
+  done < "$tmp/active" > "$tmp/notest"
+  if [ "$strict" -eq 1 ]; then cat "$tmp/notest" >> "$tmp/orphans"; else sed "s/^/info: /" "$tmp/notest" >> "$tmp/info"; fi
+fi
+
+# Check 6 (informational): closed criteria with no "closes AC-###" in git history.
+if [ "$explicit" -eq 0 ] && git log -1 >/dev/null 2>&1; then
+  git log --format=%B > "$tmp/log" 2>/dev/null
+  while read -r id; do
+    grep -Eq "closes $id([^0-9]|$)" "$tmp/log" || echo "info: $id no conforming commit"
+  done < "$tmp/closed_u" >> "$tmp/info"
+fi
+
 n=$(wc -l < "$tmp/orphans" | tr -d ' ')
 if [ "$n" -gt 0 ]; then cat "$tmp/orphans"; fi
+cat "$tmp/info"
 echo "Orphans: $n"
+if [ "$n" -eq 0 ]; then echo "RESULT orphans=0 status=pass"; else echo "RESULT orphans=$n status=fail"; fi
 [ "$n" -eq 0 ]

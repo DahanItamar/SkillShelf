@@ -115,7 +115,7 @@ Then tell the user the path and the verify command you recorded. Say that `spec-
 
 **This skill never writes code.** It documents what code must look like.
 
-**One constitution, and one spec set, per root.** The chain assumes one set of docs per repository root: `docs/CONSTITUTION.md`, `docs/SPEC.md` and `docs/changes/` all sit under one directory. For a monorepo, treat each package root as its own root: run the chain with `docs/` under that package directory and keep one constitution there. Not one per feature, and no shared or layered constitutions.
+**One constitution, and one spec set, per root.** The chain assumes one set of docs per repository root: `docs/CONSTITUTION.md`, `docs/SPEC.md` and `docs/changes/` all sit under one directory. For a monorepo, treat each package root as its own root: run the chain with `docs/` under that package directory and keep one constitution there. Not one per feature, and no shared or layered constitutions. For an agency or any set of similar repositories, copy `docs/CONSTITUTION.md` from a template repository into each root and keep a one-line `Template: <name> <date>` header so drift from the template is visible. A shared overlay is unsupported.
 
 ## Calibration
 

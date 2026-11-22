@@ -4,14 +4,10 @@
 
 **What you get:** eight Markdown skills that give every requirement an `AC-###` id, then check every later step against that id.
 
-**Eight skills: six stages, a front door and an opt-in checker. They carry one identifier from a rough idea to shipped code — every
-requirement gets a number in the spec, and every task, verification, audit and refactoring after it
-cites that number.**
-
 Plain Markdown, read by Claude Code.
 **No `package.json`, no dependencies, no build step, nothing that executes at install.**
 
-<img alt="17 illustration tests passing across 4 suites" src="https://img.shields.io/badge/illustration%20tests-17%20passing-0F766E?style=flat-square">
+<img alt="proof suite" src="https://img.shields.io/badge/proof%20suite-node%20--test-0F766E?style=flat-square">
 <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-0F766E?style=flat-square">
 <img alt="version 3.4.0" src="https://img.shields.io/badge/version-3.4.0-0F766E?style=flat-square">
 <a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-0F766E?style=flat-square"></a>
@@ -175,7 +171,7 @@ calculation diverged where no criterion looks — stage 6 catches that.
 | One id across every stage | not claimed here | not claimed here | not claimed here | `AC-###` |
 | Machine-checkable traceability line | `/speckit.analyze`: read-only consistency check across spec, plan and tasks (per third-party write-ups) | not claimed here | not claimed here | `/spec-check`, and an optional `scripts/spec-check.sh` for checks 1-4: AC to task to commit to test, final `Orphans: N` line |
 
-Honest limits: Claude Code only, no CLI, no IDE integration, no multi-agent portability, and one spec set per repository root. For a monorepo, run the chain from each package root with its own `docs/` and its own constitution; there is no shared layout across packages. The other tools win on portability. "Not claimed here" means this README has not verified the competitor either way. Every competitor cell comes from write-ups by other people that were not re-checked against official documentation: [Spec Kit `analyze`](https://www.mintlify.com/github/spec-kit/commands/analyze), [Spec Kit constitution](https://dev.to/x4nent/github-spec-kit-deep-dive-spec-driven-development-the-constitution-speckit-slash-commands-1m71), [OpenSpec versus Spec Kit](https://ovidiueftimie.substack.com/p/openspec-vs-spec-kit), [Kiro versus Spec Kit](https://docs.plannotator.ai/compare/github-spec-kit-vs-kiro-specs.md).
+Honest limits: Claude Code only, no CLI, no IDE integration, no multi-agent portability, and one spec set per repository root. For a monorepo, run the chain from each package root with its own `docs/` and its own constitution; there is no shared layout across packages. For an agency with many similar repositories, copy `docs/CONSTITUTION.md` from a template repository into each root and keep a one-line `Template: <name> <date>` header so drift is visible; a shared overlay is unsupported. Eval status: protocol only, no runs recorded (see [examples/eval](examples/eval/README.md)). The other tools win on portability. "Not claimed here" means this README has not verified the competitor either way. Every competitor cell comes from write-ups by other people that were not re-checked against official documentation: [Spec Kit `analyze`](https://www.mintlify.com/github/spec-kit/commands/analyze), [Spec Kit constitution](https://dev.to/x4nent/github-spec-kit-deep-dive-spec-driven-development-the-constitution-speckit-slash-commands-1m71), [OpenSpec versus Spec Kit](https://ovidiueftimie.substack.com/p/openspec-vs-spec-kit), [Kiro versus Spec Kit](https://docs.plannotator.ai/compare/github-spec-kit-vs-kiro-specs.md).
 
 ## Optional CI recipe
 
@@ -183,10 +179,10 @@ Nothing here runs at install. If you want a gate, copy [`scripts/spec-check.sh`]
 
 ```yaml
 - name: Spec traceability
-  run: sh scripts/spec-check.sh
+  run: sh scripts/spec-check.sh   # from the repository root
 ```
 
-It covers checks 1 to 4 of `/spec-check` only: cited ids exist, every active criterion is closed by a task, no id appears twice, and `preserves` citations resolve. It exits 1 when there are orphans, 2 when it cannot decide (`Orphans: unknown`), and 0 otherwise. The test and commit checks (5 and 6) stay with the skill, because they are candidates for a person to read, not facts. Because it is a script rather than a model call, the final `Orphans: N` line is deterministic.
+It covers checks 1 to 4 of `/spec-check`: cited ids exist, every active criterion is closed by a task, no id appears twice, and `preserves` citations resolve. It also reports a reused change ordinal (3b) and prints check 6 as `info:` lines. Optional flags: `--main` (run on `main` or a merge queue, not on feature branches: lists leftover `0000-*` directories and `AC-NEW-n` ids), `--tests` (lists active ids that no test file names; add `--strict` to count them), and the output ends with `RESULT orphans=N status=pass|fail` for bots, after the unchanged `Orphans: N` line. It exits 1 when there are orphans, 2 when it cannot decide (`Orphans: unknown`), and 0 otherwise. Test hits are still candidates for a person to read, not proof. Because it is a script rather than a model call, the output is deterministic.
 
 Run against the hand-built fixture, the real output was (Node test: `node --test examples/spec-check-fixture/spec-check.test.mjs`):
 
@@ -195,6 +191,7 @@ T-03 cites AC-009, which does not exist (examples/spec-check-fixture/TASKS.md)
 AC-003 active, closed by no task
 AC-003 appears twice in section 2.1
 Orphans: 3
+RESULT orphans=3 status=fail
 ```
 
 ## Extending it
@@ -224,21 +221,22 @@ Bytes from `wc -c`, not token counts (no token count was measured). A skill load
 | Skill | `SKILL.md` | References (all) |
 |---|--:|--:|
 | `spec-start` | 6,326 | none |
-| `spec-constitution` | 7,405 | 6,827 |
-| `spec-architect` | 12,877 | 49,039 |
+| `spec-constitution` | 7,650 | 6,827 |
+| `spec-architect` | 12,877 | 49,292 |
 | `spec-tasks` | 6,273 | 5,364 |
 | `spec-implement` | 10,133 | 4,552 |
-| `spec-check` | 4,807 | none |
-| `spec-drift` | 12,449 | 24,324 |
+| `spec-check` | 5,727 | none |
+| `spec-drift` | 12,449 | 24,644 |
 | `spec-refactor` | 12,684 | 28,358 |
+
+Small-change lane, measured with `wc -c`: `spec-architect/SKILL.md` (12,877) plus `references/change-proposals.md` (7,828) is 20,705 bytes, because that lane loads no other reference. The full chain loads every `SKILL.md` (74,119 bytes) and, as each step needs them, the references above.
 
 ## Under the hood — briefly
 
 - **Nothing executes at install.** No dependencies, no build, no network calls. The only runnable
   code is 5 `.mjs` files under `examples/proof/`, importing `node:test`, `node:assert/strict` and
   `node:fs`, plus the optional `scripts/spec-check.sh` and its test, which you run yourself.
-- **3,250 lines (`SKILL.md` and references) that load on demand.** Each `SKILL.md` loads on invocation, the largest being 164
-  lines; its references load only at the phase that needs them, so a task list is never written with
+- **Skills and references that load on demand** (count them with `wc -l`). Each `SKILL.md` loads on invocation; its references load only at the phase that needs them, so a task list is never written with
   the risk checklist in context.
 - **Change proposals, not spec rewrites.** Once `docs/SPEC.md` exists, `/spec-architect` writes a
   diff under `docs/changes/` and leaves the spec alone — the reasoning that made feature 1 correct
