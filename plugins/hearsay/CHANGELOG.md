@@ -3,7 +3,7 @@
 Release checklist: version in `plugin.json` == the hearsay entry (version and description) in the root `.claude-plugin/marketplace.json` == the head of this file == the README badge; `sh scripts/verify.sh` exits 0; the hearsay entry, root README row, plugin count and badge, and the "Which folders to copy" row are added in the release branch (they are not in the plugin folder); a real run is committed under `examples/results/<model>-<date>.md` before any README line claims a measured result (until then the README says "Measured so far: nothing yet"). Nothing here runs at install.
 
 ## 0.2.0
-- Skill text is tool-neutral: the command table is now an Inputs section in plain words, with /hearsay and $hearsay as optional shorthand; no Claude-only tool names. Removed the Blueprint cross-reference.
+- Skill text is tool-neutral: the command table is now an Inputs section in plain words, with /hearsay and $hearsay as optional shorthand; no Claude-only tool names. Removed a cross-reference to another plugin.
 - Preflight is a numbered decision list. The changelog-section rule is stated once, in SKILL.md step 1; the rubric and release mode point to it.
 - Release mode: untracked files are listed with `git ls-files --others --exclude-standard` on a dirty tree and treated as added; `--match` is used for monorepo tag inference; the `--no-merges` limit is stated.
 - Ledger: rewrites print `H-nn after:` only, and "Read first" is omitted when 3 or fewer rows are contradicted.
