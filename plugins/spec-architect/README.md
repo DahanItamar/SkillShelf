@@ -155,6 +155,10 @@ silently stops being storable — stage 5 catches that. `smelly.mjs` contradicts
 shows an overnight shift as `-960` minutes in its tooltip, because one of three copies of the same
 calculation diverged where no criterion looks — stage 6 catches that.
 
+## Try spec-check in a minute
+
+[`examples/spec-check-fixture/`](examples/spec-check-fixture) is a hand-built fixture, not a recorded run: a `SPEC.md` and one `TASKS.md` with three deliberate orphans. Copy them into a scratch repo as `docs/SPEC.md` and `docs/changes/0001-m1-fixture/TASKS.md`, run `/spec-check`, and you should see `Orphans: 3`.
+
 ## Compared with other spec tools
 
 | | Spec Kit | OpenSpec | Kiro | This plugin |
@@ -165,6 +169,7 @@ calculation diverged where no criterion looks — stage 6 catches that.
 | Refactor gate that cannot edit a criterion | not claimed here | not claimed here | not claimed here | yes (stage 6) |
 | Verify command only from the constitution | not claimed here | not claimed here | not claimed here | yes |
 | One id across every stage | not claimed here | not claimed here | not claimed here | `AC-###` |
+| Machine-checkable traceability line | `analyze` checks artifact consistency; code-level via extensions (per third-party write-ups) | not claimed here | not claimed here | `/spec-check`: read-only AC-to-task-to-commit-to-test thread, final `Orphans: N` line a CI step can match |
 
 Honest limits: Claude Code only, no CLI, no IDE integration, no multi-agent portability. The other tools win on all four. "Not claimed here" means this README has not verified the competitor either way.
 
@@ -175,12 +180,14 @@ Nothing here runs at install. If you want a gate, copy this into your own workfl
 ```yaml
 - name: Spec traceability
   run: |
-    claude -p "/spec-check" > spec-check.txt
+    claude -p "Run the spec-check skill and print only its output" > spec-check.txt
     cat spec-check.txt
+    test -s spec-check.txt
+    grep -q '^Orphans: [0-9]' spec-check.txt
     tail -n 1 spec-check.txt | grep -qx 'Orphans: 0'
 ```
 
-The model writes that last line, so treat the gate as advisory and read the table before trusting it.
+The model writes that last line, so treat the gate as advisory and read the table before trusting it. Not verified on any Claude Code version; test it in your own CI. Slash-invoked skills are documented as interactive-only in headless mode and some versions fail silently with `-p`, which is why the prompt is plain text and the `test` and `grep` lines fail on empty output. `--bare` skips skill discovery, so do not use it here.
 
 ## Extending it
 
@@ -194,7 +201,13 @@ Because every stage keys on `AC-###` and plain files, you can add your own stage
 
 Nothing else is needed: no registry, no hooks.
 
-Natural places to run an optional pass, by hand, are the stage boundaries: after `/spec-tasks` and before `/spec-implement`, [acsm](../acsm) for compliance and [uilint](../uilint) for UI states. Prose only; nothing triggers them for you.
+Natural places to run an optional pass, by hand, are the stage boundaries. Nothing triggers them for you.
+
+| Boundary | Optional pass | Entry skill |
+|---|---|---|
+| after `/spec-tasks` | compliance | [acsm](../acsm) |
+| before `/spec-implement` | UI states | [uilint](../uilint) |
+| any time | criterion integrity | `/spec-check` |
 
 ## Under the hood — briefly
 

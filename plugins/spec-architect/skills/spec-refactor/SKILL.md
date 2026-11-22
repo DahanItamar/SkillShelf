@@ -59,7 +59,7 @@ Cleanup needs no gate because it is not a design opinion, but it does need evide
 
 1. **`docs/CONSTITUTION.md`** — the verify command, the static-analysis command if it names one, and the size and layout rules. A "smell" that contradicts the constitution is not a finding; the constitution wins.
 2. **`docs/SPEC.md` §2.1** — the criteria covering the code you are about to touch. These are the invariants of everything you propose. Note their IDs now; you will cite them.
-3. **`TASKS.md` and `docs/changes/`** — what is scheduled next. This is the gate's input. Without it you have no way to tell a Change Preventer from an aesthetic preference, and you will produce a wish list.
+3. **`docs/changes/*/TASKS.md` and `docs/changes/`** — what is scheduled next. This is the gate's input. Without it you have no way to tell a Change Preventer from an aesthetic preference, and you will produce a wish list.
 4. **`docs/refactorings/SMELLS.md`** — every smell this repository has ever recorded, and the next free id. A smell already logged there is not a new finding; a smell already marked **won't fix** has been argued once and does not get re-litigated without a reason.
 
 If there is no spec, say so and continue with a narrower promise: you can still find smells and remove dead code, but "behavior is preserved" degrades from a checked claim to a hope. Offer `/spec-architect` to reverse-engineer the criteria first — on a codebase worth refactoring, that is usually the better order.
