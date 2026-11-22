@@ -102,3 +102,9 @@ Hebrew is required for Israeli consumers. Translate all copy above.
   running an advertising pixel is a misrepresentation, not a drafting slip.
 - If you use Google Consent Mode or a similar signal-based integration, verify that denied
   consent actually blocks storage rather than only tagging the request.
+
+## Counsel must check — delete before publishing
+
+- The cookie list matches what the site actually sets, per market.
+- Whether the reject path and the consent record meet the regulator guidance in each market.
+- Which consent signals from the consent platform are legally binding in your setup.

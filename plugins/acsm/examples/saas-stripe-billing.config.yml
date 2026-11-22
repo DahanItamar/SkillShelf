@@ -1,0 +1,19 @@
+# Fixture: a SaaS that bills through Stripe, sold in the US and Israel.
+# Not loaded by the skill. Guards R13: PaymentFinancial must load module 5
+# even though appType is not E-commerce and the enterprise flag is off.
+#
+# Expected: modules 1, 2, 3, 4, 5, 6, 8
+#   R04  rank >= 1 (PaymentFinancial = 2)   -> 1, 3
+#   R08  markets include Israel             -> 4
+#   R09  markets include US                 -> 2
+#   R11  appType != HeadlessAPI             -> 6
+#   R12  infrastructure != LocalOnPrem      -> 1, 8
+#   R13  rank >= 2                          -> 5
+
+appType: SaaS
+targetMarkets: [US, Israel]
+dataSensitivity: PaymentFinancial
+aiIntegration: None
+infrastructure: CloudMultiTenant
+configVersion: 1
+lastConfirmed: 2026-08-15

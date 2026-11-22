@@ -11,6 +11,11 @@
 
 set -u
 
+# Optional argument: a plugin directory to check (for third-party jurisdiction plugins).
+if [ $# -ge 1 ]; then
+	cd "$1" || { printf 'cannot run: cannot enter %s\n' "$1" >&2; exit 2; }
+fi
+
 FAILURES=0
 
 # fail <check> <path> <line> <message>
@@ -39,8 +44,9 @@ fi
 
 printf 'ACSM verify\n'
 
-TMPF=./.verify.tmp
-trap 'rm -f "$TMPF" "$TMPF.fm" "$TMPF.lk" "$TMPF.aw" "$TMPF.in" "$TMPF.ph"' EXIT INT TERM
+TMPD=$(mktemp -d 2>/dev/null) || { printf 'cannot run: mktemp -d failed\n' >&2; exit 2; }
+TMPF=$TMPD/t
+trap 'rm -rf "$TMPD"' EXIT INT TERM
 
 # Module files are `references/<n>-<slug>.md` with n in 1..8 (SPEC.md AC-051).
 # Other files may live in references/ — audit-flow.md is procedure, not a module,
@@ -276,6 +282,131 @@ while IFS= read -r f; do
 		fi
 	done < "$TMPF.lk"
 done < "$TMPF"
+
+# --- routing fixtures: Expected modules match the router rule table --------
+# Each examples/*.config.yml declares `# Expected: modules ...`. The rule table in
+# SKILL.md section 2 is evaluated here, so a rule change that moves a module fails.
+
+cfg_get() {
+	sed -n "s/^$2:[[:space:]]*//p" "$1" | head -n 1 | sed 's/[[:space:]]*#.*//'
+}
+
+rule_fires() {
+	# $1 condition text from the router table, backticks removed
+	case "$1" in
+		"appType == LocalDesktop") [ "$T_APP" = LocalDesktop ] ;;
+		"appType == ConnectedDesktop") [ "$T_APP" = ConnectedDesktop ] ;;
+		"appType == E-commerce") [ "$T_APP" = E-commerce ] ;;
+		"rank >= 1") [ "$T_RANK" -ge 1 ] ;;
+		"enterpriseFlag") [ "$T_ENT" = 1 ] ;;
+		"aiIntegration != None") [ "$T_AI" != None ] ;;
+		"markets include EU") case "$T_MK" in *EU*|*Global*) true ;; *) false ;; esac ;;
+		"markets include Israel") case "$T_MK" in *Israel*|*Global*) true ;; *) false ;; esac ;;
+		"markets include US") case "$T_MK" in *US*|*Global*) true ;; *) false ;; esac ;;
+		"markets include UK_APAC") case "$T_MK" in *UK_APAC*|*Global*) true ;; *) false ;; esac ;;
+		"appType != HeadlessAPI") [ "$T_APP" != HeadlessAPI ] ;;
+		"infrastructure != LocalOnPrem") [ "$T_INF" != LocalOnPrem ] ;;
+		"rank >= 2 or Stripe/billing signal in repo") [ "$T_RANK" -ge 2 ] ;;
+		*) return 2 ;;
+	esac
+}
+
+sed -n 's/^| \(R[0-9][0-9]\) | \(.*\) | \([0-9, ]*\) |$/\1|\2|\3/p' skills/acsm/SKILL.md | tr -d '`' > "$TMPF.rt"
+for fx in examples/*.config.yml; do
+	[ -e "$fx" ] || continue
+	exp=$(sed -n 's/^# Expected: modules //p' "$fx" | head -n 1 | tr -d ' ')
+	[ -n "$exp" ] || { fail routing "$fx" 1 "no '# Expected: modules' line"; continue; }
+	T_APP=$(cfg_get "$fx" appType)
+	T_AI=$(cfg_get "$fx" aiIntegration)
+	T_INF=$(cfg_get "$fx" infrastructure)
+	T_MK=$(cfg_get "$fx" targetMarkets)
+	T_ENT=0
+	case "$(cfg_get "$fx" dataSensitivity)" in
+		Public) T_RANK=0 ;;
+		StandardPII) T_RANK=1 ;;
+		PaymentFinancial) T_RANK=2 ;;
+		SensitiveHealth) T_RANK=3 ;;
+		EnterpriseB2B) T_RANK=1; T_ENT=1 ;;
+		*) fail routing "$fx" 1 "unknown dataSensitivity"; continue ;;
+	esac
+	got=""
+	while IFS='|' read -r rid cond loads; do
+		[ -n "$rid" ] || continue
+		rule_fires "$cond"
+		rc=$?
+		if [ "$rc" -eq 2 ]; then
+			fail routing skills/acsm/SKILL.md 1 "verify.sh does not know rule condition: $rid $cond"
+		elif [ "$rc" -eq 0 ]; then
+			got="$got,$loads"
+		fi
+	done < "$TMPF.rt"
+	got=$(printf '%s' "$got" | tr -d ' ' | tr ',' '\n' | grep -v '^$' | sort -un | tr '\n' ',' | sed 's/,$//')
+	if [ "$got" != "$exp" ]; then
+		fail routing "$fx" 1 "router gives modules $got, fixture expects $exp"
+	fi
+done
+
+# --- seeded fixture: every expected row ID exists in a module --------------
+
+for ef in examples/*/EXPECTED-FINDINGS.md; do
+	[ -f "$ef" ] || continue
+	grep -o 'AUDIT-[0-9]-[0-9][0-9]' "$ef" | sort -u > "$TMPF.ex"
+	while IFS= read -r rid; do
+		[ -n "$rid" ] || continue
+		if ! grep -q "^| $rid " $MODULE_GLOB; then
+			fail fixture "$ef" 1 "row does not exist in any module: $rid"
+		fi
+	done < "$TMPF.ex"
+done
+
+# --- version drift: fail ---------------------------------------------------
+# plugin.json, the marketplace entry and the root README table are one release.
+# Only meaningful inside the full marketplace checkout; skipped when the plugin is alone.
+
+mp=../../.claude-plugin/marketplace.json
+rd=../../README.md
+if [ -f .claude-plugin/plugin.json ]; then
+	pv=$(sed -n 's/^[[:space:]]*"version":[[:space:]]*"\([^"]*\)".*/\1/p' .claude-plugin/plugin.json | head -n 1)
+	if [ -f "$mp" ]; then
+		mv=$(awk '/"name": "acsm"/ { f = 1 } f && /"version"/ { gsub(/[^0-9.]/, "", $2); print $2; exit }' "$mp")
+		if [ -n "$mv" ] && [ "$mv" != "$pv" ]; then
+			fail version "$mp" 1 "marketplace.json lists acsm $mv, plugin.json says $pv"
+		fi
+	fi
+	if [ -f "$rd" ]; then
+		rv=$(sed -n 's/^| \[\*\*acsm\*\*\].*| *\([0-9][0-9.]*\) *|[[:space:]]*$/\1/p' "$rd" | head -n 1)
+		if [ -n "$rv" ] && [ "$rv" != "$pv" ]; then
+			fail version "$rd" 1 "root README lists acsm $rv, plugin.json says $pv"
+		fi
+	fi
+fi
+
+# --- README claims about SKILL.md length -----------------------------------
+
+skl=$(wc -l < skills/acsm/SKILL.md | tr -d ' ')
+rl=$(sed -n 's/.*SKILL\.md`\{0,1\}\]\{0,1\}([^)]*) is \([0-9][0-9]*\) lines.*/\1/p' README.md | head -n 1)
+if [ -n "$rl" ] && [ "$rl" != "$skl" ]; then
+	fail readme README.md 1 "README says SKILL.md is $rl lines; it is $skl"
+fi
+
+# --- staleness: warn, never fail -------------------------------------------
+
+days_of() {
+	y=${1%%-*}; r=${1#*-}; m=${r%%-*}; d=${r#*-}
+	m=${m#0}; d=${d#0}
+	[ "$m" -le 2 ] && { y=$((y - 1)); m=$((m + 12)); }
+	echo $((365 * y + y / 4 - y / 100 + y / 400 + (153 * (m - 3) + 2) / 5 + d))
+}
+today=$(days_of "$(date +%Y-%m-%d)")
+for f in $MODULE_GLOB; do
+	[ -e "$f" ] || continue
+	lv=$(sed -n 's/^last_verified:[[:space:]]*//p' "$f" | head -n 1)
+	[ -n "$lv" ] || continue
+	age=$((today - $(days_of "$lv")))
+	if [ "$age" -gt 180 ]; then
+		printf 'WARN stale: %s last_verified %s is %s days old (see docs/REFRESH.md)\n' "$f" "$lv" "$age"
+	fi
+done
 
 # --- report ----------------------------------------------------------------
 

@@ -23,7 +23,8 @@ instruments:
 
 # Module 5 — Payment, Financial & Enterprise Vectors
 
-Loaded by **R03** (e-commerce) and **R05** (enterprise flag).
+Loaded by **R03** (e-commerce), **R05** (enterprise flag) and **R13** (payment-grade data or a
+billing signal, so a SaaS with Stripe is covered).
 
 PCI DSS is contractual rather than statutory — it binds through the acquirer agreement, and
 the consequence of failure is fines, forensic investigation costs, and losing the ability to

@@ -1,0 +1,8 @@
+# Seeded-violation fixture. Every violation here is deliberate.
+appType: SaaS
+targetMarkets: [US, EU]
+dataSensitivity: PaymentFinancial
+aiIntegration: None
+infrastructure: CloudMultiTenant
+configVersion: 1
+lastConfirmed: 2026-08-15

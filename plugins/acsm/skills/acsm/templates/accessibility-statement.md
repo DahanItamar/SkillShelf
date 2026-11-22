@@ -92,3 +92,9 @@ same information or complete the same transaction another way, at no extra cost.
 - Publish it at a stable path, linked from the footer of every page.
 - The alternatives paragraph is a commitment. Make sure someone is actually able to honour it
   before publishing.
+
+## Counsel must check — delete before publishing
+
+- The conformance level claimed matches an actual audit, not an intention.
+- The named feedback contact is monitored and the response time stated is achievable.
+- Which local law governs the statement in each market served.

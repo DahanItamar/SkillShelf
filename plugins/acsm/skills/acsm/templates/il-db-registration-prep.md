@@ -112,3 +112,9 @@ An undocumented one is indistinguishable from never having asked.
   hypothesis.
 - Amendment 13's DPO duty may apply to you. Check it as a separate question from registration.
 - Do not file anything produced from this worksheet without counsel reviewing it.
+
+## Counsel must check — delete before publishing
+
+- Whether registration is still required after Amendment 13 for this database.
+- Whether a data protection officer or other new duty applies.
+- Anything filed with the regulator, before it is filed.

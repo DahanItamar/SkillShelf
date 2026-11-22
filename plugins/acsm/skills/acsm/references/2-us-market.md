@@ -26,7 +26,7 @@ instruments:
 Loaded by **R09** whenever `targetMarkets` includes `US`, and by `Global`.
 
 The US has no general federal privacy statute. What it has is a deception statute the FTC
-enforces broadly, a subscription statute, and a patchwork of state privacy laws of which
+enforces broadly, a subscription statute, and about twenty state privacy laws (section 2.6), of which
 California's is the strictest and the one most products build to. Building to CCPA and
 applying it nationally is usually cheaper than segmenting by state — but that is a business
 decision, not a legal requirement, and it should be recorded as one.
@@ -141,6 +141,56 @@ conditioning participation on excess collection), 312.10 (retention limits).
 - Actual knowledge is a trigger you can create. A support ticket saying "my daughter is 11"
   puts you on notice, so the support tooling needs a path for it.
 
+
+### 2.6 State comprehensive privacy statutes beyond California
+
+California is not the only state with a comprehensive privacy law. About twenty were in effect by
+early 2026; counts differ between trackers (20 to 24 enacted) depending on whether limited laws
+are counted, so this table cites statutes, not counts. **Verify against primary text before
+relying on any cell.** The values below come from legislature and regulator summaries and have
+not yet been checked against statute text (see `docs/CITATIONS.md`, US state statutes).
+**Status: all 19 rows unverified.** An audit that fires AUDIT-2-10 to 2-12 says so.
+
+| Law | In effect | Applies when (summary) | Universal opt-out signal | Sensitive data | Cure period |
+| --- | --- | --- | --- | --- | --- |
+| Virginia VCDPA | 2023-01-01 | 100k consumers, or 25k and over half of revenue from sale | no | opt-in | 30 days |
+| Colorado CPA | 2023-07-01 | 100k consumers, or 25k and revenue or discount from sale | yes, since 2024-07-01 | opt-in | none since 2025-01-01 |
+| Connecticut CTDPA | 2023-07-01 | 100k consumers (thresholds amended; check current text) | yes, since 2025-01-01 | opt-in | ended 2025-12-31 |
+| Utah UCPA | 2023-12-31 | revenue over $25M and 100k consumers (or 25k and half of revenue from sale) | no | notice and opt-out | 30 days |
+| Texas TDPSA | 2024-07-01 | does business in Texas, not an SBA small business | yes, since 2025-01-01 | opt-in | 30 days |
+| Oregon OCPA | 2024-07-01 | 100k consumers, or 25k and 25% of revenue from sale | yes, since 2026-01-01 | opt-in | ended 2026-01-01 |
+| Montana MCDPA | 2024-10-01 | 50k consumers | yes, since 2025-01-01 | opt-in | ended 2026-04-01 |
+| Florida FDBR | 2024-07-01 | over $1B revenue plus a smart-speaker, app-store or ad-revenue condition | no | opt-in | 45 days |
+| Delaware DPDPA | 2025-01-01 | 35k consumers | yes, since 2026-01-01 | opt-in | ends 2026-12-31 |
+| Iowa ICDPA | 2025-01-01 | 100k consumers, or 25k and half of revenue from sale | no | notice and opt-out | 90 days |
+| Nebraska NDPA | 2025-01-01 | does business in Nebraska, not a small business | yes, since 2025-01-01 | opt-in | 30 days |
+| New Hampshire NHPA | 2025-01-01 | 35k consumers | yes, since 2025-01-01 | opt-in | ended 2025-12-31 |
+| New Jersey NJDPA | 2025-01-15 | 100k consumers, or 25k and revenue from sale | yes, since 2025-07-15 | opt-in | ended 2026-07-15 |
+| Tennessee TIPA | 2025-07-01 | revenue over $25M and 175k consumers | no | opt-in | 60 days |
+| Minnesota MCDPA | 2025-07-31 | 100k consumers, or 25k and 25% of revenue from sale | yes, since 2025-07-31 | opt-in | ended 2026-01-31 |
+| Maryland MODPA | 2025-10-01 | 35k consumers, or 10k and over 20% of revenue from sale | no | only where strictly necessary | ends 2027-04-01 |
+| Indiana ICDPA | 2026-01-01 | 100k consumers, or 25k and half of revenue from sale | no | opt-in | 30 days |
+| Kentucky KCDPA | 2026-01-01 | 100k consumers, or 25k and half of revenue from sale | no | opt-in | 30 days |
+| Rhode Island RIDTPPA | 2026-01-01 | 35k consumers, or 10k and 20% of revenue from sale | yes | opt-in | none |
+
+Alabama, Louisiana, Oklahoma and Vermont were reported as enacted in 2026 sources; they are not
+in the table because their effective dates and text were not confirmed. Check them before
+claiming coverage.
+
+**In code:**
+
+- Record which thresholds the product meets, as a decision, with the consumer count used.
+  "We apply California's rules everywhere" is a valid decision; an unrecorded one is not.
+- Treat a universal opt-out signal (GPC and its equivalents) as an opt-out of sale, sharing and
+  targeted advertising for every user whose state recognises it, not only California.
+- Collecting precise location, health, biometric, race, religion, sexuality or child data needs
+  a separate opt-in consent record where the state requires opt-in. The consent is not the
+  privacy-policy acceptance.
+- Cure periods are ending in most states. Do not plan around receiving a warning first.
+
+**Citation:** state statutes listed in `docs/CITATIONS.md` under US state statutes; each cell
+above is an unverified summary until that section shows an access date.
+
 ---
 
 ## Audit
@@ -156,6 +206,9 @@ conditioning participation on excess collection), 312.10 (retention limits).
 | AUDIT-2-07 | Do Not Sell or Share link present and correctly worded | Footer component; routes | A link reading "Do Not Sell or Share My Personal Information" exists site-wide and needs no account | Cal. Civ. Code § 1798.135 | blocker |
 | AUDIT-2-08 | Global Privacy Control honoured | Request middleware; consent state | The `Sec-GPC` header is read and treated as an opt-out request | Cal. Civ. Code § 1798.135(b) | high |
 | AUDIT-2-09 | Verifiable parental consent where under-13 users are possible | Age gate; signup; consent records | An age gate exists and under-13 signup is blocked pending a verifiable consent method | 16 CFR § 312.5 | blocker |
+| AUDIT-2-10 | Universal opt-out signal honoured beyond California | Request middleware; consent state; ad and analytics init | The `Sec-GPC` header, or an equivalent signal, suppresses sale, sharing and targeted advertising for every user, not only California residents | State statutes, section 2.6 | high |
+| AUDIT-2-11 | Sensitive data collected only with separate consent where the state requires it | Forms and SDKs collecting location, health, biometric or child data; consent records | Each such collection point checks a stored, specific opt-in, separate from policy acceptance | State statutes, section 2.6 | blocker |
+| AUDIT-2-12 | State applicability thresholds recorded as a decision | Docs or ADRs; privacy policy scope text | A written decision states which state laws are applied and the consumer counts used | State statutes, section 2.6 | medium |
 
 **Reporting these:** `n/a` is a real verdict here. A B2B product with no consumer reviews, no
 subscription, and no under-13 users legitimately fails to trigger most of this module — say so

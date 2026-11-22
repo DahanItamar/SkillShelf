@@ -3,6 +3,7 @@ module: 3
 domain: "European, UK & APAC Jurisdictions"
 jurisdictions: ["EU", "GB", "AU"]
 last_verified: 2026-08-15
+neutral_rows: ["AUDIT-3-04", "AUDIT-3-07", "AUDIT-3-08"]
 instruments:
   - name: "General Data Protection Regulation"
     citation: "Regulation (EU) 2016/679, Arts. 6, 13–14, 15, 17, 25, 30, 32, 33"

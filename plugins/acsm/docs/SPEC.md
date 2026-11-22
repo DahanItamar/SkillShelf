@@ -419,6 +419,7 @@ The complete routing surface. R01–R10 are the source rules from the project's 
 | R10 | `targetMarkets` includes `UK_APAC` | 3 |
 | R11 | `appType != 'HeadlessAPI'` | 6 |
 | R12 | `infrastructure != 'LocalOnPrem'` | 1 + 8 |
+| R13 | `rank(dataSensitivity) >= 2` or a Stripe or billing signal in the repo | 5 |
 
 **R11 exists because accessibility was unreachable.** In the source rules, Module 6 (WCAG 2.2 AA / ADA Title III / Israeli Equal Rights Regulations) is selected only by R03, meaning a SaaS product or a mobile app inherited no accessibility obligation at all. ADA Title III and the Israeli regulations do not care whether a product sells things. R11 selects Module 6 for every app type that renders a user interface, and excludes `HeadlessAPI`, which has none.
 
@@ -467,7 +468,7 @@ All three land on the same `SKILL.md` with the same relative `references/` and `
       "name": "acsm",
       "source": "./",
       "description": "Adaptive Compliance & Security Matrix — routes a project to the compliance obligations that actually apply to it.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ]
 }

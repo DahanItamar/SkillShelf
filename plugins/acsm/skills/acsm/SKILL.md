@@ -5,7 +5,7 @@ description: Works out which compliance and security obligations apply to a proj
 
 # ACSM — Adaptive Compliance & Security Matrix
 
-Six legal regimes, eight modules, and only the ones that apply to *this* project.
+Eight modules, four market selectors, and only the rules that apply to *this* project.
 
 This file is the router. It holds no obligation of its own — every legal claim lives in a
 module under `references/`, with its citation. If you find yourself stating a rule here,
@@ -47,7 +47,9 @@ people who use it. It sets the flag *as well as*, never *instead of*, the rank.
 ### Constraints
 
 - `targetMarkets` must be non-empty. An empty list is a resolution failure, not "no obligations".
-- `Global` may not appear beside another market. It is shorthand for all four.
+- `Global` may not appear beside another market. It means **US, EU, Israel, UK/APAC** only,
+  never the world. Every audit and draft report opens with a header line: `Jurisdictions
+  covered: <expanded markets>. NOT covered: Canada, Brazil, India, Japan, China, SensitiveHealth.`
 
 ### Infer first
 
@@ -85,10 +87,8 @@ If a field cannot be inferred, **ask for that field** — using the option block
 **`references/config-questions.md`**, which spell out every permitted value. Present options,
 never free text: a user who does not already know the enum cannot answer well.
 
-Do not substitute a default and do not guess from a neighbouring field.
-
-Silence is not `Public`. No locale files is not `US`. An unanswered field is the one most
-likely to be wrong, and a default hides exactly the case where the user needed to think.
+Do not substitute a default or guess from a neighbouring field. Silence is not `Public`, and
+no locale files is not `US`.
 
 ### Reuse a saved answer — check this before inferring
 
@@ -98,33 +98,25 @@ confirmation entirely** — but only when both of these hold:
 - `lastConfirmed` is a date. Not `null`, not absent.
 - `configVersion` is `1`.
 
-A file failing either test is an inference nobody blessed, not an answer. Fall through to
-infer-and-confirm, then offer to save the result over it. `lastConfirmed: null` exists to mark
-exactly that state, and trusting it would bypass the confirmation gate in the one case it was
-built for.
+A file failing either test is an inference nobody blessed. Fall through to infer-and-confirm,
+then offer to save the result over it.
+
+**Trust expires.** Over 180 days since `lastConfirmed`, or repo signals disagree with the saved
+enums: re-confirm once (details in `references/config-questions.md`). Never route silently.
 
 If the file is malformed or carries a value outside the enums above, ask — never repair it
 silently. A quietly corrected config is a wrong answer nobody was shown.
 
+### SensitiveHealth is a coverage gap — say so
+
+No module covers HIPAA, GDPR Art. 9 special-category data, or state health and biometric laws.
+For `SensitiveHealth`, route as rank 3, then state before any audit or draft that these are
+**not covered** and need counsel. Draft no privacy policy for it until the user acknowledges that.
+
 ### Offer to save it
 
-After the user confirms, offer to write `acsm.config.yml`. **Write only on explicit consent.**
-This is the only file ACSM ever writes to a target repository; everything else it does there
-is read-only.
-
-```yaml
-# acsm.config.yml — safe to commit
-appType: ConnectedDesktop
-targetMarkets: [Israel]
-dataSensitivity: StandardPII
-aiIntegration: ThirdPartyAPI
-infrastructure: HybridCloud
-configVersion: 1
-lastConfirmed: 2026-08-15
-```
-
-Five enum values, no identifiers, no secrets. Committing it is the whole point — every
-teammate and every later session then skips the confirmation exchange.
+After the user confirms, offer to write `acsm.config.yml`, only on explicit consent. It is the only
+file ACSM ever writes to a target repository. Template: `references/config-questions.md`.
 
 ---
 
@@ -150,13 +142,16 @@ in the EU fires four of them, and the union is what loads.
 | R10 | markets include `UK_APAC` | 3 |
 | R11 | `appType != HeadlessAPI` | 6 |
 | R12 | `infrastructure != LocalOnPrem` | 1, 8 |
+| R13 | `rank >= 2` or Stripe/billing signal in repo | 5 |
 
-R04 loads Module 3 for the GDPR Art. 17 erasure handler regardless of market, because the
-same deletion machinery is what every regime's erasure right needs.
+**Market-neutral rules.** R04 and R06 select Module 3 for what the product *does*, not where
+it ships. When no `EU`, `UK_APAC` or `Global` market selected it (R07, R10), run it in
+**neutral mode**: evaluate only the rows in its `neutral_rows` frontmatter (erasure, AI
+disclosure, AI media marking), mark the rest `n/a` "market not served", and apply no other
+Module 3 obligation when writing code. Say so in the report.
 
-R11 exists because accessibility was otherwise reachable only through E-commerce. ADA Title
-III and the Israeli Equal Rights Regulations do not care whether a product sells anything —
-every app type with a user interface owes them. `HeadlessAPI` has no interface and is excluded.
+R11: accessibility duties attach to any user interface, not only shops. `HeadlessAPI` is excluded.
+R13: see `references/config-questions.md`, Rule notes.
 
 ### Modules
 

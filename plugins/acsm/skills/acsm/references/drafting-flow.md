@@ -113,3 +113,10 @@ generation.
   out of scope per the spec. Say so and stop.
 - **Never claims currency.** The templates carry a `last_verified` context through the modules
   they cite. If those are stale, say so before the document, not after.
+
+## 6. After counsel review
+
+The disclaimer stays in every generated draft. When qualified counsel has reviewed a document,
+the user deletes the blockquote and the two trailing "delete before publishing" sections
+themselves. ACSM never strips them, and does not offer a mode that does. Each template ends with
+a short **Counsel must check** list: hand it to the reviewer along with the draft.
