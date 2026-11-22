@@ -54,7 +54,8 @@ under `strict`, and keep them out of the `edgecase-ids:` line unless the user as
 
 ## Track state debt with a plain diff
 
-Every review ends with an `edgecase-ids:` line. To see new state debt, run the review on the base branch and on the feature branch, save each last line, and compare them with an ordinary diff, or with `sort` and `comm -13 base.txt feature.txt`. An ID that appears only on the feature branch is new debt. This uses only the output contract: no script, hook or dependency.
+Every review ends with an `edgecase-ids:` line. To see new state debt, run the review on the base branch and on the feature branch, save each last line, then put one ID per line (`tr " " "
+"`, dropping the `edgecase-ids:` label and any "none") and compare with an ordinary diff, or with `sort` and `comm -13 base.txt feature.txt`. An ID that appears only on the feature branch is new debt. This uses only the output contract: no script, hook or dependency.
 
 ## Probe recipes
 
