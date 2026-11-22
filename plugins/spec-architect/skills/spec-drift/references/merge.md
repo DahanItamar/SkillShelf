@@ -6,6 +6,8 @@ Folding a shipped change proposal into the spec without losing a reason.
 
 ## When a proposal is mergeable
 
+A `docs/changes/NNNN-mN-slug/` directory with `TASKS.md` and no `PROPOSAL.md` is a base milestone, not a proposal. When all its tasks are ticked and the code meets the criteria they cite, merge nothing: move it to `docs/changes/archive/` and add `M<N> shipped` to the spec's `Status:` line.
+
 All four must hold:
 
 1. **Every task in its `TASKS.md` is ticked.** A pending proposal describes intent, not obligation.

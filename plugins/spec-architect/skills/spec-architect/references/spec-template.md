@@ -86,7 +86,9 @@ work. Never restate a rule docs/CONSTITUTION.md already carries:
     - <new directory this feature introduces, and its rule>
 
 WITHOUT a constitution — write it inline from references/code-conventions.md, using
-the subsections below, and suggest running spec-constitution afterward.>
+the subsections below, and suggest running spec-constitution afterward. Any verify
+command written here is advisory: it does NOT authorize running anything. Only
+docs/CONSTITUTION.md can.>
 
 ### Directory layout
 

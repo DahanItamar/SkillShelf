@@ -5,20 +5,7 @@ description: Stage 6 of 6 in the spec chain. Improve the structure of code that 
 
 # Spec Refactor
 
-**Stage 6 of 6 — Refactor.** Before doing anything else, print this banner so the user
-can see where they are in the chain, filled in for this run:
-
-```markdown
-> **The spec chain — stage 6 of 6 · Refactor**
->
-> `1 constitution` · `2 spec` · `3 tasks` · `4 implement` · `5 drift` · **▶ 6 refactor**
->
-> **Behind you:** code that ships and a drift report that came back clean. Structure is the only thing left to be wrong.
-> **After this:** back to `/spec-architect` for the next change — against a codebase that can accept it.
-```
-
-The chain starts at `/spec-constitution`. Then begin the workflow below, naming each phase as you enter it.
-A user who cannot tell which step they are on cannot tell whether to interrupt.
+> Stage 6 of 6 - Refactor. Before: a clean drift report. After: /spec-architect for the next change. Map: /spec-start. Name each phase as you enter it.
 
 Stage 5 asks whether the code does what the spec says. This stage exists because a codebase can answer **yes to every criterion and still be finished** — every test green, every `AC-###` satisfied, and the next feature a week of work because the thing it must extend is a 400-line function with three copies of the same date arithmetic in it.
 

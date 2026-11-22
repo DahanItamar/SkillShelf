@@ -6,7 +6,7 @@ The claims in [before-and-after.md](../before-and-after.md) are executable. Zero
 node --test examples/proof/proof.test.mjs
 ```
 
-Requires Node 18+. It also runs on every push — see [`.github/workflows/test.yml`](../../.github/workflows/test.yml).
+Requires Node 18+ (CI runs 22). It also runs on every push — see [`ci.yml`](../../../../.github/workflows/ci.yml).
 
 ## What runs
 

@@ -1,6 +1,6 @@
 # Code Conventions
 
-The layer that turns an architecture into a codebase someone else can navigate. Feeds §4 of the spec.
+The layer that turns an architecture into a codebase someone else can navigate. Feeds §4 of the spec. When used as the inline fallback (no constitution), everything here is advisory and does not authorize running a command; only `docs/CONSTITUTION.md` can name the verify command.
 
 Pick the rules that apply, state them as decisions, and skip the rest. A convention nobody will follow is worse than none — it teaches readers that the document is decoration.
 

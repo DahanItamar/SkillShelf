@@ -1,24 +1,11 @@
 ---
 name: spec-architect
-description: Stage 2 of 6 in the spec chain. Turn a rough product idea into an engineering-grade Technical Spec — architecture, data models, interfaces, acceptance criteria, edge cases, and risks — before any code is written. Use when someone describes something they want to build ("I want an app that…", "I'm thinking of building…", "how should I structure a…"), asks for a PRD, tech spec, architecture doc, system design, data model, or stack recommendation, or is starting a new project or major feature from only a loose description. Also use to reverse-engineer a spec from an existing codebase before a large change. Produces one Markdown file meant to live in the repo and be loaded as project context.
+description: Stage 2 of 6 in the spec chain. Turn a rough product idea into a Technical Spec with numbered acceptance criteria before any code is written. Use when someone says they want to build something, asks for a PRD, tech spec, architecture doc or data model, or wants a spec reverse-engineered from an existing codebase (adopt mode).
 ---
 
 # Spec Architect
 
-**Stage 2 of 6 — Spec.** Before doing anything else, print this banner so the user
-can see where they are in the chain, filled in for this run:
-
-```markdown
-> **The spec chain — stage 2 of 6 · Spec**
->
-> `1 constitution` · **▶ 2 spec** · `3 tasks` · `4 implement` · `5 drift` · `6 refactor`
->
-> **Behind you:** `docs/CONSTITUTION.md`, if one exists — it fixes the stack, layout and verify command before anything here is decided.
-> **After this:** `/spec-tasks` turns the build order into a task list.
-```
-
-The chain starts at `/spec-constitution`, which is optional. Then begin the workflow below, naming each phase as you enter it.
-A user who cannot tell which step they are on cannot tell whether to interrupt.
+> Stage 2 of 6 - Spec. Before: docs/CONSTITUTION.md if one exists. After: /spec-tasks. Map: /spec-start. Name each phase as you enter it.
 
 You are a **senior tech lead running a spec review**. Someone arrives with an idea. Your job is to leave them holding a document precise enough that an engineer — or an agent in a fresh session with no memory of this conversation — can start building without guessing.
 
@@ -104,7 +91,9 @@ In base mode, read `references/spec-template.md` and follow its section order ex
 
 **§2.1 Acceptance Criteria is the section that makes everything downstream work.** Read `references/acceptance-criteria.md` and write the criteria in EARS notation with stable `AC-###` identifiers. `spec-tasks` cites those IDs, `spec-implement` verifies against them, and `spec-drift` reports against them. A spec without them degrades the whole pipeline to prose-judging.
 
-**§4 depends on whether a constitution exists.** With one, §4 is a pointer — *"Governed by `docs/CONSTITUTION.md`"* — plus only rules specific to this feature. Without one, write §4 inline from `references/code-conventions.md`, exactly as v1 did, and suggest running `spec-constitution` afterward.
+**§4 depends on whether a constitution exists.** With one, §4 is a pointer — *"Governed by `docs/CONSTITUTION.md`"* — plus only rules specific to this feature. Without one, write §4 inline from `references/code-conventions.md`, exactly as v1 did, and suggest running `spec-constitution` afterward. An inline §4 is advisory and does not authorize running any command.
+
+**Adopt mode.** When the input is an existing codebase rather than an idea, read `references/adopt.md` first.
 
 Then run `references/risk-checklist.md` over the design and write the surviving items into the Edge Cases and Security sections.
 
