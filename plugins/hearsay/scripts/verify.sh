@@ -48,7 +48,7 @@ find . -path ./.git -prune -o -type f \
 for f in .claude-plugin/plugin.json .gitattributes CHANGELOG.md LICENSE README.md SKILL.md \
 	references/claim-rubric.md references/verdicts.md references/ledger-template.md \
 	references/rewrite-rules.md references/release-mode.md references/public-surface.md \
-	examples/README.md examples/results/.gitkeep scripts/verify.sh scripts/make-fixture.sh \
+	examples/README.md examples/results/.gitkeep scripts/verify.sh scripts/make-fixture.sh scripts/score.test.js examples/results/TEMPLATE.md \
 	examples/pagegrab/package.json examples/pagegrab/README.md examples/pagegrab/src/cli.js \
 	examples/pagegrab/src/fetch.js examples/pagegrab/src/index.js examples/changes/pagegrab.diff \
 	examples/inputs/notes-1.4.0.md examples/inputs/readme-features.md examples/inputs/pr-text.md \

@@ -47,7 +47,8 @@ flowchart TD
 ```
 
 Wrong accusations cost more than missed ones, so when torn between contradicted and unverified it
-chooses unverified. **Verified means the text matches what the code shows. It does not mean the code is
+chooses unverified. It also re-opens and quotes the cited line before printing contradicted, and
+downgrades to unverified if it cannot. **Verified means the text matches what the code shows. It does not mean the code is
 correct.**
 
 ## What a run looks like
@@ -128,9 +129,10 @@ source (read, never applied); `--path <dir>` scopes release mode to one package 
 layouts only); `--rows 41-80` prints the next block after the 40-row cap; `--json` adds one JSON block
 with the same rows, advisory only because runs are not deterministic.
 
-To check a PR: save the PR body to a file, then run `/hearsay <path>`. Cost: the instructions are about
-32 KB of Markdown, roughly 8k tokens (an estimate from byte counts, not a measurement), before any
-repository reads. Text of about 10 lines or fewer skips the six reference files and loads about 8 KB.
+To check a PR: save the PR body to a file, then run `/hearsay <path>`. Cost, estimated from byte counts at about 4 bytes per token (not measured), before any
+repository reads: fast path about 9 KB; a normal run (SKILL.md plus claim-rubric, verdicts and
+ledger-template) about 21 KB, about 24 KB with rewrite-rules; release mode loads all six references,
+about 33 KB, roughly 8k tokens. Text of 10 non-blank lines or fewer and at most 1,200 characters skips the six reference files and loads about 9 KB.
 
 **Release mode** compares the tag with HEAD, classifies each change (Breaking, Feature, Fix,
 Dependency, Docs, Internal) using a per-ecosystem public-surface checklist, and proposes a SemVer bump
@@ -173,9 +175,18 @@ Limits, plainly:
 - Verified is not correct. A ledger of all verified rows says the prose matches the code.
 - It is not deterministic, so it cannot gate CI. The same input can phrase things differently between
   runs; the verdicts should not change, and `examples/README.md` has a two-run check for that.
+- Only JavaScript is seeded in `examples/`; other ecosystems rely on `references/public-surface.md` and are untested.
 - It caps a run at 40 ledger rows (the rest are counted by kind; `--rows 41-80` continues), and checks
   one changelog section: the one you name, else the one matching the manifest version, else `Unreleased`,
   else the newest.
+
+## Hardening
+
+If you want a mechanical guard instead of an instruction, add deny rules to your own Claude Code
+settings (the plugin ships none). For example, in `.claude/settings.json`:
+`{"permissions": {"deny": ["Bash(git commit *)", "Bash(git push *)", "Bash(git reset *)", "Bash(git checkout *)", "Bash(git stash *)", "Bash(git config *)", "Bash(git rebase *)"]}}`.
+The host then blocks those commands whatever the text under check says. Check the rule syntax against
+the current Claude Code permissions documentation, since it can change.
 
 ## How it compares
 
@@ -211,7 +222,7 @@ are independent.
 
 ## How it is built
 
-[`SKILL.md`](SKILL.md) is about 125 lines and 8 KB: the trigger, the invocation grammar, the seven-step
+[`SKILL.md`](SKILL.md) is about 130 lines and 9 KB: the trigger, the invocation grammar, the seven-step
 procedure, an inline fast path, the output contract and the never-list. Six reference files load on demand:
 [claim-rubric](references/claim-rubric.md) and [verdicts](references/verdicts.md) and
 [ledger-template](references/ledger-template.md) on every run longer than the fast path,

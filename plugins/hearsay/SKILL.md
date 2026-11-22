@@ -34,7 +34,9 @@ run. `--json` add the advisory JSON block.
    header: `--diff` file, `--base`, `--release` tag, merge-base with the default branch (`git
    symbolic-ref refs/remotes/origin/HEAD`, then `main`, then `master`). If that diff is empty (HEAD is
    on the default branch), use `git describe --tags --abbrev=0` as the base and print "base inferred
-   from latest tag <t>"; else none. With no diff and no git, change claims cannot be checked: say so
+   from latest tag <t>"; else none. For pasted or file PR text on an inferred base, also print "PR
+   range unknown, diff is tag..HEAD, pass --base or --diff to check change claims" and mark change
+   claims resting only on that diff unverified unless the cited hunk plainly matches. With no diff and no git, change claims cannot be checked: say so
    once, mark them unverified, and still check state claims against the files. For a changelog, check
    one section: the one named; else the one equal to the manifest version; else `Unreleased` if
    newest; else the newest. Print it in the header.
@@ -46,7 +48,8 @@ run. `--json` add the advisory JSON block.
 4. **Verify.** Read `references/verdicts.md`. Open the actual lines; do not infer from names. Search
    widely before concluding something is absent: re-exports, aliases, generated code, registration,
    config, and for a rename the old name across the repo. Apply the decision order and cite
-   `path:line`. In release mode also read `references/release-mode.md` and
+   `path:line`. Before printing contradicted, re-open the cited line, quote it in the Note, and
+   confirm it states the counter-evidence; if you cannot quote it, the verdict is unverified. In release mode also read `references/release-mode.md` and
    `references/public-surface.md`.
 5. **Print the ledger** in the contract of `references/ledger-template.md`.
 6. **Rewrite.** Read `references/rewrite-rules.md`. Only claims that are not verified get a rewrite.
@@ -58,11 +61,13 @@ run. `--json` add the advisory JSON block.
 
 ## Fast path
 
-Text of about 10 lines or fewer, no `--release`: skip the six references and use this. Load
+Text of 10 non-blank lines or fewer and at most 1,200 characters, no `--release`: skip the six references and use this. Load
 `verdicts.md` or `rewrite-rules.md` only for an ambiguous claim (split, closed set, kind K).
 
 - Verdicts. verified: evidence at `path:line` matches every atom. unverified: a command or more
-  reading in the repo could settle it, none found; the Note names what was searched. contradicted:
+  reading in the repo could settle it, none found (e.g. "all tests pass", "works on Windows", a
+  benchmark script with no results: put the command in the Note, Hearsay does not run it); the Note
+  names what was searched. contradicted:
   counter-evidence at `path:line`; absence alone only in a closed set read in full (whole manifest,
   full file list). unmeasurable: no command could settle it (judgment, or real-world measurement); add
   `Needs:` what, baseline, command.

@@ -42,6 +42,8 @@ Apply these rewrites to <file>?
   left unchecked: kinds K x a, S x b, I x c`, in the same risk order that chose the kept rows
   (Compatibility, Scope, Interface, Behavior, then the rest), so a reviewer sees whether a dropped
   row was compatibility-critical. `--rows 41-80` prints the next block the same way.
+- In release mode, Not checked also carries "N more not listed" for Not mentioned items past the 10
+  shown (Breaking first, then Feature, then sensitive-area fixes).
 - Note is one line. Put the search terms for any negative claim here.
 - For an unmeasurable row, Evidence is `(none)`.
 - The Kind column uses the word from the rubric: Change, Interface, Behavior, Compatibility,

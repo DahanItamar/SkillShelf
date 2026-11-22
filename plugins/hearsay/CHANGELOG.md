@@ -14,6 +14,10 @@ Release checklist: version in `plugin.json` == the hearsay entry (version and de
 - Changelog section choice (named, manifest version, Unreleased, newest) is stated in the header; release mode uses `git diff <tag>` when the tree is dirty.
 - Release mode reverse check also lists sensitive-area fixes (needs-maintainer) and dependency floor changes. Added `--path <dir>` for monorepos (common layouts only), `--rows 41-80`, and `--json` (advisory).
 - Cap shown honestly: unchecked claims are counted by kind in risk order.
-- Fast path: text of about 10 lines or fewer skips the six references; description shortened.
+- Fast path: text of 10 non-blank lines or fewer and at most 1,200 characters skips the six references; description shortened.
 - Fixed the `src/fetch.js:5-12` citation and the H-04 evidence in the README; README now has the hearsay-pr note on the first screen, a cost note, a PR recipe and four more comparisons.
+- Optional maintainer scorer `scripts/score.test.js` (node --test, built-ins only) compares a saved ledger with a golden by row id and verdict, and counts false accusations (rows marked contradicted that the golden does not). `examples/results/TEMPLATE.md` is the results format. Run protocol: build the fixture with `make-fixture.sh`, run cases 1 to 8 twice each on two or more models, score, commit `results/<model>-<date>.md`.
+- Contradicted gate: the cited line is re-opened and quoted before contradicted is printed, else unverified. Fast path names "tests pass"; its threshold is now 10 non-blank lines and 1,200 characters.
+- Inline or file PR text with only a tag-inferred base prints "PR range unknown" and downgrades change claims that rest only on that diff. Release mode lists at most 10 Not mentioned items.
+- README: per-mode cost estimates, a JavaScript-only limit and a Hardening paragraph (user-side deny rules, nothing shipped).
 - Not done: the recorded run of the eight fixture cases was not performed in this pass, so `examples/results/` is still empty and the README says "Nothing yet". The Python and Go or Rust fixtures are deferred until that run exists. No accuracy figure is claimed.

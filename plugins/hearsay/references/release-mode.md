@@ -84,6 +84,8 @@ claims a change the diff does not contain.
   changes are never listed.
 - Do not list a change twice. If a contradicted row's rewrite already states the change, it is covered
   and is not repeated under Not mentioned.
+- List at most 10 items under Not mentioned, Breaking first, then Feature, then sensitive-area fixes,
+  grouped by file when several share one; count the rest as "N more not listed" in Not checked.
 
 ## 7. Output, in this order
 

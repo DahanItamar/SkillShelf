@@ -40,6 +40,9 @@ Apply in this order and stop at the first that fits.
 3. Evidence found for every atom of the claim? Yes: **verified**.
 4. Otherwise: **unverified**.
 
+Before printing contradicted, re-open the cited line, quote it in the Note, and confirm it states the
+counter-evidence. If you cannot quote it, the verdict is unverified.
+
 If one atom of a claim holds and another fails, the claim should have been split in step 2. Split it
 now: add a new row with the next free number and note "split from H-nn".
 
