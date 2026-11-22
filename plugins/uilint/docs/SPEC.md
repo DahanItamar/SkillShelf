@@ -1,6 +1,6 @@
 # uilint — Technical Spec
 
-> Status: Draft · 2026-08-02 · Spec version 1.0
+> Status: Current · Spec version 1.4.0 (originally drafted 2026-08-02 as 1.0). Design rationale; the shipped rules are in `references/`.
 
 ## 1. Problem & Users
 
@@ -29,7 +29,7 @@ present, and Claude names what is still missing rather than reporting "done".
 - Choose **error placement** (inline · toast · modal) from the severity of the failure
 - Reduce **form friction** — validation timing, required-field clarity, prefill, forgiving input
 - Enforce **graceful degradation** — one failing section must not blank the page
-- Apply four **UX laws** (Jacob's, Hick's, Progressive Disclosure, Tesler's) to layout and flow decisions
+- Apply a small set of **UX law rules** (Jacob's, Hick's, Progressive Disclosure, Tesler's, primary paths) to layout and flow decisions
 - Act as a **blocking gate** during build: a component with a missing required state is not finished
 
 ### Explicitly out of scope
@@ -118,10 +118,10 @@ rule sets with different revision rates.
 Revisit if: `craft` is retired.
 
 **Rules are independently written directives, never source transcript text.**
-Because: the rule set is derived from a creator's published series. Ideas and facts are free to
+Because: the rule set is informed by publicly available UX guidance. Ideas and facts are free to
 learn from; their expression is not. Rules are also *better* as compressed imperatives than as
 transcribed speech.
-Instead of: quoting the source — legally careless and worse as a rule file.
+Instead of: quoting a source — legally careless and worse as a rule file.
 Revisit if: never.
 
 ## 4. Project Layout & Conventions
@@ -141,7 +141,7 @@ uilint/
 │   └── SPEC.md           # this file. Design rationale only; never rules.
 ├── README.md             # for humans on GitHub: what it is, install, how to contribute rules
 ├── LICENSE               # MIT
-└── .gitignore            # source material stays local
+└── .gitignore            # local-only files stay out of Git
 ```
 
 Nothing else at the root. No `src/`, no build step, no dependencies — a skill that needs a toolchain
@@ -157,7 +157,7 @@ another reference file — if two domains need the same rule, it belongs in the 
 
 | Kind | Convention | Example |
 | --- | --- | --- |
-| Rule ID | `R-<domain>-<nn>` | `R-STATE-03` |
+| Rule ID | `R-<domain>-<nn>` | `R-STATE-12` |
 | Domain codes | `STATE` · `FEEDBACK` · `FORM` · `LAW` | — |
 | Reference file | lowercase domain noun, plural | `states.md` |
 
@@ -176,7 +176,7 @@ Enforced by review, because every line is context cost on real requests.
 | Total rules | 30 | 40 |
 
 Hitting the hard limit means merging or cutting rules, never raising the limit. This was tested in
-v1.2.0 and held — see §12. Retired rule IDs (`R-STATE-03`, `R-STATE-05`) stay retired rather than
+v1.2.0 and held — see §12. Retired rule IDs (`R-STATE-03`, `R-STATE-05`, `R-LAW-09`, `R-LAW-10`) stay retired rather than
 being reissued, so an older review citing one still resolves.
 
 ### Tooling
@@ -193,11 +193,11 @@ A rule is the unit of everything here. Fixed shape, so rules stay comparable and
 one precisely.
 
 ```markdown
-### R-STATE-03 · Error state per data section
-**DO:** Give every section that fetches data its own error state and its own retry control.
-*Why:* One failed request should cost the user that section, not the page.
-*Applies:* any component performing an async fetch
-*Check:* force the request to reject — is the rest of the page still usable?
+### R-STATE-12 · One failure must not blank the page
+**DON'T:** Replace an entire screen with an error because a single section failed.
+*Why:* The rest of the data arrived and is still useful.
+*Applies:* screens with more than one data region
+*Check:* force one request to reject. Is the remaining content still readable?
 *Severity:* required
 ```
 
@@ -319,7 +319,7 @@ single rendered frame, and audit only what is visible.
 | Framework unknown or unusual | Fixes suggested in the wrong idiom | Fixes described behaviourally when the framework is unclear; concrete code only when it is known |
 | Two rules disagree | Reviewer cites both, user loses confidence | `<!-- CONFLICT -->` marker; a human resolves before merge |
 | Rule set outgrows context budget | Every unrelated prompt pays for it | Hard limits, §4. At the limit rules merge or die |
-| Source series continues past the captured parts | Rule set silently goes stale | Open question, §12 — a documented refresh path, not an assumption that it is complete |
+| UX guidance evolves | Rule set silently goes stale | New material merges into existing rules first; only what cannot merge takes a new ID (§12) |
 
 ## 9. Security & Permissions
 
@@ -331,9 +331,8 @@ must never surface backend or database detail to end users. A raw exception stri
 unreadable and a disclosure of internal structure. This is `R-FEEDBACK-01`, severity `required`, and
 it is the only rule that is a security control as well as a UX one.
 
-**Data handling:** the repo contains no source material. Transcripts, audio, and any downloaded media
-stay local and gitignored. Only independently written rules are committed. Creators whose published
-work informed the rule set are credited in `README.md`.
+**Data handling:** the repo contains only independently written rules. Sources that informed them
+(public UX research and guidelines) are credited in `README.md`.
 
 ## 10. Build Order
 
@@ -357,40 +356,28 @@ A vague error message gets flagged and rewritten.
 **M5 — Public**
 - [ ] README: install, usage, contribution bar, credits
 - [ ] Push `DahanItamar/uilint`
-- [ ] Confirm the junction at `~/.claude/skills/uilint` still resolves after publish
 
 ## 11. Assumptions
 
-1. **The rule set is derived from one creator's series and credited as such.** If material from other
+1. **The rule set is informed by public UX guidance and credited as such.** If material from other
    sources is added later, `README.md` credits grow and no rule text changes.
-2. **Rules are synthesised, not transcribed** — per your "not hardcoded" instruction. Each rule is an
-   independently written imperative; none reproduces source wording.
-3. **"Pick's Law" in the source is Hick's Law** and is written under the correct name. If the source
-   genuinely meant something else, `references/laws.md` changes; nothing else does.
-4. **Five states, not four.** The source names four (loading, empty, error, success); partial /
-   degraded is treated as a first-class fifth because two full parts of the series are devoted to it.
-   If this proves noisy, partial folds back into `states.md` as a sub-rule.
-5. **The junction at `~/.claude/skills/uilint` is the install mechanism for you**, so repo edits are
-   live without copying. Other users copy the folder.
-6. **No CI at v1.** If the repo attracts contributors, a frontmatter-parse and link-check action is
-   the first addition.
-7. **Loader-selection rules are written from Parts 2 and 4 without Part 3.** Those two parts already
-   give the shape — skeletons for whole-layout waits, spinners for buttons and small regions, and
-   explicit timing thresholds — so the rules stand on that. Where Part 3 would have supplied a
-   figure, the rule is phrased to rest on its reasoning rather than on a number nobody verified. If
-   Part 3 later contradicts them, only `references/states.md` changes.
+2. **Rules are synthesised, not transcribed.** Each rule is an independently written imperative; none
+   reproduces source wording.
+3. **"Pick's Law" is Hick's Law** and is written under the correct name.
+4. **Five states, not four.** Loading, empty, error and success are the common four; partial /
+   degraded is treated as a first-class fifth. If this proves noisy, partial folds back into
+   `states.md` as a sub-rule.
+5. **Install is by plugin or by copying the folder.** See the README.
+6. **No CI.** If the repo attracts contributors, a frontmatter-parse and link-check action is the
+   first addition.
+7. **Loader-selection rules rest on reasoning, not on a number nobody verified.** Where a figure is
+   given it is phrased as approximate.
 
 ## 12. Open Questions
 
-- **Part 3 of the source series was never captured.** Decided rather than left open — see Assumption
-  7; M1 is not blocked. Capturing it later would refine the loader-selection rules, not invalidate
-  them. — blocks: nothing · needed by: whenever the transcript is available
-- ~~**The series is still running** (Part 16 points at Part 17). No refresh path is defined for folding
-  later parts into the rule set.~~ **Answered in v1.2.0.** Parts 17 to 19 were transcribed and folded
-  in, and the refresh path is now the precedent they set: new material merges into existing rules
-  first, and only what cannot be merged takes a new ID. Those three parts wanted four new rules; the
-  set grew by one, because `R-STATE-03` merged into `R-STATE-06`, `R-STATE-05` into `R-STATE-04`, and
-  the "take the user to the first failure" material into `R-FEEDBACK-04`. The §4 hard limit of 40 was
-  not raised. Retired IDs are never reused.
-- **Does the gate hold for prototypes?** A user who says "quick mockup" arguably wants the gate off by
-  default rather than per-component. — blocks: nothing · needed by: post-launch, from real usage
+- **Refresh path.** Answered: new material merges into existing rules first, and only what cannot be
+  merged takes a new ID. The §4 hard limit of 40 was not raised. In 1.4.0 two rules were added
+  (`R-STATE-16`, `R-FEEDBACK-10`) and `R-LAW-09` / `R-LAW-10` were retired to hold the cap.
+  Retired IDs are never reused.
+- **Does the gate hold for prototypes?** Answered in 1.4.0: an opt-out writes the happy path only and is
+  honoured once per component. Teams can also set paths to ignore in a `uilint:` block in `CLAUDE.md`.

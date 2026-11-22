@@ -1,0 +1,5 @@
+<div id="comments" hx-get="/comments" hx-trigger="load"></div>
+<form hx-post="/comments" hx-target="#comments" hx-swap="beforeend">
+  <textarea name="body"></textarea>
+  <button>Post</button>
+</form>

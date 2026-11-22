@@ -15,10 +15,10 @@ nothing, when it fails, when it succeeds, and when only part of it is ready.
 users actually hit.
 *Applies:* any component performing async work
 *Check:* name the file and line for each of the five. A state you cannot point at does not exist.
-*Severity:* required
+*Severity:* recommended (demoted in 1.4.0; this is the checklist in `SKILL.md`, and the rules below block on the individual states)
 
 ### R-STATE-02 · Never show an unexplained blank
-**DO:** Render an indicator as soon as a wait begins.
+**DO:** Render an indicator as soon as a wait begins — unless the wait is expected to stay under ~1 second, where R-STATE-06 says render nothing, and keep any prior content on screen.
 *Why:* A blank screen is indistinguishable from a broken one, and people give up on it within a few
 seconds.
 *Applies:* any wait with no existing content on screen
@@ -52,7 +52,7 @@ occupy the same footprint the real content will?
 *Why:* Making someone wait and then telling them it failed spends their patience to deliver bad
 news, which reads as contempt for their time.
 *Applies:* validation that can fail early, requests that reject fast
-*Check:* force a failure. Does the error appear when it is known, or when the timer ends?
+*Check:* in code, find the loader's stop condition. Does a rejected request or failed local validation end it immediately, or only a timeout or a fixed delay? Force a failure to confirm.
 *Severity:* required
 
 ### R-STATE-08 · An empty state must say what it is for
@@ -115,13 +115,32 @@ the beginning and gives each completed step a reason to continue.
 *Check:* create a fresh account. Can you tell how many steps stand between you and a working setup?
 *Severity:* recommended
 
-### R-STATE-15 · A control has six states, not one
-**DO:** Decide what a button looks like when idle, hovered, focused, held down, working, and
-unavailable — then build the ones that apply to the platform you ship on.
+### R-STATE-15 · A control that works must say it is working
+**DO:** When a control triggers async work, give it a working state — visibly busy and not pressable
+again until the work settles. Make the request idempotent where a repeat would do harm.
 *Why:* A control that looks identical before, during, and after a press tells the user nothing, so
 they press it again. The duplicate submit that follows is not user error; it is the missing state.
-*Applies:* buttons, icon buttons, and any control that triggers an action
-*Check:* tab to it — visible focus ring? Hold it down — anything change? Trigger its slow path — does
-the control itself say it is working? Then tap it on a phone and scroll away: a hover style that
-latches after the finger lifts reads as a bug, because touch has no cursor to leave.
+*Applies:* buttons and controls that trigger async work. Hover, held and focus styling are
+`recommended`, not blocking: a focus ring on every control, and no latching hover after a touch.
+*Check:* trigger its slow path. Does the control itself say it is working, and does a second press do
+nothing? Then tab to it (focus ring?) and tap it on a phone (does hover latch?).
+*Severity:* required for the working state; recommended for hover, held and focus
+
+### R-STATE-16 · Bound every wait
+**DO:** Give every request that can hang a timeout or abort, and when it fires, an error with a way to
+retry or leave.
+*Why:* A request that never resolves leaves the loader on forever. "It just spins forever" is the
+most common way a missing failure path is reported, and the user has no move except closing the tab.
+*Applies:* any fetch, upload or poll on a network the code does not control
+*Check:* make the request never resolve. After the timeout does the user get an error and a next step?
 *Severity:* required
+
+---
+
+## Probe (optional, on request)
+
+For any finding the user disputes, or on an explicit `/uilint probe`, print that rule's `Check:` line
+as a recipe the user runs, not something you run. Give one handler per failure: an MSW handler or a
+Playwright `route.fulfill` returning a 500, one that never resolves (a `new Promise(() => {})` body or
+`route.abort` after the timeout), and one returning `[]`. Name the screen state the user should then
+see. Never run a script or start a server for a probe. Write nothing to the repo unless asked, and if asked to write the file, show it first; the `Check:` lines already hold the content.

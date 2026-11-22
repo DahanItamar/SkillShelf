@@ -63,7 +63,7 @@ dismissible trains people to dismiss; spending it without an exit creates a dead
 **DO:** Make the result of a completed action visible.
 *Why:* Without confirmation the user is left guessing whether it took effect, and the natural
 response to that doubt is to do it again — which is how you get duplicate submissions.
-*Applies:* submits, saves, payments, destructive actions, state changes
+*Applies:* submits, saves, payments, destructive actions, state changes. Not when R-FEEDBACK-08 applies (the change is visible on its own)
 *Check:* complete the action and cover the console. Is it obvious that it worked?
 *Severity:* required
 
@@ -82,3 +82,13 @@ onboarding or shipping a first project.
 *Applies:* success animations, full-screen confirmations, celebratory copy
 *Check:* would this feel excessive on the twentieth repetition? Then it is too much for the first.
 *Severity:* recommended
+
+### R-FEEDBACK-10 · Announce a state change the user did not move focus to
+**DO:** When a loading, error or success state appears without the user's focus moving to it, expose it
+to assistive tech: `role="status"` or `aria-live="polite"` for progress and success, `role="alert"` for errors.
+*Why:* A sighted user sees the toast or banner appear. A screen-reader user hears nothing, so the
+failure is as silent for them as an empty catch block is for everyone. This covers only state changes;
+the rest of ARIA belongs to the `accessibility` skill.
+*Applies:* inline errors, toasts, banners, in-place loading and success messages
+*Check:* trigger the change with a screen reader on, or inspect the node. Is it in a live region or role?
+*Severity:* required
