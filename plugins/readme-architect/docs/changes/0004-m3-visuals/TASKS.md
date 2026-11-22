@@ -1,3 +1,5 @@
+> Build history, not user instructions. Kept as provenance for how this plugin was made.
+
 # M3 Visuals — Tasks
 
 > Source: docs/SPEC.md §10 M3 · Constitution: docs/CONSTITUTION.md

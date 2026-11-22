@@ -1,3 +1,5 @@
+> Build history, not user instructions. Kept as provenance for how this plugin was made.
+
 # README Architect v2 — Technical Spec
 
 > Status: Draft · 2026-08-15 · Spec version 1.0

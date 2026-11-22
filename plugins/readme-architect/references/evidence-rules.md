@@ -24,7 +24,7 @@ If no, it is either evidence waiting to be gathered, or a line to cut.
 
 ---
 
-## The four kinds of evidence
+## The five kinds of evidence
 
 ### 1. Real program output
 
@@ -136,7 +136,7 @@ a directory nobody listed.
 | Test count | The suite was run and reported it |
 | Dependency count | The manifest's `dependencies` was read and counted |
 | Line or file count | The files were listed and counted |
-| A timing | A clock was started and stopped |
+| A timing | N runs with a range, or stated as `one run on <machine>` |
 | A cost | The provider's own usage record, not a rate card multiplied by a guess |
 
 One invented number discredits every other number on the page, because a reader who catches it has

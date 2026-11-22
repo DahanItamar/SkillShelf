@@ -1,3 +1,5 @@
+> Build history, not user instructions. Kept as provenance for how this plugin was made.
+
 # 0007 — Announce the flow
 
 > Status: proposed · 2026-08-15 · Against spec version 1.0

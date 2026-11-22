@@ -40,8 +40,8 @@ with the reader's theme:
 
 ```html
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/winnow-dark.png">
-  <img src="docs/brand/winnow-light.png" alt="Winnow" width="420">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/winnow-dark.svg">
+  <img src="docs/brand/winnow-light.svg" alt="Winnow" width="420">
 </picture>
 ```
 

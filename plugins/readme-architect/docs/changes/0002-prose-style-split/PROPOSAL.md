@@ -1,3 +1,5 @@
+> Build history, not user instructions. Kept as provenance for how this plugin was made.
+
 # 0002 — Split prose style out of house style
 
 > Status: proposed · 2026-08-15 · Against spec version 1.0

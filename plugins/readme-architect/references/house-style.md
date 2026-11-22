@@ -1,6 +1,6 @@
 # House Style
 
-The skeleton, the voice, and the formatting. Derived from READMEs that hold up under a stranger's
+The section rules and the formatting. Derived from READMEs that hold up under a stranger's
 first thirty seconds — the shape across them is remarkably tight, and the parts that vary are the
 parts carrying evidence.
 
@@ -12,34 +12,7 @@ are each specified in their own file and are not restated here.
 
 ## The skeleton
 
-```markdown
-<div align="center">
-  <!-- the identity block: wordmark · pitch · stack line · badges · nav row · hero -->
-  <!-- six elements, in that order, specified separately -->
-</div>
-
----
-
-## <The mechanism>            ← mandatory. Named for the thing, never "Overview"
-
-## <Capability>               ← 0–3, each admitted by the test below
-
-## Run it                     ← mandatory
-
-## <Capability>               ← the ones a reader only wants after seeing it run
-
-## Under the hood — briefly   ← mandatory, always last
-
-> A blockquote pointing at the docs that carry the depth this file deliberately does not.
-
----
-
-<div align="center">
-
-Built by <a href="https://github.com/USERNAME">Author Name</a> · <a href="LICENSE">MIT</a> · © YEAR
-
-</div>
-```
+The skeleton itself lives in `readme-template.md`; this file does not repeat it.
 
 **Four fixed points, and free slots between them.** The identity block opens, the mechanism section
 comes first, `Under the hood — briefly` comes last, and the footer closes. Everything else is a
@@ -75,47 +48,22 @@ What goes in it:
 
 ## The admission test
 
-A capability section is not admitted because it describes something the project does. It is
-admitted because it **carries** something. One question, asked of every proposed `##` section
-between the mechanism and `Under the hood`:
+The test lives in SKILL.md ("The admission tests"): a capability section is admitted only if it
+carries a diagram, a table, real output, a measured number or an image. One that carries none is
+demoted to one bullet in `Under the hood - briefly`, not padded and not deleted.
 
-> Does this section contain at least one of the five?
-
-| Admissible | What it proves |
-| --- | --- |
-| A **diagram** | The mechanism has a shape, and here it is |
-| A **table** | The thing is an enumeration, and here are all of its members |
-| **Real program output** | It runs, and this is what it said |
-| **A measured number** | Someone counted, and here is the count |
-| **An image** | It exists on a screen and this is what the screen looks like |
-
-Nothing else counts. Not a well-written paragraph, not a list of sub-features, not a claim that the
-approach is unusual. Those are the raw material of a section, not a section.
-
-**A section that carries none of the five is demoted to a bullet** in `Under the hood — briefly`.
-It is not padded until it looks like a section, and it is not deleted — the information is usually
-worth one line. It is worth one line.
-
-````markdown
-<!-- Fails the test: three sentences, no artifact. -->
+```markdown
+<!-- Fails: three sentences, no artifact. -->
 ## Caching
+The application caches responses to avoid redundant work.
 
-The application caches responses to avoid redundant work. The cache is invalidated when the
-underlying data changes, keeping memory use predictable even under sustained load.
-
-<!-- Admitted, because the number is real and was observed. -->
+<!-- Admitted: the number is real and was observed. -->
 ## Caching
+On the 48-document corpus the cache cut model calls from 97 to 8.
 
-Responses are cached until the row they read changes. On the 48-document corpus this cut model
-calls from 97 to 8 — the other 89 were re-reads of documents already in the ledger.
-
-<!-- Or, if there is no such number: demoted, and honest. -->
-- **Caching** — responses are held until the row they read changes, so a re-read costs nothing.
-````
-
-The test exists because "include it if it earns its place" is exactly the judgement that resolves
-toward *yes* on every section, and a README where every section was admitted is the padded README
-this style exists to prevent.
+<!-- Or demoted, and honest. -->
+- **Caching** - responses are held until the row they read changes.
+```
 
 ---
 
@@ -214,17 +162,10 @@ Two callouts is normal. Four means at least two are emphasis wearing a warning's
 
 ## The footer
 
-Identical every time. It is the one piece of pure convention in the document.
+Three facts, centred, separated by middots: **who built it**, **the licence** linked to its file,
+and **the year**. Use the licence and owner detected in Phase 0; if either is unknown, omit the
+footer rather than invent one. Nothing else. A footer that thanks contributors on a solo project, or
+links a roadmap that does not exist, undoes the credibility the rest of the page earned.
 
-```markdown
-<div align="center">
-
-Built by <a href="https://github.com/USERNAME">Author Name</a> · <a href="LICENSE">MIT</a> · © YEAR
-
-</div>
-```
-
-Three facts, centred, separated by middots: **who built it**, **the licence** — linked to the file,
-so the claim is checkable in one click — and **the year**. Nothing else. A footer that thanks
-contributors on a solo project, or links a roadmap that does not exist, undoes the credibility the
-rest of the page just earned.
+**Team or internal service.** Use the Internal service skeleton at the end of
+`readme-template.md` (owner, on-call, health check, runbook) instead of the public skeleton.

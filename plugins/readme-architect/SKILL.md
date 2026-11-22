@@ -1,6 +1,6 @@
 ---
 name: readme-architect
-description: Write or rewrite a repository README that shows the project working instead of describing it — real output, observed numbers, a stated setup path, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact. Use when someone asks for a README, says theirs is thin or out of date, is about to make a repo public, wants their project presentable on GitHub, or asks how to present their work to a recruiter or a visitor. Also use to audit an existing README before publishing. Produces README.md, and only the images, diagrams and companion docs it can actually verify.
+description: Write or rewrite a repository README that shows the project working instead of describing it — real output, observed numbers, a stated setup path, a mermaid diagram of the mechanism, and an identity block whose every badge states a checkable fact. Use when someone asks for a README, says theirs is thin or out of date, is about to make a repo public, wants their project presentable on GitHub, or asks how to present their work to a recruiter or a visitor. Also use to audit an existing README before publishing ("audit a README without changing it"). Produces README.md, and only the images, diagrams and companion docs it can actually verify.
 ---
 
 # README Architect
@@ -44,6 +44,7 @@ seems at the time:
 | `docs/brand/<name>-{light,dark}.svg` | No brand assets exist and a wordmark is wanted |
 | `docs/assets/screens/*.png` | Capture succeeded |
 | `docs/SCREENSHOTS.md` | Capture failed, was impossible, or was declined |
+| `docs/EVIDENCE.md` | The user accepts the evidence table from the handover |
 
 **Never run a git command that writes.** No commit, no push, no tag, no branch. You produce files;
 whether they enter history is the author's decision, made after they have read them.
@@ -93,10 +94,46 @@ Read, in this order:
 **Read all five before writing any prose.** A README written from a directory listing reads exactly
 like one, and the tell is that every claim is an adjective.
 
+Also detect the **licence** (`LICENSE`, then the manifest) and the **owner** (manifest author or
+org, else ask). Neither is invented; the footer needs both.
+
+**Mode.** If a README already exists, audit first: show a keep / change / cut table, keep the
+author's accurate hand-written prose, and write the replacement only after the table is shown.
+Offer **audit only** (trigger: "audit my README"): a findings list that writes nothing. Write each
+finding as four lines: `Where: file:line`, `Problem:`, `Fix:`, `Rank: high|med|low`. If
+`docs/EVIDENCE.md` exists, enter **refresh mode**: replay its commands, compare the output to the
+README, and edit only the facts that are stale, leaving the prose alone. Record a short hash of
+each command's output in the ledger and edit only rows whose hash changed. Update the ledger's
+dates. If `.readme-architect.md` exists, read it and let it override the footer, section list and
+tone; it never overrides the run-safety gate or the evidence rules. Never overwrite
+an existing README that has uncommitted edits without saying so.
+
+Special shapes, one line each: **internal or team service** - use the Internal service skeleton
+in `references/readme-template.md`; **monorepo** - one root README plus a short per-package README
+linking up; **library or no tests** - run the examples; **non-English or RTL** - write in the
+author's language and set `dir="rtl"`.
+
 ### Phase 1 — Run it
 
 Start it. Hit an endpoint. Run the test suite. Trigger the interesting path. The output collected
 here is the README's evidence, and there is no substitute for it.
+
+**Run-safety gate.** Running a stranger's project executes their code, so classify first.
+Default-allow only the test suite and a dev server bound to localhost. **Ask before** anything that
+touches a network service, a paid API, a remote or shared database, migrations, deploy or seed
+scripts, or `.env` values that look like real credentials. Read `.env.example`, never `.env`.
+Start background processes with a note of how to stop them, then stop them and delete stray
+artifacts (db files, coverage output) before Phase 6. Whatever was not run is marked `unverified`
+in the handover.
+
+Before starting a dev server, check that its host or port flag or config binds to
+127.0.0.1/localhost (for example `--host`, `HOST`, a listen address). If it binds 0.0.0.0 or cannot
+be confirmed, set it to localhost or ask; if you cannot ask, skip the run and mark it
+`unverified`, and do not retry. A failed or timed-out run is recorded as `unverified: <exit or
+reason>` and retried at most once. Before the run and again after cleanup, list listening ports
+(`ss -ltn` or `netstat -an`) and diff them; report any new port in the handover. Read
+`references/run-recipes.md` for the likely test
+and dev-server commands per ecosystem.
 
 **If it genuinely cannot be run** — missing credentials, hardware, a paid service, a build that
 fails — say so to the user, then write from the tests instead. They are the next best source of
@@ -130,16 +167,17 @@ Read `references/evidence-rules.md`. Collect, before writing:
 
 ### Phase 4 — Write it
 
-Read `references/house-style.md` for the skeleton and `references/readme-template.md` for the
-structure to fill. Read `references/identity-block.md` before the header block and
-`references/prose-style.md` for voice and formatting. Write to `README.md` at the repository root.
+Read `references/readme-template.md` for the skeleton to fill, `references/house-style.md` for the
+section rules and `references/prose-style.md` for voice. Read `references/identity-block.md` only
+when producing a header block; skip it for a 40-60 line utility. Write to `README.md` at the
+repository root. If the footer's licence or owner is unknown, omit the footer.
 
 Then apply the admission tests below. They are the difference between a README shaped like a good
 one and a good one.
 
 ### Phase 5 — Visuals
 
-Read `references/visuals.md`.
+Read `references/visuals.md` only when producing a diagram or an image.
 
 Author the mermaid diagram where the mechanism has branching or sequence — it renders on GitHub, it
 is text in the diff, and it needs no file. Ask the user which capture mechanism to use before
@@ -148,22 +186,40 @@ that this is the one thing you could not do.
 
 ### Phase 6 — Pressure-test, then hand over
 
-Reread as a stranger and fix anything that fails:
+Run the mechanical checks first. **Recheck every number:** re-run each counting command from
+Phase 3 (`wc`, test count, dependency count, timing) and diff the result against the README. Then
+`test -f` for every relative link and image path (grep `src=`
+and `href=` to list them) and grep for `TODO`, `Coming soon` and `Lorem`. Then reread as a
+stranger and fix anything that fails:
 
 1. Does the first sentence say what this **is**, to someone outside the domain?
 2. Is there a single claim I would have to take on trust? Replace it with evidence or cut it.
 3. Can I get it running from this file alone, with nothing else open?
-4. **Does every relative link resolve, and does every referenced image exist?** Open them.
+4. Did the mechanical checks above come back clean?
 5. Is there a number here I did not personally observe?
 6. Does it say what the project deliberately does *not* do or need?
-7. Would this survive a recruiter reading only the first screen?
+7. Only one applies. 7a, owner-facing or portfolio repo: would it survive a recruiter reading only
+   the first screen? 7b, team or internal service: can a new on-call engineer find the owner, the
+   run command and the runbook link on the first screen?
 
-**Then hand over, always reporting four things:**
+**Then hand over, always reporting five things, plus the stranger-test step when it ran:**
 
 - every path written
-- every number used, and where it came from
-- every claim you could not verify
+- every number used, as a table: claim, command, observed output, date (offer it as PR text, and
+  optionally save it as `docs/EVIDENCE.md`)
+- every claim you could not verify, including each setup command not actually run, written as
+  `unverified`
 - whether screenshots were captured or listed, and why
+- the `Verified on <OS, runtime version, date>` line for Run it, filled from the Phase 1 run notes
+  and omitted when nothing was run
+- when it ran, the first step the stranger-test subagent had to guess
+
+Offer the handover as ready-to-paste PR description text.
+
+**Stranger test (default for an Application with a domain worth explaining or larger).** When an
+Agent or Task tool exists, spawn a fresh-context subagent given only `README.md` and the repo tree.
+It follows the setup path in a scratch copy under the same safety gate and reports the first step it
+had to guess; attach that step to the handover. Without such a tool, rely on the reread above.
 
 ---
 
@@ -214,7 +270,8 @@ somebody forgot to finish.
   the badge, not the row.
 - **Emoji section headers.** They date, they are read aloud, and they replace the work.
 - **"Contributing", "Roadmap", "Acknowledgements" on a solo project.** Empty sections read as an
-  abandoned template.
+  abandoned template. A team or internal repo uses the Internal service skeleton in
+  `references/readme-template.md` instead.
 - **A feature list of things every project has.** "Responsive design", "clean code", "error
   handling" — the reader assumes these or does not care.
 - **Placeholder text of any kind.** `TODO`, `Coming soon`, `Lorem`, `your-project-name`. If it is
@@ -236,10 +293,12 @@ find the install command leaves.
 
 ## Reference files
 
-- `references/house-style.md` — the skeleton, the section rules, and the callout rules
+- `references/house-style.md` — the section rules and the callout rules (the skeleton is in `readme-template.md`)
 - `references/prose-style.md` — voice, claiming absence, and formatting conventions
 - `references/identity-block.md` — wordmark, badges, nav row, hero image
 - `references/visuals.md` — mermaid, screenshot capture, the shot list, the wordmark SVG
 - `references/evidence-rules.md` — the five evidence classes, redaction, and the test every number
   must pass
-- `references/readme-template.md` — the structure to fill, with per-section guidance
+- `references/readme-template.md` — the structure to fill, with per-section guidance and the
+  Internal service skeleton
+- `references/run-recipes.md` — per-ecosystem test and dev-server commands, loaded only in Phase 1

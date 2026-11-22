@@ -1,3 +1,5 @@
+> Build history, not user instructions. Kept as provenance for how this plugin was made.
+
 # M4 Evidence — Tasks
 
 > Source: docs/SPEC.md §10 M4 · Constitution: docs/CONSTITUTION.md
