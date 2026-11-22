@@ -81,8 +81,8 @@ if [ -f "$ROOTMKT" ]; then
 		note "hearsay is not in the root marketplace.json yet (S2, S12, S13 root parts not checked)"
 	else
 		[ "$MVER" = "$PVER" ] || fail S2 "marketplace version '$MVER' != plugin.json '$PVER'"
-		grep -q '"description": *"Five ' "$ROOTMKT" || fail S13 "marketplace description does not start with Five"
-		grep -qi 'five' ../../README.md 2>/dev/null || fail S13 "root README does not say five plugins"
+		grep -q '"description": *"[A-Z][a-z]* Claude Code skills' "$ROOTMKT" || fail S13 "marketplace description does not state a plugin count"
+		grep -q 'plugins-[0-9]*-0F766E' ../../README.md 2>/dev/null || fail S13 "root README has no plugins-N badge"
 		grep -q 'plugins/hearsay' ../../.github/workflows/ci.yml 2>/dev/null \
 			&& grep -q 'verify.sh' ../../.github/workflows/ci.yml 2>/dev/null \
 			|| fail S12 "ci.yml has no hearsay job that runs verify.sh"

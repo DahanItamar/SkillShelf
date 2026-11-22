@@ -28,6 +28,39 @@ jobs:
         working-directory: plugins/blueprint
         run: node --test examples/proof/proof.test.mjs
 
+  hearsay-verify:
+    name: hearsay / structural verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Structural verification
+        working-directory: plugins/hearsay
+        run: sh scripts/verify.sh
+
+  casebook-proof:
+    name: casebook / before-and-after proof
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Before-and-after proof
+        working-directory: plugins/casebook
+        run: node --test examples/proof/proof.test.mjs
+
+  gatehouse-check:
+    name: gatehouse / file check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: File check
+        working-directory: plugins/gatehouse
+        run: node --test examples/check.test.mjs
+
   marketplace:
     name: marketplace / every plugin resolves
     runs-on: ubuntu-latest

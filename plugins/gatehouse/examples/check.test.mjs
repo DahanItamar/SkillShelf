@@ -87,16 +87,18 @@ test('1b marketplace entry matches plugin.json (skipped until the entry exists)'
   assert.equal(e.category, 'security');
 });
 
-test('2 marketplace and root README say five (skipped until gatehouse is listed)', (t) => {
+test('2 marketplace and root README state the same plugin count (skipped until gatehouse is listed)', (t) => {
   const mf = path.join(repo, '.claude-plugin', 'marketplace.json');
   if (!fs.existsSync(mf)) return t.skip('no marketplace.json');
   const m = JSON.parse(fs.readFileSync(mf, 'utf8'));
   if (!m.plugins.some((p) => p.name === 'gatehouse')) return t.skip('gatehouse is not listed yet');
-  assert.equal(m.plugins.length, 5);
-  assert.match(m.description, /^Five /);
+  const words = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"];
+  const word = words[m.plugins.length];
+  assert.ok(word, "plugin count has a word");
+  assert.match(m.description, new RegExp("^" + word + " "));
   const rr = fs.readFileSync(path.join(repo, 'README.md'), 'utf8');
-  assert.match(rr, /\*\*Five Claude Code skills/);
-  assert.match(rr, /plugins-5-0F766E/);
+  assert.match(rr, new RegExp('\\*\\*' + word + ' Claude Code skills'));
+  assert.match(rr, new RegExp("plugins-" + m.plugins.length + "-0F766E"));
 });
 
 test('3 nothing at the plugin root can run or start', () => {
