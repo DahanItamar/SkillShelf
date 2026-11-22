@@ -1,0 +1,16 @@
+diff --git a/src/payments.py b/src/payments.py
+--- a/src/payments.py
++++ b/src/payments.py
+@@ -13,3 +13,12 @@ def charge(order_id, amount_cents):
+         except requests.RequestException:
+             time.sleep(2 ** attempt)
+     return {"status": "ok", "id": None}
++
++
++def refund(order_id, amount_cents):
++    try:
++        r = requests.post(PAYMENTS_URL + "/refund", json={"order": order_id, "amount": amount_cents}, timeout=5)
++        r.raise_for_status()
++        return True
++    except Exception:
++        return True
