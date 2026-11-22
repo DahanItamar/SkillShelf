@@ -10,9 +10,9 @@ Seven reference files and one workflow, in plain Markdown.
 **No dependencies, no build step, no runtime. Nothing executes at install; the skill runs your
 project's tests or dev server only after its run-safety gate.**
 
-<img alt="version 2.1.0" src="https://img.shields.io/badge/version-2.1.0-B55400?style=flat-square">
-<a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2b2e3a?style=flat-square"></a>
-<img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-1f6f3f?style=flat-square">
+<img alt="version 2.1.0" src="https://img.shields.io/badge/version-2.1.0-0F766E?style=flat-square">
+<a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-0F766E?style=flat-square"></a>
+<img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-0F766E?style=flat-square">
 
 <a href="#see-the-result">Result</a> ·
 <a href="#cost-and-safety">Cost and safety</a> ·
