@@ -66,7 +66,9 @@ Seven phases. **State them before starting, and name each one as you enter it.**
 Without markers a long run of reading, running and writing is a wall the user cannot judge or
 interrupt. Two lines of output turn it into a progress bar.
 
-Open with this, filled in for the run you are about to do:
+Open with this, filled in for the run you are about to do. Write modes list all seven phases;
+other modes name the mode and list only the phases that run (Audit only: `0` and `6` mechanical
+checks; Static: `0`, `2` to `6`).
 
 ```markdown
 > **Showcase · 7 phases** — `0 Learn` → `1 Run` → `2 Find the one thing` → `3 Evidence` →
@@ -102,14 +104,15 @@ org, else ask once; if unanswerable and no `.showcase.md` exists, omit the foote
 | --- | --- | --- | --- |
 | Write | No README, or "write a README" | 0 to 6 | The paths in Hard rules |
 | Audit, then rewrite | A README exists | 0 to 6; show a keep / change / cut table before writing | Same |
-| Audit only | "audit my README", "do not change it" | 0, then the Phase 6 mechanical checks. No Phase 1 run, no visuals, no stranger test; read only the README, manifest, entry point and referenced paths | Nothing |
+| Audit only | "audit my README", "do not change it" | 0, then the Phase 6 mechanical checks. No Phase 1 run, no visuals, no stranger test; read only the README, manifest, entry point and referenced paths. Static facts only; run facts reported as `not rechecked` | Nothing |
 | Refresh | `docs/EVIDENCE.md` exists | 0, replay its commands under the Phase 1 gate, Phase 6 checks | Stale facts and the ledger's dates |
 | Static | "do not run anything" | 0 and 2 to 6, no Phase 1 | As write; every runtime fact is `unverified` |
 
 Audit findings are four lines each: `Where: file:line`, `Problem:`, `Fix:`, `Rank: high|med|low`.
 When a README exists, keep the author's accurate hand-written prose and show the table before
 writing. Refresh stores each claim's extracted value (count, version, status) in the ledger, not
-raw output, and compares extracted values only. Compare timings and other volatile fields
+raw output, and compares extracted values only. Ledger columns and default tolerances are in
+`references/evidence-rules.md`. Compare timings and other volatile fields
 (timestamps, ids, ports) within a stated tolerance, or list them as "re-measure on request". Edit a
 row only when its extracted value changed, and leave the prose alone. If `.showcase.md` exists, read
 it (format in `references/readme-template.md`); it never overrides the run-safety gate or the
@@ -126,9 +129,11 @@ Start it. Hit an endpoint. Run the test suite. Trigger the interesting path. The
 here is the README's evidence, and there is no substitute for it.
 
 **Run-safety gate.** Running a project executes its code, so classify first. Run the tests only if
-the repository is the user's own (the user named it, or it is the working directory with a git
-history the user created) or the user confirms. If ownership is unclear, ask once before any
-execution. Tests may touch the network, files or databases, so check the manifest and CI for
+the repository is the user's own or the user confirms. A repository counts as the user's own if
+the user named it, or is working in it under their own task (including a client repo they cloned
+and work in daily). An unfamiliar third-party clone, or one the user only asked you to look at,
+does not. If ownership is unclear, ask once before any execution. If no one can answer (headless
+or non-interactive run), treat ownership as unconfirmed and fall to Static mode. Tests may touch the network, files or databases, so check the manifest and CI for
 service dependencies first; a test that needs one is "ask before". A dev server bound to localhost
 follows the same ownership rule. **Ask before** anything that touches a network service, a paid
 API, a remote or shared database, migrations, deploy or seed scripts, or `.env` values that look
@@ -177,6 +182,10 @@ Read `references/evidence-rules.md`. Collect, before writing:
 - **The setup path** — the exact commands, in order, from clone to running
 - **What is deliberately absent** — no build step, zero dependencies, no account, mock mode
 
+In Static mode collect only test names and assertions, manifest facts (dependencies, scripts,
+version), file and line counts, and example code from the repo. No output, no timings, no counts of
+passing tests. Every runtime row goes in the handover as `unverified`.
+
 ### Phase 4 — Write it
 
 Read `references/readme-template.md` for the skeleton to fill, `references/house-style.md` for the
@@ -198,8 +207,11 @@ that this is the one thing you could not do.
 
 ### Phase 6 — Pressure-test, then hand over
 
-Run the mechanical checks first. **Recheck every number:** re-run each counting command from
-Phase 3 (`wc`, test count, dependency count, timing) and diff the result against the README. Then
+Run the mechanical checks first. **Recheck every number.** Static facts, always rechecked:
+`wc` and line counts, relative links, the dependency count read from the manifest. Run facts (test
+count, timings, exit codes): re-run only in Write, Audit-then-rewrite and Refresh modes after the
+Phase 1 gate; in Audit only and Static mode list them as `not rechecked`. Diff each result against
+the README. Then
 `test -f` for every relative link and image path (grep `src=`
 and `href=` to list them) and grep for `TODO`, `Coming soon` and `Lorem`. Then reread as a
 stranger and fix anything that fails:

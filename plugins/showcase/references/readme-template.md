@@ -138,6 +138,11 @@ sections: Run it, Under the hood
 badge_colour: 0F766E
 ```
 
+For an agency or team: commit a shared `.showcase.md` per client repo, or keep one preset in a team
+template and copy it in. Set `footer: omit`, or `owner:` to the client or agency name, per repo.
+The file may hold no secrets, contact emails, or client names the client has not agreed to publish.
+`.showcase.md` cannot relax the run-safety gate.
+
 ## Filling it in
 
 **Write the pitch last.** It has to say what the thing is *and* why it is not ordinary, in one

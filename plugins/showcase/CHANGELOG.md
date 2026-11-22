@@ -5,6 +5,9 @@ All notable changes to this plugin. Format follows [Keep a Changelog](https://ke
 ## [2.2.0] - 2026-11-22
 
 ### Changed
+- Phase 1 ownership rule is explicit; a run nobody can answer falls to Static mode.
+- Banner names the mode and lists only the phases that run.
+- Static mode states what Phase 3 collects.
 - Run-safety gate: tests run only on the user's own repository or after confirmation; no confirmation means no execution.
 - Static mode: say "do not run anything" and the skill writes from code and tests, marking every runtime fact unverified.
 - Modes table in Phase 0. Audit only now runs Phase 0 plus the Phase 6 checks, reads only what the README points at, and no longer runs the project.
@@ -17,8 +20,12 @@ All notable changes to this plugin. Format follows [Keep a Changelog](https://ke
 - `.showcase.md` format in `references/readme-template.md`.
 - `check.sh`, a maintainer-run script that rechecks the sizes and line counts quoted in the README, its links, and sample names. It is not loaded at run time.
 - This changelog.
+- Evidence ledger schema (columns, default tolerances) in `references/evidence-rules.md`.
+- Agency and shared-preset guidance for `.showcase.md`.
+- `check.sh` replays a committed example ledger (`docs/example/docs/EVIDENCE.md`) when one exists and lists stale rows.
 
 ### Fixed
+- Phase 6 no longer contradicts Audit only and Static mode: run facts are listed as `not rechecked`.
 - README byte counts were 32 bytes too high.
 
 ### Planned

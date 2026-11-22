@@ -67,17 +67,19 @@ Ask in your own words, for example:
 - *"audit my README without changing it"* (audit only, writes nothing)
 - *"make this presentable before I make it public"*
 
-Not for: a `CHANGELOG`, a `CONTRIBUTING` guide, or API reference docs.
+Not for: a `CHANGELOG`, a `CONTRIBUTING` guide, or API reference docs, in the repositories it
+documents; this plugin keeps its own.
 
 ## Cost and safety
 
-- **Cost.** `SKILL.md` is 17,850 bytes at 2.2.0 (about 4.5k tokens at 4 bytes per token) and loads on every
-  run. The seven reference files total 51,578 bytes and load only at the phase that needs them. A
+- **Cost.** `SKILL.md` is 18,897 bytes at 2.2.0 (about 4.7k tokens at 4 bytes per token) and loads on every
+  run. The seven reference files total 52,533 bytes and load only at the phase that needs them. A
   utility run that skips `identity-block.md` and `visuals.md` loads `SKILL.md` plus five
-  references, 49,591 bytes (about 12.4k tokens). A run that loads everything is 69,428 bytes (about
-  17.4k tokens). Audit only loads `SKILL.md` plus the few files the README points at. The stranger
+  references, 51,593 bytes (about 12.9k tokens). A run that loads everything is 71,430 bytes (about
+  17.9k tokens). Audit only loads `SKILL.md` plus the few files the README points at. The stranger
   test is offered, not default: it spawns a subagent that repeats the setup path and roughly doubles
-  the run's token cost. Sizes measured with `wc -c` at 2.2.0 and rechecked by `check.sh`.
+  the run's token cost. Sizes measured with `wc -c` at 2.2.0 and rechecked by `check.sh`. No end-to-end run cost was
+  measured; the figures above are load size only. The stranger test and Phase 1 execution add to it.
 - **Safety.** Phase 1 runs the project, which executes its code. Tests run only if the repository
   is yours or you confirm; if ownership is unclear it asks once. It checks the manifest and CI for
   service dependencies first, asks before network, paid, remote-database, migration, deploy or
@@ -190,8 +192,8 @@ that this was the one thing it could not do. **It never references an image it d
 
 ## Under the hood — briefly
 
-- **Progressive disclosure.** `SKILL.md` is 314 lines and loads every invocation; the seven
-  reference files are 1,136 lines and load only at the phase that needs them. A reference file is
+- **Progressive disclosure.** `SKILL.md` is 326 lines and loads every invocation; the seven
+  reference files are 1,155 lines and load only at the phase that needs them. A reference file is
   read cold and alone, so each is complete by itself and none depends on another being loaded.
 - **Audit first.** If a README exists, the skill shows a keep / change / cut table before writing,
   and offers an audit-only mode that writes nothing and does not run the project.

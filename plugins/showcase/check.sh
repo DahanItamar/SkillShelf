@@ -38,5 +38,33 @@ done | { found=0; while read -r line; do echo "$line"; found=1; done; [ "$found"
 # the style-source name must not appear in the skill or its references
 if grep -n 'Winnow' SKILL.md references/*.md; then bad "Winnow in SKILL.md or references"; fi
 
+# Replay the committed example ledger. Runs only when docs/example/docs/EVIDENCE.md exists.
+# Rows follow references/evidence-rules.md. A row with replay = yes runs from docs/example/fixture
+# with sh; its output is the extracted value. Exact match unless the tolerance is +/-N%.
+led=docs/example/docs/EVIDENCE.md
+if [ -f "$led" ]; then
+  trim() { printf '%s' "$1" | sed 's/^ *//; s/ *$//'; }
+  sed 's/\\|/@PIPE@/g' "$led" | grep '^|' | while IFS='|' read -r _ claim cmd val tol _ rp _; do
+    [ "$(trim "$rp")" = yes ] || continue
+    tol=$(trim "$tol"); val=$(trim "$val")
+    case "$tol" in volatile*) continue;; esac
+    cmd=$(trim "$cmd" | sed 's/^`//; s/`$//; s/@PIPE@/|/g')
+    got=$(cd docs/example/fixture && sh -c "$cmd" 2>/dev/null | tr -d ' \n')
+    pct=$(printf '%s' "$tol" | sed -n 's|^+/-\([0-9]*\)%.*|\1|p')
+    if [ -n "$pct" ]; then
+      awk -v g="$got" -v v="$val" -v p="$pct" 'BEGIN{d=g-v;if(d<0)d=-d;exit !(v!=0 && d*100<=p*v)}' ||
+        echo "STALE: $(trim "$claim") (stored $val, got $got)"
+    else
+      [ "$got" = "$val" ] || echo "STALE: $(trim "$claim") (stored $val, got $got)"
+    fi
+  done | { n=0; while read -r line; do echo "$line"; n=1; done; [ "$n" = 0 ]; } || bad "example ledger has stale rows"
+  # every number in the example README must appear in the ledger
+  if [ -f docs/example/README.md ]; then
+    grep -o '[0-9][0-9.,]*[0-9]\|[0-9]' docs/example/README.md | sort -u | while read -r n; do
+      grep -qF "$n" "$led" || echo "NOT IN LEDGER: $n"
+    done | { n=0; while read -r line; do echo "$line"; n=1; done; [ "$n" = 0 ]; } || bad "example README number missing from ledger"
+  fi
+fi
+
 [ "$fail" = 0 ] && echo "OK: $skill / $refs / $utility / $full bytes, $skilllines / $reflines lines"
 exit "$fail"
