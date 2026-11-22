@@ -203,8 +203,8 @@ section 4 at the end.
 
 ### Machine-readable output (optional)
 
-Only when the user asks for "machine-readable" or "lines" output. After the report, print one
-line per row whose verdict is not `pass`, sorted by row id, nothing else on the line:
+Only when the user asks for "machine-readable" or "lines" output. It is the findings list from
+section 4, printed after the report with no spaces around the separators, nothing else on a line:
 
 ```
 row|verdict|severity|path:line|citation-id
@@ -212,8 +212,7 @@ AUDIT-5-01|fail|blocker|web/app/checkout.html:2|PCI-DSS v4.0.1
 ```
 
 Use `-` for a field with no value (for example `n/a` rows have no `path:line`). Two saved
-outputs of the same scope can then be compared with plain `diff`, which makes the diff audit
-above comparable run to run.
+outputs of the same scope can then be compared with plain `diff`.
 
 ## 5. What the audit never does
 
