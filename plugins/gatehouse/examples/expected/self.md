@@ -29,6 +29,6 @@ Must not report
 
 Coverage: complete. Nothing is unreadable, nothing is remote, node_modules is absent, and the tree is under 300 files. `examples/check.test.mjs` and `examples/make-fixtures.mjs` are example-surface scripts wired to nothing (note).
 
-Sweeps expected to be 0 hits outside the fixtures: S-INVIS, S-TAG, S-PAD, S-BLOB (one false positive: the long Red Hat URL in README.md; judge and drop), S-HEX, S-OBFUSC, S-LONGLINE, S-REMOTE-EXEC, S-REMOTE-FOLLOW. S-COMMENT hits only the literal `<!--` text inside code spans in patterns.md and rules.md (not hidden).
+Sweeps expected to be 0 hits outside the fixtures: S-INVIS, S-TAG, S-PAD, S-BLANKS, S-BLOB (one false positive: the long Red Hat URL in README.md; judge and drop), S-HEX, S-OBFUSC, S-LONGLINE, S-REMOTE-EXEC, S-REMOTE-FOLLOW. S-COMMENT hits only the literal `<!--` text inside code spans in patterns.md and rules.md (not hidden).
 
 Audit of the installable skill alone (`plugins/gatehouse/skills/gatehouse`): predicted INSTALL, with the downgraded notes listed. Not confirmed by a model run.
