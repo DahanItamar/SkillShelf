@@ -146,6 +146,8 @@ Match the report to the drift. A spec checked weekly should usually come back cl
 
 ## Reference files
 
+Phases 6 and 7 load `merge.md` and `refactoring-sweep.md` only when the user asks to merge or sweep.
+
 - `references/checkable-claims.md` — per section: what is verifiable, and how to verify it
 - `references/verdicts.md` — classifying each gap, and how to write the fix on either side
 - `references/merge.md` — folding a shipped proposal into the spec without losing a reason

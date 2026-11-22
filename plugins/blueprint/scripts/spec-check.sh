@@ -19,7 +19,7 @@ if [ $# -ge 1 ]; then
   for f in "$@"; do echo "$f" >> "$tmp/tasks"; done
 else
   spec=docs/SPEC.md
-  for f in docs/changes/*/TASKS.md docs/changes/archive/*/TASKS.md; do [ -f "$f" ] && echo "$f" >> "$tmp/tasks"; done
+  for f in docs/changes/*/TASKS.md docs/changes/archive/*/TASKS.md docs/changes/*/PROPOSAL.md docs/changes/archive/*/PROPOSAL.md; do [ -f "$f" ] && echo "$f" >> "$tmp/tasks"; done
   for f in docs/refactorings/*/REPORT.md docs/refactorings/archive/*/REPORT.md; do [ -f "$f" ] && echo "$f" >> "$tmp/reports"; done
 fi
 

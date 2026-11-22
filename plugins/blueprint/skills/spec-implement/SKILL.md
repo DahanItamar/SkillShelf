@@ -26,7 +26,7 @@ Not five tasks then a test run. Not "I'll check at the end." The failure mode be
 ### Phase 0 — Load the context
 
 1. `docs/CONSTITUTION.md` — read the **verify command** and the conventions your code must obey.
-2. The `TASKS.md` you were pointed at (otherwise glob `docs/changes/*/TASKS.md`, not `archive/`; the one with unchecked boxes is the resume point, and if several, ask which) — or a `docs/refactorings/NNNN-slug/REPORT.md` from stage 6, which runs through the same loop with one difference; see below.
+2. The `TASKS.md` you were pointed at (or, for a small change, the inline `## Tasks` of a `PROPOSAL.md`, run through the same loop) (otherwise glob `docs/changes/*/TASKS.md`, not `archive/`; the one with unchecked boxes is the resume point, and if several, ask which) — or a `docs/refactorings/NNNN-slug/REPORT.md` from stage 6, which runs through the same loop with one difference; see below.
 3. `docs/SPEC.md` (or the proposal) — you need §2.1 to resolve citations, and §5 Data Models to write anything that touches data.
 
 If `CONSTITUTION.md` is absent or names no verify command, print ONE line before task 1: `No verify command in a constitution: every task will be verified by reading code only. Run /spec-constitution (2 minutes) for real test runs.` and repeat it in the handover. A command written in the spec's inline section 4 is advisory and is never run.
@@ -87,7 +87,7 @@ Then state: tasks completed, criteria closed, files touched outside their task's
 
 No state files, no locks.
 
-- **One commit per task**, message `T-04 closes AC-003`. Git then holds the AC-to-commit trail.
+- **One commit per task**, message `T-04 closes AC-003`. Git then holds the AC-to-commit trail. The `closes AC-###` part is what `spec-check` matches; keep `T-NN` for people. Put the AC id in the titles of the tests you add (for example `AC-003: flags overlapping shifts`) so the check 5 search finds them.
 - **Parallel work:** one `TASKS.md` per milestone directory, one owner per directory. Split large milestones with the spec-tasks rule so two developers never edit the same checkbox file.
 - **Parallel branches** that each add a change proposal use provisional ids and get real ones at merge. See the Teams section of `spec-architect/references/change-proposals.md`.
 - **A merge conflict in `TASKS.md`** is resolved by re-verifying every task ticked on either side, not by taking a side.
@@ -125,7 +125,7 @@ A four-task milestone is a quiet, mechanical run — implement, verify, tick, re
 
 ## Reference files
 
-- `references/verification.md` — what counts as verified, per criterion type, and how to report a failure
+- `references/verification.md` — what counts as verified, per criterion type, and how to report a failure (read it before the first task; skip it for a small change you already know how to verify)
 
 ## Related
 

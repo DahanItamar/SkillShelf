@@ -71,11 +71,12 @@ Location: `docs/changes/NNNN-slug/TASKS.md`. For a base-spec milestone with no p
 # <Milestone or change title> — Tasks
 
 > Source: docs/SPEC.md §10 M1 · Constitution: docs/CONSTITUTION.md
-> Verify: `npm test`
 
 - [ ] T-01 <what changes> — closes AC-001 — files: src/store.js
 - [ ] T-02 <what changes> — closes AC-002, AC-005 — files: src/store.js — depends: T-01
 ```
+
+Do not write a verify command into `TASKS.md`; `spec-implement` takes it only from the constitution, so a copy here would be ignored and could drift.
 
 The checkboxes are the only state this pipeline keeps. There is no status file, because two records of the same fact eventually disagree.
 

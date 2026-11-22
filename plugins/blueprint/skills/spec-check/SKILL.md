@@ -13,7 +13,7 @@ It checks integrity of references, not truth of behavior. Whether the code still
 
 ## What to read
 
-`docs/SPEC.md` (section 2.1), every `docs/changes/*/TASKS.md` and `docs/changes/archive/*/TASKS.md`, every `docs/refactorings/*/REPORT.md`, and `git log` messages (read-only).
+`docs/SPEC.md` (section 2.1), every `docs/changes/*/TASKS.md` and `docs/changes/archive/*/TASKS.md` (and the inline `## Tasks` of any small-change `PROPOSAL.md` there), every `docs/refactorings/*/REPORT.md`, and `git log` messages (read-only).
 
 ## The checks
 
@@ -23,8 +23,8 @@ It checks integrity of references, not truth of behavior. Whether the code still
 | 2 | Every active criterion is closed by at least one task, or is tombstoned | A requirement nothing builds |
 | 3 | No `AC-###` id appears twice in section 2.1, and no tombstoned id is reused | Archived task lists now cite the wrong requirement |
 | 4 | Every `preserves AC-###` in a `REPORT.md` resolves to an active criterion | A refactoring guarding something that is gone |
-| 5 | Each active criterion has a test or code location | Candidate only: a grep for the id and for key words of the criterion in test files and source. Label every hit `candidate, not proof` |
-| 6 | Commit convention | For each closed criterion, no `git log` message matches `T-NN closes AC-###`. List it as `no conforming commit`. Informational: not a failure, not counted in `Orphans: N`. Scope: search the current branch only (`git log`). If the repo squash-merges, match the PR title or body instead; if that is not possible, treat check 6 as not applicable and print one line saying so, rather than listing every criterion |
+| 5 | Each active criterion has a test or code location | Candidate only: a grep for the id and for key words of the criterion in test files and source. Label every hit `candidate, not proof`. A test whose title names the id (`AC-003: ...`) is the strongest candidate |
+| 6 | Commit convention | For each closed criterion, no `git log` message contains `closes AC-###` for that id. The AC id is the key; `T-NN` is optional text, and task numbers that repeat from one milestone to the next do not matter. List it as `no conforming commit`. Informational: not a failure, not counted in `Orphans: N`. Scope: search the current branch only (`git log`). If the repo squash-merges, match the PR title or body instead; if that is not possible, treat check 6 as not applicable and print one line saying so, rather than listing every criterion |
 
 A provisional `AC-NEW-n` cited by a task is resolved against the unmerged `PROPOSAL.md` in the same directory; if there is none, it is an orphan like any other id that does not exist. Duplicate ids after parallel branches merge are caught by check 3.
 

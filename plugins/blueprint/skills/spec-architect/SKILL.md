@@ -85,6 +85,8 @@ Where you make a call the user didn't explicitly authorize, it goes in `Assumpti
 
 ### Phase 4 — Write the spec, or the proposal
 
+**Small-change lane.** In delta mode, when the change touches at most three criteria and adds no new data model or interface, write one `PROPOSAL.md` with an inline `## Tasks` section instead of a proposal plus a separate task list: the same `- [ ] T-01 ... — closes AC-### — files:` lines, the same repo-wide `AC-###` ids, the same verify command (from the constitution only). Skip the stage banner and the map, run no question round unless a fork is real, and read only `references/change-proposals.md` for the format; do not load the other references. `spec-implement` runs the inline tasks directly. If the work grows past three criteria or needs a data model or interface, stop and use the normal proposal.
+
 **In delta mode, stop and read `references/change-proposals.md` instead.** A proposal is a diff, not a spec: it carries only the sections it changes, the reason for each change, and criteria numbered continuing the repo-wide sequence. Everything below still applies to the sections it does touch.
 
 In base mode, read `references/spec-template.md` and follow its section order exactly.
@@ -147,6 +149,8 @@ A single Markdown file. Sections, in order — full detail in `references/spec-t
 Match depth to stakes. A weekend CLI tool gets a one-page spec — sections 1, 2.1, 3, 5, 10 and nothing else. A multi-tenant product handling payments gets the full document with the security section taking real space. Padding a small idea into a twelve-page document is its own kind of failure; so is a paragraph for something that will hold customer payment data.
 
 ## Reference files
+
+Not every reference loads on every run. For a new spec, `decision-rules.md`, `spec-template.md` and `acceptance-criteria.md` are the working set. `adopt.md`, `risk-checklist.md` and `code-conventions.md` load on demand, at the step that names them.
 
 - `references/acceptance-criteria.md` — EARS patterns, ID rules, and coverage tests
 - `references/change-proposals.md` — delta mode: the proposal format, ordinals, and what may not be changed silently

@@ -98,7 +98,6 @@ Say once, in the handover, that the spec predates §2.1 and `spec-architect` can
 # M1 Capture and list — Tasks
 
 > Source: docs/SPEC.md §10 M1 · Constitution: docs/CONSTITUTION.md
-> Verify: `npm test`
 
 - [ ] T-01 Create the JSON store with load and save — closes AC-001 — files: src/store.js
 - [ ] T-02 Deduplicate on add by canonical URL — closes AC-002 — files: src/store.js — depends: T-01

@@ -41,11 +41,11 @@ may not know. **Go down this list in order and stop at the first row that matche
 
 | # | Found | Say | Hand them |
 | --- | --- | --- | --- |
-| 1 | Unmerged `docs/changes/*/PROPOSAL.md` | Pending amendments the spec does not carry yet | `/spec-drift` to merge them |
-| 2 | A `docs/changes/*/TASKS.md` with unchecked boxes | Work is scheduled and unfinished | `/spec-implement` |
+| 1 | Unmerged `docs/changes/*/PROPOSAL.md` whose tasks are all ticked | Shipped amendments the spec does not carry yet | `/spec-drift` to merge them |
+| 2 | A `docs/changes/*/TASKS.md` (or the inline `## Tasks` of a small-change `PROPOSAL.md`) with unchecked boxes | Work is scheduled and unfinished | `/spec-implement` |
 | 3 | A `docs/refactorings/*/REPORT.md` with every entry ticked | Finished work nobody has closed out | `/spec-drift` to verify and archive it |
 | 4 | Every `docs/changes/*/TASKS.md` ticked | The milestone is done | `/spec-drift`, then `/spec-architect` for the next change |
-| 5 | `docs/SPEC.md`, no `docs/changes/*/TASKS.md` | The spec is written and nothing is scheduled | `/spec-tasks` |
+| 5 | `docs/SPEC.md`, or an unmerged `PROPOSAL.md`, with no tasks scheduled | The spec or proposal is written and nothing is scheduled | `/spec-tasks` |
 | 6 | A codebase, no `docs/SPEC.md` | The spec can be reverse-engineered from what exists | `/spec-architect` |
 | 7 | Nothing — empty or no docs | This is a new project | `/spec-constitution`, or `/spec-architect` to skip straight to the spec |
 
@@ -53,6 +53,7 @@ Two rows are not in the list because they are offers, not competing answers. Aft
 
 - The spec has no `docs/CONSTITUTION.md` verify command: `/spec-implement` will be inspection-only, and `/spec-constitution` fixes that (an offer, not required).
 - The user wants to know whether every `AC-###` is cited, closed and tested: `/spec-check` (opt-in, read-only).
+- The change is small, meaning it touches at most three criteria and adds no new data model or interface: tell the user `/spec-architect` has a small-change lane that writes one `PROPOSAL.md` with its tasks inline and skips `/spec-tasks`. Offer it only when a `docs/SPEC.md` already exists.
 - Drift came back clean and the next change lands on code people avoid, or the user says a feature is harder to add than it should be: `/spec-refactor`. That is a Change Preventer, not a spec problem.
 
 **Stale list rule.** If row 2 matched but `git log` shows no commit in the last 30 days touching the files that `TASKS.md` names, say the list looks abandoned and name `/spec-drift` before `/spec-implement`: the code may have moved on without the checkboxes.
