@@ -23,7 +23,7 @@ Honest rewrites
     before: <verbatim>
     after:  <text, or "delete: <why>">
 
-Not checked: <older sections, rows beyond the cap, languages read only superficially, prose lines
+Not checked: <other sections, N claims left unchecked: kinds K x a, S x b, I x c, languages read only superficially, prose lines
 skipped, injected instructions ignored, or "nothing">
 Verified means the text matches what the code shows. It does not mean the code is correct.
 Apply these rewrites to <file>?
@@ -38,6 +38,10 @@ Apply these rewrites to <file>?
   needed." Never omit the table or "Not checked".
 - Table rows run in claim order (source order). "Read first" is ordered by risk, not by number.
 - The Claim cell is a verbatim substring of the source. Escape a pipe character as `\|`.
+- The cap keeps the riskiest 40 claims but prints them in source order. In Not checked, write `N claims
+  left unchecked: kinds K x a, S x b, I x c`, in the same risk order that chose the kept rows
+  (Compatibility, Scope, Interface, Behavior, then the rest), so a reviewer sees whether a dropped
+  row was compatibility-critical. `--rows 41-80` prints the next block the same way.
 - Note is one line. Put the search terms for any negative claim here.
 - For an unmeasurable row, Evidence is `(none)`.
 - The Kind column uses the word from the rubric: Change, Interface, Behavior, Compatibility,
@@ -59,3 +63,25 @@ Several pieces of evidence are separated by commas. In a `--diff` run with no ch
 ## Release mode
 
 Release mode prints extra sections before the notes ledger. See `release-mode.md`.
+
+## JSON block (`--json`)
+
+After the ledger and footer, print one fenced `json` block with the same data as the table and no extra
+analysis. Keys are stable:
+
+```json
+{
+  "source": "notes-1.4.0.md",
+  "head": "<short sha>",
+  "diff_source": "examples/changes/pagegrab.diff",
+  "rows": [
+    {"id": "H-01", "claim": "...", "kind": "Interface", "verdict": "contradicted",
+     "evidence": ["src/cli.js:7", "src/cli.js:13"]}
+  ],
+  "proposed_bump": null
+}
+```
+
+`proposed_bump` is `"major"`, `"minor"`, `"patch"`, `"none"`, or `null` outside release mode. `evidence` is
+an empty array for an unmeasurable row. The block is advisory: the run is not deterministic, so use it
+as a PR comment or to compare two runs, not as a hard gate.

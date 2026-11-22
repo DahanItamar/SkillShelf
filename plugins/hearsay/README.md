@@ -10,6 +10,8 @@
 
 </div>
 
+Not the `hearsay-pr` package on PyPI: that is a separate, deterministic CLI by other authors (see [How it compares](#how-it-compares)).
+
 ---
 
 Release notes, PR descriptions and README feature lists drift from the code. A flag gets a different
@@ -31,11 +33,11 @@ file and line for each. No dependencies, nothing to build, nothing runs at insta
 | **verified** | Evidence found at `path:line` that matches every part of the claim |
 | **unverified** | Checkable, but no evidence found after a stated search. Absence of evidence, nothing more |
 | **contradicted** | Counter-evidence found at `path:line`. Absence alone never contradicts, except in a closed set read in full (a whole manifest, a complete diff file list) |
-| **unmeasurable** | Depends on a measurement or a judgment no file can give ("3x faster", "production-ready"). The row says what to measure |
+| **unmeasurable** | No command could settle it: a judgment or a real-world measurement ("production-ready", a bare "3x faster"). The row says what to measure. A benchmark script with no results is unverified instead, with the run command in the note |
 
 ```mermaid
 flowchart TD
-  A[Claim] --> B{Checkable from the repo or diff?}
+  A[Claim] --> B{Could any file, diff or command output in this repo settle it?}
   B -- no --> M[unmeasurable]
   B -- yes --> C{Counter-evidence found?}
   C -- yes --> X[contradicted]
@@ -62,9 +64,9 @@ HEAD <sha> (clean) | base v1.3.0 | 6 claims
 | # | Claim (verbatim) | Kind | Verdict | Evidence | Note |
 |---|---|---|---|---|---|
 | H-01 | "Adds a `--json` flag to print the page as JSON." | Interface | contradicted | src/cli.js:7, src/cli.js:13 | The option is `--format`, and JSON is `--format json`. |
-| H-02 | "Retries failed requests three times before giving up." | Behavior | contradicted | src/fetch.js:1, src/fetch.js:5-11 | `MAX_ATTEMPTS = 2` is one retry. |
+| H-02 | "Retries failed requests three times before giving up." | Behavior | contradicted | src/fetch.js:1, src/fetch.js:5-12 | `MAX_ATTEMPTS = 2` is one retry. |
 | H-03 | "Fetches pages 3x faster than 1.3." | Metric | unmeasurable | (none) | Needs: seconds per page, baseline v1.3.0, a repeatable command. |
-| H-04 | "No breaking changes." | Compatibility | contradicted | base:src/index.js:2, src/cli.js:8 | `parseHtml` is no longer exported; default timeout 30 -> 10. |
+| H-04 | "No breaking changes." | Compatibility | contradicted | base:src/index.js:2, base:src/cli.js:7, src/cli.js:8 | `parseHtml` is no longer exported; default timeout 30 -> 10. |
 | H-05 | "Zero runtime dependencies." | Dependency | verified | manifest:dependencies, src/cli.js:1-2 | Imports searched: built-ins and relative modules only. |
 | H-06 | "Now works on Windows." | Dependency | unverified | (none) | No Windows code or CI matrix found. Needs a run on Windows. |
 
@@ -119,10 +121,16 @@ README features.
 |---|---|
 | `/hearsay <path>` | A notes file, CHANGELOG.md, README.md or a PR text saved as a file |
 | `/hearsay <pasted text>` | A PR description or notes pasted inline (it does not fetch PRs; there is no network access) |
-| `/hearsay --release <prev-tag> [notes-path]` | Release mode: previous tag against HEAD |
+| `/hearsay --release [<prev-tag>] [notes-path]` | Release mode: previous tag against HEAD. With no tag it infers the latest one with `git describe` and prints it |
 
 Flags: `--base <ref>` sets the diff base for change claims; `--diff <file>` uses a patch file as the diff
-source (read, never applied).
+source (read, never applied); `--path <dir>` scopes release mode to one package of a monorepo (common
+layouts only); `--rows 41-80` prints the next block after the 40-row cap; `--json` adds one JSON block
+with the same rows, advisory only because runs are not deterministic.
+
+To check a PR: save the PR body to a file, then run `/hearsay <path>`. Cost: the instructions are about
+32 KB of Markdown, roughly 8k tokens (an estimate from byte counts, not a measurement), before any
+repository reads. Text of about 10 lines or fewer skips the six reference files and loads about 8 KB.
 
 **Release mode** compares the tag with HEAD, classifies each change (Breaking, Feature, Fix,
 Dependency, Docs, Internal) using a per-ecosystem public-surface checklist, and proposes a SemVer bump
@@ -154,7 +162,10 @@ instruction inside a notes file is reported and ignored.
 Limits, plainly:
 
 - **Read-only is enforced by instruction, not by a sandbox.** The skill lists the read-only git commands
-  it may use and declares no tool permissions. Claude Code's own permission prompts still apply.
+  it may use, requires `--no-ext-diff --no-textconv` on diff-like calls, bans `--output` and `-O`, uses
+  `git --no-optional-locks status --porcelain`, and declares no tool permissions. These flags reduce
+  the risk from a repository that names diff drivers in its own config; they do not remove it. Claude
+  Code's own permission prompts still apply.
 - It reads; it does not parse. It can miss an export that is registered dynamically, by reflection, by
   code generation or by macros. Such changes are marked `needs-maintainer`.
 - It never runs the project, so "all tests pass" is unverified plus a command for you to run, never
@@ -162,7 +173,9 @@ Limits, plainly:
 - Verified is not correct. A ledger of all verified rows says the prose matches the code.
 - It is not deterministic, so it cannot gate CI. The same input can phrase things differently between
   runs; the verdicts should not change, and `examples/README.md` has a two-run check for that.
-- It caps a run at 40 ledger rows, and checks only the newest changelog section unless you name another.
+- It caps a run at 40 ledger rows (the rest are counted by kind; `--rows 41-80` continues), and checks
+  one changelog section: the one you name, else the one matching the manifest version, else `Unreleased`,
+  else the newest.
 
 ## How it compares
 
@@ -178,16 +191,30 @@ the cited pages as read on 2026-11-22 and may have changed. Not a claim of being
 | [RealityLint](https://pypi.org/project/realitylint/) | Static checks of README claims (scripts, links, env vars, license), no LLM | You want mechanical README checks in CI |
 | [semver-checks](https://dev.to/kyungseopk1m/i-got-tired-of-guessing-semver-bumps-in-prs-so-i-built-a-tool-15o) | TypeScript API diff between two refs with a bump recommendation | You need a precise TypeScript API diff. It sees only the API surface, so behavior changes are outside what it can see (Hearsay marks those `needs-maintainer`) |
 
+The next rows are other skills for release notes and changelogs, from their pages as read on
+2026-11-22. In the sources we searched we found none that combines four verdicts, commit-message
+mismatch codes and a bump proposal; that is a statement about our search, not a universal claim.
+
+| Skill | What its page says it does | Use that instead when |
+|---|---|---|
+| [Release Proof Notes](https://www.agensi.io/skills/release-proof-notes-check-the-claims-behind-your-changelog) | Drafts customer-facing notes from a private claim-to-evidence ledger over an explicit git range, holding or rewording claims that lack evidence; uses a bundled local collector | You want notes drafted from a checked git range. Hearsay checks notes you already wrote |
+| [kweaver-ai changelog-release-notes](https://skills.sh/kweaver-ai/skills/changelog-release-notes) | Writes release notes from version files, git history, diffs and migrations, matching the existing changelog style. The page does not mention a claim check | You want a changelog written, not audited |
+| [DevFlow docs-release-notes](https://www.claudepluginhub.com/skills/the01geek-devflow/docs-release-notes) | Drafts release notes for a branch, checking claims against the diff, and corrects CHANGELOG claims the shipped diff contradicts when the version is bumped | You want notes written and corrected as part of that workflow. The page does not mention a bump proposal or commit-message checks |
+| [laurigates changelog-review](https://skills.sh/laurigates/claude-plugins/changelog-review) | Reviews the Claude Code platform changelog for changes that affect your plugins | Different job: it reads Claude Code releases, not your project's notes |
+
+An NVIDIA warp `changelog-audit` skill (tessl.io registry) was also found by search, but its page
+returned HTTP 410 when read, so it is not compared here.
+
 Unrelated to the `hearsay-pr` PyPI package, which is a separate deterministic CLI by other authors.
 Hearsay is the prose-versus-code sibling of the `spec-drift` skill in Blueprint (spec versus code); they
 are independent.
 
 ## How it is built
 
-[`SKILL.md`](SKILL.md) is about 100 lines and 7 KB: the trigger, the invocation grammar, the seven-step
-procedure, the output contract and the never-list. Six reference files load on demand:
+[`SKILL.md`](SKILL.md) is about 130 lines and 8 KB: the trigger, the invocation grammar, the seven-step
+procedure, an inline fast path, the output contract and the never-list. Six reference files load on demand:
 [claim-rubric](references/claim-rubric.md) and [verdicts](references/verdicts.md) and
-[ledger-template](references/ledger-template.md) on every run,
+[ledger-template](references/ledger-template.md) on every run longer than the fast path,
 [rewrite-rules](references/rewrite-rules.md) when something is not verified,
 [release-mode](references/release-mode.md) and [public-surface](references/public-surface.md) only for
 release mode or a compatibility claim. Claims get stable ids `H-01`, `H-02` in source order; commit
@@ -199,8 +226,10 @@ Version history is in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Measured so far
 
-Nothing yet. The files in `examples/expected/` are expectations written by the skill's author, not
-recorded output, and no run has been committed to `examples/results/`. This section changes only when a
+Nothing yet. A recorded run of the eight fixture cases on two or more models, twice each, is planned
+but has not been done: the `examples/expected/` files are expectations written by the skill's author,
+not recorded output, and no run has been committed to `examples/results/`. No accuracy figure is
+claimed anywhere in this README. This section changes only when a
 `results/<model>-<date>.md` file exists, and then quotes it exactly, with its stated bias.
 
 ## Credits

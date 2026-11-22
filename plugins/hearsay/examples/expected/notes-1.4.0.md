@@ -7,7 +7,7 @@ Expected: 6 claims. 1 verified, 1 unverified, 3 contradicted, 1 unmeasurable.
 | # | Claim | Kind | Verdict | Evidence | Note |
 |---|---|---|---|---|---|
 | H-01 | "Adds a `--json` flag to print the page as JSON." | Interface | contradicted | src/cli.js:7, src/cli.js:13 | The option is `--format`, and JSON is `--format json`. No `--json` anywhere in `src/` or the README. |
-| H-02 | "Retries failed requests three times before giving up." | Behavior | contradicted | src/fetch.js:1, src/fetch.js:5-11 | `MAX_ATTEMPTS = 2` is one retry, and only a thrown fetch error (connection failure or timeout) triggers it. |
+| H-02 | "Retries failed requests three times before giving up." | Behavior | contradicted | src/fetch.js:1, src/fetch.js:5-12 | `MAX_ATTEMPTS = 2` is one retry, and only a thrown fetch error (connection failure or timeout) triggers it. |
 | H-03 | "Fetches pages 3x faster than 1.3." | Metric | unmeasurable | (none) | Needs: wall-clock time per page, baseline v1.3.0, same URLs, a repeatable command. No benchmark in the repo. |
 | H-04 | "No breaking changes." | Compatibility | contradicted | base:src/index.js:2, base:src/cli.js:7, src/cli.js:8 | `parseHtml` is no longer exported (`src/html.js` deleted), and the default `--timeout` changed from 30 to 10. |
 | H-05 | "Zero runtime dependencies." | Dependency | verified | manifest:dependencies, src/cli.js:1-2, src/index.js:1 | Negative claim. Searched imports in `src/`: only `node:util` and relative modules. No `dependencies` key. |

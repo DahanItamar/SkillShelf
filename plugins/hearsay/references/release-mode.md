@@ -1,10 +1,12 @@
 # Release mode
 
-Read with `--release <prev-tag> [notes-path]`, together with `public-surface.md`. Everything here is
+Read with `--release [<prev-tag>] [notes-path]`, together with `public-surface.md`. Everything here is
 read-only and uses only the git allowlist in `SKILL.md`.
 
 ## 1. Preflight
 
+- No tag given: infer it with `git describe --tags --abbrev=0` . Print "tag inferred from latest tag
+  <t>" in the header so the user can correct it. No tags at all: ask for `--base <ref>`.
 - Resolve the tag: `git rev-parse --verify <tag>^{commit}`.
 - If it does not resolve, print `git tag --list` (newest 5 by version) and stop. Make no other claim.
 - If `git rev-parse --is-shallow-repository` prints `true`, warn that history may be incomplete.
@@ -14,7 +16,9 @@ read-only and uses only the git allowlist in `SKILL.md`.
 
 - Commits: `git log --no-merges --format=%h%x09%s <tag>..HEAD`, plus full bodies where a message needs
   checking for a `BREAKING CHANGE` footer.
-- Files: `git diff --name-status -M <tag> HEAD`.
+- Files: `git diff --no-ext-diff --no-textconv --name-status -M <tag> HEAD`.
+- Diff range: if `git --no-optional-locks status --porcelain` is dirty, use `git diff <tag>` (working
+  tree against the tag) so citations match the files; else `<tag> HEAD`. Print which one in the header.
 - Per-file diffs, and `git show <tag>:<path>` for the base side of any file you cite.
 - Large ranges: if there are more than 200 files or about 5,000 changed lines, review in priority
   order: public-surface files, manifests, then the rest. State "reviewed N of M files" in the header.
@@ -68,11 +72,16 @@ claims a change the diff does not contain.
 
 ## 6. Notes
 
-- If `notes-path` is given, use it. Otherwise use the newest section of CHANGELOG.md. If neither
-  exists, print "no notes found to check" and skip this step.
+- If `notes-path` is given, use it. Otherwise use CHANGELOG.md: the section whose version equals the
+  manifest version at HEAD, else `Unreleased`, else the newest. State the section in the header. If
+  neither exists, print "no notes found to check" and skip this step.
 - Run the normal ledger on the notes with the diff source `<tag>..HEAD`.
-- Then the reverse check. Breaking or Feature changes that no note mentions go under **Not mentioned**,
-  each with its `path:line` and a suggested line (rewrite rule 8). Internal changes are never listed.
+- Then the reverse check. These go under **Not mentioned**, each with its `path:line` and a suggested
+  line (rewrite rule 8): Breaking and Feature changes that no note mentions; a Fix whose diff touches
+  auth, crypto, input validation, path handling or data loss, marked `needs-maintainer` for severity
+  (say "touches validation code, maintainer to judge", never "a security fix" from the diff alone); and a
+  Dependency floor change (`engines`, `python_requires`, minimum toolchain), which is Breaking. Internal
+  changes are never listed.
 - Do not list a change twice. If a contradicted row's rewrite already states the change, it is covered
   and is not repeated under Not mentioned.
 
@@ -87,6 +96,13 @@ claims a change the diff does not contain.
 7. Rewrites.
 8. "What this cannot tell you": behavior changes, dynamic registration, anything marked
    `needs-maintainer`.
+
+## Monorepo: `--path <dir>`
+
+Restrict `git log` and `git diff` to `-- <dir>`, read the manifest in that dir, and match tags of the
+form `<pkg>@<ver>` or `<pkg>-v<ver>` with `git tag --list '<pkg>*'`. Without `--path` in a repo with
+several manifests, say "multiple manifests found" and scope to the one the notes name, or ask. This
+handles only the common layouts; say under Not checked what it did not handle.
 
 ## Degraded cases
 

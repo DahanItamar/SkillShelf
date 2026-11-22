@@ -8,6 +8,10 @@ Read at step 4. Every claim gets exactly one of four verdicts.
 claim. Cite it. Verified means the prose matches what the code shows. It does not mean the code is
 correct, safe or tested.
 
+**The boundary.** unverified: a command or an extra file read in the repo could settle it ("tests
+pass", "works on Windows", a benchmark script with no results). unmeasurable: no command could settle
+it; it is a judgment or needs real-world measurement ("more intuitive", "production-ready", "secure").
+
 **unverified**: checkable in principle from the repo or the diff, but no evidence was found after a
 stated search. This is absence of evidence only. The Note says what was searched (terms and paths)
 and, if only a run could settle it, the command for the user to run ("run `npm test` yourself").
@@ -21,16 +25,17 @@ A closed set is the complete `git diff --name-status`, the whole manifest, or th
 Write "closed set" in the Note and name the set.
 
 **unmeasurable**: the truth depends on a measurement or a judgment that no file or diff can supply
-("3x faster", "reduces memory 40%", "more intuitive", "production-ready", "secure"). The row carries a
-`Needs:` benchmark spec: what to measure, the baseline, and the command or setup. If the repo has a
-benchmark script but no committed results, the claim is still unmeasurable, because Hearsay does not
-run it.
+("3x faster" with no script, "reduces memory 40%", "more intuitive", "production-ready", "secure"). The
+row carries a `Needs:` benchmark spec: what to measure, the baseline, and the command or setup. If the
+repo has a benchmark script but no committed results, the claim is unverified, not unmeasurable: put
+the run command in the Note, because Hearsay does not run it. A bare "3x faster" with no script is
+unmeasurable.
 
 ## Decision order
 
 Apply in this order and stop at the first that fits.
 
-1. Checkable from the repo or diff? No: **unmeasurable**.
+1. Could any file, diff or command output in this repo settle it? No: **unmeasurable**.
 2. Counter-evidence found? Yes: **contradicted**. It beats verified.
 3. Evidence found for every atom of the claim? Yes: **verified**.
 4. Otherwise: **unverified**.

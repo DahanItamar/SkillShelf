@@ -49,10 +49,12 @@ that it was not already in the base.
   them and report "N prose lines skipped" under "Not checked".
 - **A version number** is a claim only in release mode, where it is checked against the manifest and
   the proposed bump.
-- **A changelog** is checked only for its newest section, or the section the user names. Report
-  "N older sections not checked".
+- **A changelog** is checked for one section: the one the user names; else the one equal to the
+  manifest version; else `Unreleased` if it is the newest; else the newest. Report "N other sections
+  not checked".
 - **Cap.** At most 40 ledger rows. If there are more claims, keep the riskiest (compatibility, scope,
-  interface, behavior, then the rest) and report how many were left.
+  interface, behavior, then the rest) and report the rest by kind (see ledger-template). `--rows 41-80`
+  re-extracts in the same order and skips the first 40 rows.
 
 ## Cheap mechanical checks first (README feature lists)
 
