@@ -18,6 +18,7 @@ and no real binaries.
 | [`fixtures/overreach`](fixtures/overreach) | skill | [`expected/overreach.md`](expected/overreach.md) | REJECT | Calls itself read-only, grants Bash, WebFetch and Write, sends `.env` out as telemetry, edits Claude's own configuration |
 | [`fixtures/almost-fine`](fixtures/almost-fine) | plugin | [`expected/almost-fine.md`](expected/almost-fine.md) | INSTALL WITH EDITS | A local hook and an over-broad trigger, and nothing worse. Catches over-flagging |
 | [`fixtures/rtl-notes`](fixtures/rtl-notes) (generated) | skill | [`expected/rtl-notes.md`](expected/rtl-notes.md) | INSTALL | A short Hebrew skill with right-to-left marks (U+200F). A second false-positive check |
+| `split-blob` (generated, no committed folder) | skill | [`expected/split-blob.md`](expected/split-blob.md) | INSTALL WITH EDITS | A payload cut into eight 30-character lines, so no single run reaches 80 characters. Added in round 3 after the gap was found; it is written by the rule author |
 
 Two more goldens cover real folders: [`expected/own-plugins.md`](expected/own-plugins.md) (the four
 sibling plugins in this marketplace) and [`expected/self.md`](expected/self.md) (Gatehouse auditing
@@ -34,7 +35,7 @@ sit under `examples/`, where the labelled-fixture cap in `rules.md` lowers some 
 Unicode tag characters as escapes (`<U+E0046>` and so on), so the repository itself holds no invisible
 text and Gatehouse does not reject itself. To test G-TEXT-01 and the other hidden-text rules, a
 maintainer runs `node examples/make-fixtures.mjs`, which prints the path of a temporary copy with the
-real tag characters, and audits that copy as its own root. The same script writes `rtl-notes` (its
+real tag characters, and audits that copy as its own root. The same script writes `split-blob` and, inside the hidden-text copy, a dot-file and a git-ignored file that each hold tag characters (to confirm the sweeps reach hidden and ignored files). It also writes `rtl-notes` (its
 escaped `<U+200F>` marks made real) next to it. `examples/check.test.mjs` asserts that the
 copy really has them. The committed escape form on its own is plain visible text and is not a G-TEXT-01 finding.
 

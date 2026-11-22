@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import os from 'node:os';
-import { build } from './make-fixtures.mjs';
+import { build, splitBlobLines } from './make-fixtures.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
@@ -162,7 +162,7 @@ test('5 README badges: flat-square, one colour, no logos, facts match the files'
 
 test('6 SKILL.md size and description', () => {
   assert.ok(skill.split('\n').length <= 150, 'at most 150 lines');
-  assert.ok(Buffer.byteLength(skill) <= 10 * 1024, 'at most 10 KB');
+  assert.ok(Buffer.byteLength(skill) <= 9.4 * 1024, 'at most 9.4 KB');
   const fm = frontmatter(skill);
   assert.equal(fm.name, 'gatehouse');
   assert.ok(fm.description.length > 100);
@@ -179,6 +179,10 @@ test('6b skill text names no tool-specific search or list tool', () => {
   const body = skill.replace(/^---[\s\S]*?\r?\n---/, '');
   assert.doesNotMatch(body, /\b(Grep|Glob)\b/);
   for (const n of ['patterns.md', 'rules.md', 'surfaces.md', 'report.md']) assert.doesNotMatch(refs(n), /\b(Grep|Glob)\b/, n);
+  // Tool-neutral wording: no Claude-only tool names or flags in the references.
+  const toolish = /\bRead's\b|offset and limit|Rust regex|\s-A \d/;
+  for (const n of ['patterns.md', 'rules.md', 'surfaces.md', 'report.md']) assert.doesNotMatch(refs(n), toolish, n);
+  assert.doesNotMatch(skill, toolish, 'SKILL.md');
   assert.match(patterns, /LC_ALL=C/);
   assert.match(patterns, /`S-SHEBANG`/);
 });
@@ -321,13 +325,16 @@ test('12 the procedure keeps its ordered Step 0, per-plugin table, receipt and n
 });
 
 test('13 every rule block fits the lazy-load window named in SKILL.md', () => {
-  assert.ok(skill.includes('-A 7'), 'SKILL.md still names the -A 7 lazy load');
+  assert.ok(skill.includes('read the next 7 lines'), 'SKILL.md names the 7-line lazy load');
+  assert.match(skill, /only up to the first heading that begins with `## Text`/);
+  assert.match(rules, /^## Text/m);
+  assert.ok(rules.indexOf('Single-file audits stop reading at the heading') < rules.indexOf('## Text'), 'rules.md carries the stop line before ## Text');
   const lines = rules.split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {
     if (!/^### G-/.test(lines[i])) continue;
     let n = 0;
     for (let j = i + 1; j < lines.length && lines[j].trim() !== '' && !/^### /.test(lines[j]); j++) n++;
-    assert.ok(n <= 7, lines[i].slice(0, 10) + ' has ' + n + ' lines after its heading; the lazy-load rule in SKILL.md reads only 7 (Grep -A 7)');
+    assert.ok(n <= 7, lines[i].slice(0, 10) + ' has ' + n + ' lines after its heading; the lazy-load rule in SKILL.md reads only 7');
   }
 });
 
@@ -350,4 +357,66 @@ test('14 diff-mode trust text and the scorer', async () => {
   assert.ok(stated.fail.some((f) => f.startsWith('Stated line')));
   const fenced = score(heads.join('\n').replace('## Description versus behaviour', '## Description versus behaviour\nStated:\n```text UNTRUSTED QUOTE\nx\n```'), exp);
   assert.deepEqual(fenced.fail, []);
+});
+
+test('14b diff mode lives in report.md, safety clauses stay in SKILL.md', () => {
+  assert.match(skill, /follow Diff mode in `report\.md`/);
+  assert.match(skill, /missing, unreadable or lists a different Root is ignored/);
+  assert.match(report, /^## Diff mode$/m);
+  assert.match(report, /Carried from the previous report/);
+  assert.match(report, /receipt records line counts, not content/);
+});
+
+// Extract every S-... recipe from patterns.md: the code spans that follow a colon on a recipe bullet.
+function recipes() {
+  const out = [];
+  for (const line of patterns.split(/\r?\n/)) {
+    const m = line.match(/^- `(S-[A-Z-]+)`/);
+    if (!m) continue;
+    for (const c of line.slice(m[0].length).matchAll(/: `([^`]+)`/g)) {
+      out.push({ id: m[1], src: c[1], form: /\\xE2|\\xF3|\\xD6/.test(c[1]) ? 'byte' : 'point' });
+    }
+  }
+  return out;
+}
+function toJs(src) {
+  let flags = 'i';
+  let body = src;
+  if (body.startsWith('(?s)')) { body = body.slice(4); flags += 's'; }
+  if (/\\x\{/.test(body)) { body = body.replace(/\\x\{([0-9A-Fa-f]+)\}/g, '\\u{$1}'); flags += 'u'; }
+  return new RegExp(body, flags + 'g');
+}
+const hits = (re, text) => (text.match(re) || []).length;
+
+test('15 every S- recipe compiles and hits its seeded fixture targets', () => {
+  const all = recipes();
+  assert.ok(all.length >= 25, 'found the recipes: ' + all.length);
+  const by = (id, form) => all.filter((x) => x.id === id && (!form || x.form === form));
+  for (const x of all) assert.doesNotThrow(() => toJs(x.src), x.id + ' compiles: ' + x.src);
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'gatehouse-check-'));
+  try {
+    build(out);
+    const gen = (...p) => fs.readFileSync(path.join(out, ...p), 'utf8');
+    const genBytes = (...p) => fs.readFileSync(path.join(out, ...p)).toString('latin1');
+    const tagRe = toJs(by('S-TAG', 'point')[0].src);
+    assert.ok(hits(tagRe, gen('hidden-text', 'SKILL.md')) > 0, 'S-TAG hits the SKILL.md');
+    assert.ok(hits(tagRe, gen('hidden-text', '.dotnote.md')) > 0, 'S-TAG hits the dot-file');
+    assert.ok(hits(tagRe, gen('hidden-text', 'ignored-note.md')) > 0, 'S-TAG hits the git-ignored file');
+    assert.match(gen('hidden-text', '.gitignore'), /ignored-note\.md/);
+    assert.ok(hits(toJs(by('S-TAG', 'byte')[0].src), genBytes('hidden-text', 'SKILL.md')) > 0, 'S-TAG byte form hits');
+    const invRe = toJs(by('S-INVIS', 'point')[0].src);
+    assert.ok(hits(invRe, gen('rtl-notes', 'SKILL.md')) > 0, 'S-INVIS hits the rtl marks');
+    assert.ok(hits(toJs(by('S-INVIS', 'byte')[0].src), genBytes('rtl-notes', 'SKILL.md')) > 0, 'S-INVIS byte form hits');
+    assert.ok(hits(toJs(by('S-SCRIPT', 'point')[0].src), gen('rtl-notes', 'SKILL.md')) > 0, 'S-SCRIPT explains the rtl marks');
+    assert.ok(hits(toJs(by('S-COMMENT')[0].src), rd('examples', 'fixtures', 'hidden-text', 'SKILL.md')) > 0, 'S-COMMENT hits the comment');
+    const blob = toJs(by('S-BLOB')[0].src);
+    const runs = gen('hidden-text', 'SKILL.md').match(blob) || [];
+    assert.ok(runs.some((m) => m.length === 140), 'S-BLOB hits the 140-character blob');
+    const split = gen('split-blob', 'SKILL.md');
+    assert.equal(hits(blob, split), 0, 'S-BLOB misses the split payload');
+    assert.ok(hits(toJs(by('S-BLOB-SPLIT')[0].src), split) >= 5, 'S-BLOB-SPLIT hits at least 5 pieces');
+    assert.ok(splitBlobLines().every((l) => l.length <= 30));
+  } finally {
+    fs.rmSync(out, { recursive: true, force: true });
+  }
 });

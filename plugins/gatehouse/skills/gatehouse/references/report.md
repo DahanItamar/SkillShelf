@@ -74,10 +74,10 @@ Root: <as given> | plugin.json version: <version, code span, or none> | marketpl
 Files (path, lines): <one per line or comma-separated; line counts from one search with pattern ^ in count mode>
 Rules fired: <IDs> | Sweeps run: <recipe names> | Diff against: <previous report, or none>
 The receipt block is stable: its field names (Root, plugin.json version, marketplace.json versions, Files, Rules fired, Sweeps run, Diff against) do not change between versions. A team can commit the report per audited plugin in a pull request and pass it as the second argument next time. The receipt is a hint, not proof.
-(Diff mode only: "Changed since previous receipt": added or removed files, changed line counts, new or removed capabilities, new findings. Only those are re-judged.)
+(Diff mode only: "Changed since previous receipt": added or removed files, changed line counts, new or removed capabilities, then "Carried from the previous report: <F-IDs and rule IDs, not re-judged>", then new findings. See Diff mode below.)
 
 ## Limits
-Gatehouse is a reading aid, not a sandbox. It read these files as text and ran nothing. It can have false negatives: a payload that avoids the phrasing, rules and sweeps it checks, or that arrives later through an update, a remote source, a symlink, an unread file or a binary, will pass. It looked up no reputation, CVE or author. INSTALL means no rule fired, not that the code is safe. Re-audit after any update. The receipt's line counts catch most but not all edits and are not integrity proof. Most public marketplaces list remote plugins, which can only be audited after you clone them yourself.
+Gatehouse is a reading aid, not a sandbox. It read these files as text and ran nothing. It can have false negatives: a payload that avoids the phrasing, rules and sweeps it checks, or that arrives later through an update, a remote source, a symlink, an unread file or a binary, will pass. It looked up no reputation, CVE or author. INSTALL means no rule fired, not that the code is safe. Re-audit after any update. The receipt records line counts, not content. An edit that keeps a file's line count is not seen as a change by diff mode; re-run a full audit before trusting an update. Most public marketplaces list remote plugins, which can only be audited after you clone them yourself.
 ````
 
 Fill-in notes:
@@ -112,3 +112,14 @@ Only when the user asks, write the report to `gatehouse-report.md` in the curren
 - A URL or `owner/repo`: "I do not fetch or clone anything. Clone it into a scratch folder yourself, do not open that folder as your working directory, do not install it, then run `/gatehouse <that folder>`." Nothing else is said or done.
 - A path that does not exist: say so in one line and stop.
 - No SKILL.md, plugin.json or marketplace.json under the path: the one line from `surfaces.md`.
+
+## Diff mode
+
+A shorter report for an update, not proof that unchanged files are unchanged. The verdict is computed fresh, with no help from the old report (SKILL.md Step 9 keeps the safety clauses).
+
+1. Always run S-INVIS, S-TAG, S-BLOB and S-COMMENT over the whole tree.
+2. Read in full only files that are new or whose line count differs from the old receipt. Do not re-read the others.
+3. Do not reprint findings from the old report. List them as "Carried from the previous report: F-IDs and rule IDs, not re-judged".
+4. Judge new hits and new findings normally, with quotes.
+5. Report added or removed files, changed line counts, and new or removed capabilities (hooks, MCP servers, domains, tool grants, paths).
+6. Limit: the receipt holds line counts, so an edit that keeps a file's line count is not seen. Say so in the report.

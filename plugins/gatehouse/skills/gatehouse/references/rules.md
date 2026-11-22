@@ -1,10 +1,12 @@
 # Rules
 
+Single-file audits stop reading at the heading `## Text` unless a rule fired.
+
 Sixteen rules in six groups. IDs are permanent. The set is capped at 16 for v1: new material merges
 into a rule that exists. Phrase tables and search recipes for each rule are in `patterns.md` under the
 same ID. Severity words are `reject-level`, `edit-level` and `note`.
 
-Every rule is applied to what the text does if Claude follows it, not to how it sounds. Judge hidden
+Every rule is applied to what the text does if the agent follows it, not to how it sounds. Judge hidden
 text by what it says, then by the fact that it is hidden.
 
 ## When a hit may be lowered to a note
@@ -38,14 +40,14 @@ one for severity, even though it may be downgraded under (a)-(d).
 
 ### G-TEXT-01 · Invisible characters
 **DON'T:** Ship zero-width, bidirectional-control or Unicode tag characters in instruction, execution or metadata files.
-*Why:* Claude reads characters a person cannot see. Text a reviewer never sees can still steer the model.
+*Why:* The agent reads characters a person cannot see. Text a reviewer never sees can still steer the model.
 *Applies:* any text file. A single byte-order mark at byte 0, a zero-width joiner between emoji, and U+200C, U+200D, U+200E, U+200F and U+2066-2069 in a file that contains Hebrew, Arabic or Indic letters (`[\x{0590}-\x{0DFF}]`), are not findings.
-*Check:* the invisible-character and tag-character sweeps in `patterns.md`. Reading a file cannot show these; a text search is the only detector.
+*Check:* the invisible-character and tag-character sweeps in `patterns.md`. Reading a file as plain text does not show these; a text search is the only detector.
 *Severity:* reject-level for tag characters and for U+202A-202E (embedding and override, the Trojan Source set) anywhere, and for any other invisible character inside instruction text. Edit-level for zero-width characters elsewhere.
 
 ### G-TEXT-02 · Non-rendered markup
 **DON'T:** Hide text in HTML comments, `hidden` or `display:none` elements, or lines padded with 200 or more leading spaces or tabs.
-*Why:* A person reading the rendered page does not see it. Claude reads the raw file and does.
+*Why:* A person reading the rendered page does not see it. The agent reads the raw file and does.
 *Applies:* Markdown and HTML files. A comment inside a fenced code block or a code span is displayed literally and is not hidden.
 *Check:* the multiline comment sweep, then read each comment. Judge the comment text under the other rules as if it were visible; if it breaks a G-INJ, G-EXEC, G-PERM or G-NET rule it takes that rule's severity.
 *Severity:* edit-level when a comment in an instruction file contains an instruction to the assistant. Note for plain prose or lint pragmas such as `markdownlint-disable`.
@@ -67,14 +69,14 @@ one for severity, even though it may be downgraded under (a)-(d).
 *Severity:* reject-level in any surface. Exceptions: the downgrade conditions, the labelled-fixture cap, and one tier for instruction files: a phrase inside a code span or fence that is about the pattern, does not address the reader, and is not an invisible, blob or hidden construct (conditions (b), (c), (d)) is edit-level with the edit "confirm it is only quoted", never a note and never reject-level.
 
 ### G-INJ-02 · Concealment from the user
-**DON'T:** Tell Claude to hide an action, a result or a step from the user, or to take an unannounced step before it answers.
+**DON'T:** Tell the agent to hide an action, a result or a step from the user, or to take an unannounced step before it answers.
 *Why:* The user can only consent to what they can see. A hidden step is one they never agreed to.
 *Applies:* instruction text and documentation.
 *Check:* the phrase sweep, then read the line in context.
 *Severity:* reject-level in an instruction surface. Edit-level in documentation.
 
 ### G-INJ-03 · Override of safety or approval
-**DON'T:** Tell Claude to bypass an approval step, assert a permission it was not given, or turn off a sandbox, prompt or approval setting.
+**DON'T:** Tell the agent to bypass an approval step, assert a permission it was not given, or turn off a sandbox, prompt or approval setting.
 *Why:* Those prompts are the user's last control. Removing them lets every other finding run unattended.
 *Applies:* instruction, execution and metadata surfaces, and documentation.
 *Check:* the phrase sweep. Settings keys that disable approval count as hits whether in prose or in a settings file.
@@ -123,7 +125,7 @@ one for severity, even though it may be downgraded under (a)-(d).
 **DON'T:** Read or write credential stores, shell startup files, system paths or Claude's own configuration.
 *Why:* Credentials are the most valuable thing on the machine, and a write to configuration outlives the session and the plugin.
 *Applies:* instruction or execution surfaces. Paths: `~/.ssh`, `~/.aws`, `~/.config`, `.env*`, keychains, browser profiles, shell history, shell rc files, `/etc`, `git config --global`, `.git/hooks`, Claude's own `settings.json`, `CLAUDE.md` and `~/.claude/`, and other tools' configuration (`AGENTS.md`, `GEMINI.md`, `.cursor/`, `.codex/`, `copilot-instructions`). README text that tells the user how to edit their own settings is documentation, not an instruction to Claude (note).
-*Check:* the path sweep, then read the line to see whether Claude is told to read, write or only mention the path.
+*Check:* the path sweep, then read the line to see whether the agent is told to read, write or only mention the path.
 *Severity:* reject-level for credential reads and for self-installing or persistent configuration writes. Edit-level for other out-of-project paths, including writes outside the project root and `git config` by a script that a hook, MCP command or `bin/` file runs (see G-EXEC-01).
 
 ## Net: leaving the machine
