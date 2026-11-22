@@ -18,13 +18,14 @@ users actually hit.
 *Severity:* recommended (demoted in 1.4.0; this is the checklist in `SKILL.md`, and the rules below block on the individual states)
 
 ### R-STATE-02 · Never show an unexplained blank
-**DO:** Render an indicator as soon as a wait begins — unless the wait is expected to stay under ~1 second, where R-STATE-06 says render nothing, and keep any prior content on screen.
+**DO:** Render an indicator as soon as a wait begins, and keep any prior content on screen.
 *Why:* A blank screen is indistinguishable from a broken one, and a user who cannot tell the
 difference will reload or leave.
-*Applies:* any wait with no existing content on screen. Whether a request is slow cannot be known from
-the code, so the check is on what exists, not on a time threshold
-*Check:* no spinner or skeleton exists for a request that is not cached or prefetched. Throttle the
-network and load the page to confirm: is anything on screen immediately?
+*Applies:* required only when a request has no loading indicator AND no prior or cached content on
+screen. Whether a wait is short enough to skip the indicator is the author's call, stated in one line
+in the code or the reply. A loader that is wrong for the wait is R-STATE-06 (recommended) at most
+*Check:* for a request that is not cached or prefetched, is there a spinner, skeleton or prior content?
+Throttle the network and load the page to confirm: is anything on screen immediately?
 *Severity:* required
 
 ### R-STATE-04 · Long waits need words, then a measure
@@ -138,7 +139,7 @@ most common way a missing failure path is reported, and the user has no move exc
 *Severity:* required for hand-rolled requests; recommended for server-component fetches
 
 ### R-STATE-17 · A non-2xx response is a failure
-**DO:** Check `response.ok` or the status before treating a fetch as a success, and branch on the cases the user can act on: 401 (session expired: sign in again and keep what the user typed), 404 (gone or empty), 5xx (offer a retry). Axios-style clients that throw on non-2xx already satisfy this.
+**DO:** Check `response.ok` or the status before treating a fetch as a success, and branch on the cases the user can act on: 401 (session expired: sign in again and keep what the user typed), 403 (tell the user they lack permission and what can change that; never render it as an empty list or a generic error), 404 (gone or empty), 5xx (offer a retry). A network failure (offline, DNS, no response) is not a server error: use a different message, and make the retry wait for connectivity. Axios-style clients that throw on non-2xx already satisfy this.
 *Why:* `fetch` resolves on 4xx and 5xx and rejects only on a network failure, so a `try/catch` alone never sees a server error. The code then runs its success path: the row is removed, the toast says "saved", and nothing was. (MDN, `fetch()` and `Response.ok`; the whatwg/fetch discussion "Why doesn't fetch reject if 400 <= status < 600".)
 *Applies:* any fetch or XHR call whose result changes the UI or local state. A 200 response whose body carries an error (GraphQL `errors`, `{ok:false}`, `{error:...}`) also counts as a failure when the code reads that body; the GraphQL spec says `errors` may be present beside `data` (Response, 7.1.2).
 *Check:* make the endpoint return 500. Does the user see an error, and is local state unchanged?
@@ -171,6 +172,6 @@ For any finding the user disputes, or on an explicit `/edgecase probe`, print th
 as a recipe the user runs, not something you run. Give one handler per failure: an MSW handler or a
 Playwright `route.fulfill` returning a 500, one that never resolves (a `new Promise(() => {})` body or
 `route.abort` after the timeout), and one returning `[]`. Name the screen state the user should then
-see. Never run a script or start a server for a probe. Write nothing to the repo unless asked, and if asked to write the file, show it first; the `Check:` lines already hold the content.
+see. Never run a probe recipe or start a server for a probe. Write nothing to the repo unless asked, and if asked to write the file, show it first; the `Check:` lines already hold the content.
 
 A Probe may be offered once, as one sentence, after a blocking finding.

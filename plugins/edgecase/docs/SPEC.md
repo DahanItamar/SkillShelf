@@ -29,7 +29,7 @@ present, and Claude names what is still missing rather than reporting "done".
 - Choose **error placement** (inline · toast · modal) from the severity of the failure
 - Reduce **form friction** — validation timing, required-field clarity, prefill, forgiving input
 - Enforce **graceful degradation** — one failing section must not blank the page
-- Apply a small set of **UX law rules** (Jacob's, Hick's, Progressive Disclosure, Tesler's, primary paths) to layout and flow decisions
+- Apply a small set of **UX law rules** (Jakob's, Hick's, Progressive Disclosure, Tesler's, primary paths) to layout and flow decisions
 - Act as a **blocking gate** during build: a component with a missing required state is not finished
 
 ### Explicitly out of scope
@@ -72,7 +72,7 @@ domain.
         ▼               ▼                   ▼                  ▼
  references/     references/          references/        references/
   states.md      feedback.md            forms.md           laws.md
- loading·empty   errors·placement    validation·input   Jacob·Hick·
+ loading·empty   errors·placement    validation·input   Jakob·Hick·
  ·partial        ·success feedback   ·prefill           disclosure·Tesler
 
         defers to ──►  craft (visual)  ·  accessibility (WCAG)
@@ -86,7 +86,7 @@ domain.
 | `references/states.md` | Loading, empty, partial/degraded states; loader selection and timing thresholds | Markdown rule blocks |
 | `references/feedback.md` | Error message quality, error placement, success confirmation | Markdown rule blocks |
 | `references/forms.md` | Validation timing, required-field clarity, prefill, input tolerance | Markdown rule blocks |
-| `references/laws.md` | Jacob's Law, Hick's Law, Progressive Disclosure, Tesler's Law — applied, not explained | Markdown rule blocks |
+| `references/laws.md` | Jakob's Law, Hick's Law, Progressive Disclosure, Tesler's Law — applied, not explained | Markdown rule blocks |
 | `docs/SPEC.md` | This document. Ships in-repo so a fresh session can extend the skill correctly | Markdown |
 
 ### Decisions
@@ -351,7 +351,7 @@ A vague error message gets flagged and rewritten.
 - [ ] `references/forms.md` — validation timing, required clarity, prefill, input tolerance
 
 **M4 — Laws**
-- [ ] `references/laws.md` — Jacob's, Hick's, Progressive Disclosure, Tesler's, each stated as an applied rule rather than an explanation
+- [ ] `references/laws.md` — Jakob's, Hick's, Progressive Disclosure, Tesler's, each stated as an applied rule rather than an explanation
 
 **M5 — Public**
 - [ ] README: install, usage, contribution bar, credits
