@@ -123,6 +123,11 @@ ecosystem and the port-check commands.
 Before executing anything, offer a throwaway copy (`git worktree` or `cp -r` to a temp directory) or
 a container. This reduces risk; it is not a sandbox.
 
+If the repository handles health, personal or financial records, or `.showcase.md` says
+`regulated: true`, "yes, run it" is not enough: see the regulated-repository row in
+`references/run-recipes.md`. Run only in a container or a network-disabled throwaway copy with
+synthetic data; otherwise use Static mode.
+
 Run notes:
 
 - Start background processes with a note of how to stop them, then stop them and delete the run

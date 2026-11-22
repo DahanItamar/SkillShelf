@@ -41,6 +41,18 @@ if grep -n 'Winnow' SKILL.md references/*.md; then bad "Winnow in SKILL.md or re
 # Replay the committed example ledger with scripts/replay.sh (it runs the ledger's commands).
 led=examples/docs/EVIDENCE.md
 sh scripts/replay.sh "$led" examples/fixture || bad "example ledger has stale rows"
+# Negative test: a ledger with one corrupted stored value must be reported STALE and exit non-zero.
+tmpl=$(mktemp) || exit 2
+trap 'rm -f "$tmpl"' EXIT
+sed 's/| 11 |/| 99 |/' "$led" > "$tmpl"
+if neg=$(sh scripts/replay.sh "$tmpl" examples/fixture); then bad "replay.sh accepted a corrupted ledger"
+elif ! printf '%s
+' "$neg" | grep -q '^STALE: script is 11 lines'; then bad "replay.sh did not report the corrupted row"; fi
+# Redaction example: the pre-write scan on the stored draft gives exactly the stored hits, and none on the edit.
+scan="grep -nEi '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}|([0-9]{1,3}\.){3}[0-9]{1,3}|(sk|ghp|xox[bp]|akia)[-_a-z0-9]{8,}|[a-z0-9+/_-]{32,}|[0-9]{9,}'"
+(cd examples/redaction && eval "$scan draft.md" | diff - hits.txt >/dev/null) || bad "redaction example hits differ from hits.txt"
+(cd examples/redaction && eval "$scan edited.md" >/dev/null) && bad "redaction example edit still has scan hits"
+grep -qF "$(sed -n 1p examples/redaction/hits.txt)" examples/redaction.md || bad "redaction.md lacks the scan output"
 # every number in the example README must appear in the ledger
 grep -o '[0-9][0-9.,]*[0-9]\|[0-9]' examples/README.md | sort -u | while read -r n; do
   grep -qF "$n" "$led" || echo "NOT IN LEDGER: $n"
@@ -52,6 +64,7 @@ done | { n=0; while read -r line; do echo "$line"; n=1; done; [ "$n" = 0 ]; } ||
 name=$(sed -n 's/^name: *//p' SKILL.md | head -n 1)
 [ "$name" = "$(basename "$(pwd)")" ] || bad "SKILL.md name '$name' does not match the folder"
 [ "${#name}" -le 64 ] || bad "SKILL.md name over 64 chars"
+case "$name" in -*|*-|*--*|*[!a-z0-9-]*|'') bad "SKILL.md name '$name' breaks the Agent Skills name rules";; esac
 dlen=$(sed -n 's/^description: *//p' SKILL.md | head -n 1 | wc -m | tr -d ' ')
 [ "$dlen" -le 1024 ] || bad "SKILL.md description is $dlen chars (limit 1024)"
 

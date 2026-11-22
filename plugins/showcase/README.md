@@ -53,8 +53,9 @@ cp SkillShelf/plugins/showcase/SKILL.md <skills-dir>/showcase/
 cp -r SkillShelf/plugins/showcase/references <skills-dir>/showcase/
 ```
 
-The per-tool skills directories are listed in the [Install section of the repository
-README](../../README.md#install). Then ask: *"write a README for this"*.
+For example, `<skills-dir>` is `.agents/skills` for a Codex project install (giving
+`.agents/skills/showcase`) or `~/.codex/skills` for a user install. The other tools' directories are
+listed in the [Install section of the repository README](../../README.md#install). Then ask: *"write a README for this"*.
 
 ## See the result
 
@@ -67,18 +68,32 @@ were observed by running the ledger's commands. Check them yourself:
 sh scripts/replay.sh examples/docs/EVIDENCE.md examples/fixture
 ```
 
-No output and exit status 0 means every replayable row still holds. This script runs the commands
-in the ledger, so only point it at a ledger you trust. It is an optional maintainer or CI check; the
-skill does not need it.
+A clean run prints `replayed 5 of 6 rows, 0 stale` and exits 0; the sixth row is volatile and is
+not replayed. A stale row prints a `STALE:` line and exits non-zero, and so does a replay of zero
+rows. Before this fix the check replayed nothing and passed without saying so; it now counts what it
+checked and `check.sh` proves it catches a corrupted ledger. This script runs the commands in the
+ledger, so only point it at a ledger you trust. It is an optional maintainer or CI check; the skill
+does not need it.
+
+### Keep your README honest in CI
+
+Save the skill's `docs/EVIDENCE.md` ledger in your repository, then replay it on every push:
+
+```sh
+sh path/to/replay.sh docs/EVIDENCE.md .
+```
+
+Rows marked `replay: no` and volatile rows are skipped, and the output says how many rows were
+replayed. This executes the ledger's commands, so use it only on a ledger you trust.
 
 ## Cost and safety
 
-- **Cost.** `SKILL.md` is 16,212 bytes at 2.3.0 and loads on every run. The eight reference files
-  total 58,076 bytes and load only at the phase that needs them. A utility run skips
-  `identity-block.md`, `visuals.md` and `modes.md`: 51,462 bytes. A run that loads everything is
-  74,288 bytes. Sizes are measured with `wc -c` and rechecked by `check.sh`.
+- **Cost.** `SKILL.md` is 16,523 bytes at 2.3.0 and loads on every run. The eight reference files
+  total 58,783 bytes and load only at the phase that needs them. A utility run skips
+  `identity-block.md`, `visuals.md` and `modes.md`: 52,480 bytes. A run that loads everything is
+  75,306 bytes. Sizes are measured with `wc -c` and rechecked by `check.sh`.
   **Token figures are estimates at 4 bytes per token:** about 4.1k tokens for `SKILL.md`, about
-  12.9k tokens for a utility run and about 18.6k tokens for a full load. No end-to-end run cost was
+  13.1k tokens for a utility run and about 18.8k tokens for a full load. No end-to-end run cost was
   measured; these are load sizes only. The stranger test is offered, not default, and roughly
   doubles the run's cost.
 - **Safety.** Phase 1 runs the project, which executes its code. It runs only a repository that is
@@ -87,8 +102,10 @@ skill does not need it.
   offers a throwaway copy or a container first, asks before network, paid, remote-database,
   migration, deploy or credential-bearing steps, keeps servers on 127.0.0.1, reads `.env.example`
   and never `.env`, and stops what it started. With no confirmation it executes nothing and writes
-  from the tests, marking runtime facts `unverified`. The gate is a prompt-level rule, not a
-  sandbox. The checklist and a one-line "allowed first commands" card an organisation can approve
+  from the tests, marking runtime facts `unverified`. For a repository that handles health, personal or financial records (or whose
+  `.showcase.md` says `regulated: true`), "yes, run it" is not enough: it runs only in a container or
+  a network-disabled throwaway copy with synthetic data, otherwise it uses Static mode. This is not a
+  compliance claim. The gate is a prompt-level rule, not a sandbox. The checklist and a one-line "allowed first commands" card an organisation can approve
   once are at the top of [`references/run-recipes.md`](references/run-recipes.md).
 - **Privacy.** It redacts secrets and also avoids personal data (record fields, emails, ids),
   internal hostnames, IPs and account ids, prefers seeded data, and greps its draft for
@@ -113,20 +130,13 @@ with no invented timings or screenshots. Every element (badge, section, diagram,
 checkable fact or be cut; a capability section with no diagram, table, output, measurement or image
 becomes one bullet.
 
-- **Progressive disclosure.** `SKILL.md` is 298 lines and loads every invocation; the eight
-  reference files are 1,253 lines and load only at the phase that needs them. Each is complete by
+- **Progressive disclosure.** `SKILL.md` is 303 lines and loads every invocation; the eight
+  reference files are 1,257 lines and load only at the phase that needs them. Each is complete by
   itself and none depends on another being loaded.
 - **Fixed handover.** Every run ends with the same six-row table: paths written, numbers,
   unverified claims, screenshots, `Verified on`, stranger test. A row that did not run says `not run`.
 - **Audit first.** If a README exists, it shows a keep / change / cut table before writing.
   Audit-only mode runs a fixed six-item check, writes nothing and does not run the project.
-- **It never runs a git command that writes.** No commit, no push, no tag.
-- **Screenshots are asked about, never guessed.** If capture fails or is declined, it writes
-  `docs/SCREENSHOTS.md` and says plainly that this was the one thing it could not do.
-- **Write surface.** `README.md`, `docs/SETUP.md`, `docs/ARCHITECTURE.md`, `docs/brand/*.svg`,
-  `docs/assets/screens/*.png`, `docs/SCREENSHOTS.md`, `docs/EVIDENCE.md`. Nothing else.
-- **Mermaid ahead of any image format.** It renders on GitHub, is text in the diff and needs no
-  file to rot.
 
 `CHANGELOG.md` is this plugin's history. `check.sh` and `scripts/replay.sh` are maintainer-run
 checks and are not loaded at run time.

@@ -4,12 +4,17 @@ All notable changes to this plugin. Format follows [Keep a Changelog](https://ke
 
 ## [2.3.0] - 2026-11-22
 
+### Fixed
+- `scripts/replay.sh` was vacuous: its pipe-escaping step mangled the ledger on GNU sed, no row was ever replayed, and it printed nothing and exited 0 even for a corrupted ledger. Earlier "replays clean" wording gave no evidence. It now replays rows, prints `replayed N of M rows`, and exits non-zero on a stale row or when it replays zero rows. `check.sh` has a negative test that corrupts a stored value and requires a `STALE` report.
+
 ### Added
 - `examples/`: a small fixture, the README written for it and its evidence ledger. It is a hand-authored reference example following the skill's rules, not generated output.
 - `scripts/replay.sh`, an optional maintainer or CI check that replays a ledger (it runs the ledger's commands, so only use a ledger you trust).
 - `references/modes.md`, loaded only for non-Write modes or special shapes, with a fixed six-item Audit only checklist and one output table.
 - README section "Use it in other tools".
 - Redaction now covers personal data, internal hostnames, IPs and account ids, prefers seeded data, and adds a pre-write scan. This lowers the leak risk; it is not a compliance claim.
+- Regulated-repository rule in the run-safety gate and a `regulated` key for `.showcase.md` that can only tighten the gate. A prompt-level rule, not a sandbox or a compliance claim.
+- `examples/redaction.md`: a worked pre-write scan with synthetic data and the filled handover table; `check.sh` reruns the scan against it.
 - `check.sh` validates the SKILL.md frontmatter and that every reference named in SKILL.md exists.
 
 ### Changed
@@ -18,7 +23,7 @@ All notable changes to this plugin. Format follows [Keep a Changelog](https://ke
 - The port check runs only when a server was started.
 - Stranger test leads with a reread in a scratch copy; a fresh-context helper is optional. Wording is tool-neutral.
 - Hard rules: delete only run artifacts you created; the process-document ban applies to the repository being documented.
-- `SKILL.md` is smaller (16,212 bytes, from 18,897).
+- `SKILL.md` is smaller (16,523 bytes, from 18,897).
 - README shortened.
 
 ### Removed

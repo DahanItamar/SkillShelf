@@ -13,6 +13,7 @@ This is risk reduction, not a sandbox. Run unfamiliar code in a container or VM.
 | | Any other clone, or one the user only asked you to look at | Ask for an explicit yes; the default is Static mode |
 | Can anyone answer? | No (headless or non-interactive run) | Treat as unconfirmed; Static mode |
 | Does it need a service? Check the manifest and CI | Network service, paid API, remote or shared database, migrations, deploy or seed scripts, or `.env` values that look like real credentials | Ask before; no confirmation means no execution |
+| Does it handle health, personal or financial records? Signs: model or migration names such as patient, person or account; a PII-shaped `.env.example`; a HIPAA or GDPR mention in the docs; or `.showcase.md` says `regulated: true` | Yes | "Yes, run it" is not enough. Run only inside a container or a throwaway copy with the network disabled, using seeded or synthetic data. If neither is available, use Static mode and mark runtime facts `unverified`. Prompt-level rule, not a sandbox; not a compliance claim |
 | Which copy runs? | The original | Offer a throwaway copy (`git worktree` or `cp -r` to a temp directory) or a container first |
 | Where does a server bind? | 0.0.0.0, or cannot be confirmed | Set it to 127.0.0.1 or ask; with no answer do not run it, mark `unverified`, do not retry |
 | Which env file? | `.env.example` | Never read `.env` |

@@ -44,4 +44,7 @@ All 4 checks pass and 0 fail. Case is ignored, so `A a A` counts as 3 of `a`.
 The script is 11 lines: `tr` splits words and lowercases them, `sort | uniq -c` counts, and a
 second `sort` orders by count then alphabetically, so ties are stable (`cat` before `saw`).
 
+A second worked example, the redaction scan and the handover table, is in
+[`redaction.md`](redaction.md).
+
 Verified on Git Bash, Windows 11, GNU bash 5.3, 2026-11-22. Not run on Linux or macOS.
